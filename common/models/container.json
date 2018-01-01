@@ -1,0 +1,10 @@
+{
+  "name": "Container",
+  "plural": "Containers",
+  "base": "Model",
+  "properties": {},
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

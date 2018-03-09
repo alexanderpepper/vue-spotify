@@ -1,7 +1,6 @@
 <template lang="pug">
   .landing.text-xs-center.pt-2
     .emoji 🦑
-    .emoji-text.display-3 hello
 
 </template>
 

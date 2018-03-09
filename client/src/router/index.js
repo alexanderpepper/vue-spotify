@@ -4,10 +4,12 @@ import Landing from '@/components/Landing'
 import User from '../components/User'
 import Users from '../components/Users'
 import Password from '../components/Password'
+import AuthCallback from '../components/AuthCallback'
 
 Vue.use(Router)
 
 export default new Router({
+  mode: 'history',
   routes: [
     {
       path: '/',
@@ -29,6 +31,11 @@ export default new Router({
       path: '/password',
       name: 'password',
       component: Password
+    },
+    {
+      path: '/callback',
+      name: 'callback',
+      component: AuthCallback
     }
   ]
 })

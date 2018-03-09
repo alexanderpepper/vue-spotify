@@ -1,0 +1,9 @@
+{
+  "name": "Hook",
+  "plural": "Hooks",
+  "base": "Model",
+  "properties": {},
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

@@ -38,5 +38,9 @@
   "AppUser": {
     "dataSource": "db",
     "public": true
+  },
+  "Hook": {
+    "dataSource": "db",
+    "public": true
   }
 }

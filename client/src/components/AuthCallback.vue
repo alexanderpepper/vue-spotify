@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import SpotifyService from "../services/SpotifyService";
+  import SpotifyService from '../services/SpotifyService'
 
   export default {
     name: 'callback',

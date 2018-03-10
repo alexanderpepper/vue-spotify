@@ -17,15 +17,6 @@ class UserService extends BaseService {
     })
   }
 
-  static leaderboard () {
-    return this.GET(api.users, {
-      filter: JSON.stringify({
-        include: ['submissions'],
-        order: 'points DESC'
-      })
-    })
-  }
-
   static get (id) {
     return this.GET(api.user(id), {
       filter: JSON.stringify({

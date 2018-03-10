@@ -12,5 +12,7 @@ export default {
   usersPaginated: `${host}/AppUsers/paginated`,
   userCount: `${host}/AppUsers/count`,
   uploadFile: `${host}/Containers/things/upload`,
-  user: (id) => `${host}/AppUsers/${id}`
+  user: (id) => `${host}/AppUsers/${id}`,
+  authorizationUrl: `${host}/Hooks/authorization-url`,
+  setAuthorizationCode: `${host}/Hooks/set-authorization-code`
 }

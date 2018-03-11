@@ -14,5 +14,6 @@ export default {
   uploadFile: `${host}/Containers/things/upload`,
   user: (id) => `${host}/AppUsers/${id}`,
   authorizationUrl: `${host}/Hooks/authorization-url`,
-  setAuthorizationCode: `${host}/Hooks/set-authorization-code`
+  setAuthorizationCode: `${host}/Hooks/set-authorization-code`,
+  playlists: `${host}/Hooks/playlists`
 }

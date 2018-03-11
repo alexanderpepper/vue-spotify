@@ -9,6 +9,10 @@ class SpotifyService extends BaseService {
   static setAuthorizationCode (code) {
     return this.POST(api.setAuthorizationCode, {code})
   }
+
+  static getPlaylists () {
+    return this.GET(api.playlists)
+  }
 }
 
 export default SpotifyService

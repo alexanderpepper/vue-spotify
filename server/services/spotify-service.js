@@ -24,7 +24,15 @@ module.exports = class SpotifyService {
       // const token = TokenService.setToken(data.body)
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
-      return spotifyApi.getUserPlaylists('1232656450').then(data => data.body)
+
+
+      return spotifyApi.getMe().then(data => { 
+        console.log("getMe() returned", data)
+        return spotifyApi
+          .getUserPlaylists(data.body.id)
+          .then(data => data.body)
+      })
+
     }, function(err) {
       console.log('Something went wrong!', err);
     });
@@ -41,7 +49,10 @@ module.exports = class SpotifyService {
   }
 
   getPlaylists() {
-    return spotifyApi.getUserPlaylists('1232656450').then(data => data.body)
+    return spotifyApi.getMe().then(data => {
+      console.log("getMe() returned", data)
+      return spotifyApi.getUserPlaylists(data.body.id).then(data => data.body)
+    })
   }
 
 

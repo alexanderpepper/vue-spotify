@@ -1,7 +1,7 @@
 <template lang="pug">
   .callback
     div hey this is callback
-    div {{ results }}
+    div {{ JSON.stringify(results, null, 4) }}
 </template>
 
 <script>
@@ -15,7 +15,8 @@
       }
     },
     async mounted () {
-      this.results = await SpotifyService.setAuthorizationCode(this.$route.query.code)
+      await SpotifyService.setAuthorizationCode(this.$route.query.code)
+      this.results = await SpotifyService.getPlaylists()
     }
   }
 </script>

@@ -26,7 +26,7 @@ module.exports = class SpotifyService {
       spotifyApi.setRefreshToken(token.refreshToken)
 
 
-      return spotifyApi.getMe().then(data => { 
+      return spotifyApi.getMe().then(data => {
         console.log("getMe() returned", data)
         return spotifyApi
           .getUserPlaylists(data.body.id)
@@ -50,7 +50,6 @@ module.exports = class SpotifyService {
 
   getPlaylists() {
     return spotifyApi.getMe().then(data => {
-      console.log("getMe() returned", data)
       return spotifyApi.getUserPlaylists(data.body.id).then(data => data.body)
     })
   }

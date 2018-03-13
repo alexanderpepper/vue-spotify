@@ -14,3 +14,8 @@
   * Loopback will compile the front-end for production, but no front-end updates will register until the server is re-run
 * To run the Vue client in development, run `npm run dev` from the `client` folder
   * This runs the client on http://localhost:3000
+
+### Configuration
+* Admin account is created on first run. Credentials are 
+  * Username: admin@admin.com
+  * Password: admin1234

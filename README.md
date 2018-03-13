@@ -2,7 +2,7 @@
 
 * Back-end is [LoopBack](http://loopback.io)
 * Front-end is [Vue](http://vuejs.org)/[Vuetify](http://vuetifyjs.com)
-
+* Uses [spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node)
 ### Installation
 1. Run `npm install` from the base folder
 1. Run `npm install` from the `client` folder

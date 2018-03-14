@@ -20,6 +20,7 @@ module.exports = class SpotifyService {
     spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
     return spotifyApi.authorizationCodeGrant(code).then(data => {
       const token = TokenService.normalize(data.body)
+      // TokenService.setToken(token)
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
       return data.body
@@ -38,6 +39,7 @@ module.exports = class SpotifyService {
   }
 
   getPlaylists () {
+    // this.setCredentials()
     return spotifyApi.getMe().then(data => {
       //console.log('getMe() returned', data.body)
       return Promise.all([0,1,2].map(n => spotifyApi.getPlaylists(data.body.id, {offset: n, limit: 1})).then(data => data.body))

@@ -16,7 +16,6 @@
     },
     async mounted () {
       await SpotifyService.setAuthorizationCode(this.$route.query.code)
-
       this.$router.push({name: 'home'})
     }
   }

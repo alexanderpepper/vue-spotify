@@ -38,16 +38,12 @@ module.exports = class SpotifyService {
     })
   }
 
-  getPlaylists () {
-    return spotifyApi.getMe().then(data => {
-      console.log('getMe() returned', data.body)
-      const userId = data.body.id
-      return spotifyApi.getUserPlaylists(userId, {limit: 1}).then(data => {
-        const pageCount = Math.ceil(data.body.total / limit)
-        const pages = Array.from(Array(pageCount), (_, x) => x)
-        const promises = pages.map(p => spotifyApi.getUserPlaylists(userId, {limit, offset: p * limit}).then(data => data.body.items))
-        return Promise.all(promises).then(results => results.reduce((acc, val) => [...acc, ...val]))
-      })
-    })
+  async getPlaylists () {
+    const user = await spotifyApi.getMe().then(data => data.body)
+    const sampling = await spotifyApi.getUserPlaylists(user.id, {limit: 1}).then(data => data.body)
+    const pageCount = Math.ceil(sampling.total / limit)
+    const pages = Array.from(Array(pageCount), (_, x) => x)
+    const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
+    return Promise.all(promises).then(results => results.reduce((acc, val) => [...acc, ...val]))
   }
 }

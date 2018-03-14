@@ -39,8 +39,8 @@ module.exports = class SpotifyService {
 
   getPlaylists () {
     return spotifyApi.getMe().then(data => {
-      console.log('getMe() returned', data.body)
-      return spotifyApi.getUserPlaylists(data.body.id, {limit: 50}).then(data => data.body)
+      //console.log('getMe() returned', data.body)
+      return Promise.all([0,1,2].map(n => spotifyApi.getPlaylists(data.body.id, {offset: n, limit: 1})).then(data => data.body))
     })
   }
 }

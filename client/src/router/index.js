@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Landing from '@/components/Landing'
+import Home from '@/components/Home'
 import User from '../components/User'
 import Users from '../components/Users'
 import Password from '../components/Password'
@@ -31,6 +32,11 @@ export default new Router({
       path: '/password',
       name: 'password',
       component: Password
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: Home
     },
     {
       path: '/callback',

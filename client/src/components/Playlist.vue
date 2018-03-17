@@ -26,7 +26,8 @@
     name: 'callback',
     data () {
       return {
-        playlistInfo: {}
+        playlistInfo: {},
+        audio: undefined
       }
     },
     async mounted () {
@@ -35,10 +36,13 @@
       this.playlistInfo = await SpotifyService.getPlaylist(this.$route.params.playlist_id)
       this.playlistInfo = this.playlistInfo.results
       console.log(this.playlistInfo)
+      this.audio = new Audio()
     },
     methods: {
       playSong: function (song) {
         console.log('Trying to play', song)
+        this.audio.src = song.track.preview_url
+        this.audio.play()
       }
     }
   }

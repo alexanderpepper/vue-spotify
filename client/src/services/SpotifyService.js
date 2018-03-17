@@ -10,6 +10,10 @@ class SpotifyService extends BaseService {
     return this.POST(api.setAuthorizationCode, {code})
   }
 
+  static getPlaylist (playlistID) {
+    return this.GET(api.playlist(playlistID))
+  }
+
   static getPlaylists () {
     return this.GET(api.playlists)
   }

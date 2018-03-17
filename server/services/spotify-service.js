@@ -3,6 +3,7 @@ const SpotifyWebApi = require('spotify-web-api-node')
 const {clientId, clientSecret, redirectUri} = require('../constants/credentials')
 const scopes = ['playlist-read-private']
 let spotifyApi
+const limit = 50
 
 module.exports = class SpotifyService {
   getAuthorizationUrl () {
@@ -20,7 +21,6 @@ module.exports = class SpotifyService {
     spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
     return spotifyApi.authorizationCodeGrant(code).then(data => {
       const token = TokenService.normalize(data.body)
-      // TokenService.setToken(token)
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
       return data.body
@@ -38,11 +38,13 @@ module.exports = class SpotifyService {
     })
   }
 
-  getPlaylists () {
-    // this.setCredentials()
-    return spotifyApi.getMe().then(data => {
-      //console.log('getMe() returned', data.body)
-      return Promise.all([0,1,2].map(n => spotifyApi.getPlaylists(data.body.id, {limit: 1, offset: n })).then(data => data.body))
-    })
+  async getPlaylists () {
+    const user = await spotifyApi.getMe().then(data => data.body)
+    const sampling = await spotifyApi.getUserPlaylists(user.id, {limit: 1}).then(data => data.body)
+    const pageCount = Math.ceil(sampling.total / limit)
+    const pages = Array.from(Array(pageCount).keys())
+    const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
+    return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val)))
+
   }
 }

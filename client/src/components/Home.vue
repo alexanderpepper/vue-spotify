@@ -1,8 +1,8 @@
 <template lang="pug">
   .callback
     h1 Home
-    ul(v-if="results.results && results.results.items")
-      li(v-for="item in results.results.items") 
+    ul(v-if="results && results.results")
+      li(v-for="item in results.results")
         img(v-if="item.images[0]", :src="item.images[0].url")
         div(v-else, class="no-image") No image found
         div(class="name") {{ item.name }}

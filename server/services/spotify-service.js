@@ -42,7 +42,7 @@ module.exports = class SpotifyService {
     // this.setCredentials()
     return spotifyApi.getMe().then(data => {
       //console.log('getMe() returned', data.body)
-      return Promise.all([0,1,2].map(n => spotifyApi.getPlaylists(data.body.id, {offset: n, limit: 1})).then(data => data.body))
+      return Promise.all([0,1,2].map(n => spotifyApi.getPlaylists(data.body.id, {limit: 1, offset: n })).then(data => data.body))
     })
   }
 }

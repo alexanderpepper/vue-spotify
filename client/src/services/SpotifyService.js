@@ -11,7 +11,7 @@ class SpotifyService extends BaseService {
   }
 
   static getPlaylist (playlistID) {
-    return this.GET(api.getPlaylist, {playlistID})
+    return this.GET(api.playlist(playlistID))
   }
 
   static getPlaylists () {

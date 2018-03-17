@@ -24,8 +24,7 @@
     },
     methods: {
       goToPlaylist: function (playlist) {
-        const newRoute = 'playlist/' + playlist.id
-        this.$router.push({path: newRoute})
+        this.$router.push({name: 'playlist', params: {playlist_id: playlist.id}})
       }
     }
   }

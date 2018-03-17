@@ -47,6 +47,7 @@ export default new Router({
     {
       path: '/playlist/:playlist_id',
       name: 'playlist',
+      props: true,
       component: Playlist
     }
   ]

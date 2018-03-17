@@ -21,6 +21,7 @@
 
 <script>
   import SpotifyService from '../services/SpotifyService'
+  import WebPlaybackService from '../services/WebPlaybackService'
 
   export default {
     name: 'callback',
@@ -39,10 +40,10 @@
       this.audio = new Audio()
     },
     methods: {
-      playSong: function (song) {
+      playSong: async function (song) {
         console.log('Trying to play', song)
-        this.audio.src = song.track.preview_url
-        this.audio.play()
+
+        WebPlaybackService.playSong(song)
       }
     }
   }

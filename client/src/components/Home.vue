@@ -2,7 +2,7 @@
   .callback
     h1 Home
     ul(v-if="results.results && results.results.items")
-      li(v-for="item in results.results.items") 
+      li(v-for="item in results.results.items", v-on:click="goToPlaylist(item)") 
         img(v-if="item.images[0]", :src="item.images[0].url")
         div(v-else, class="no-image") No image found
         div(class="name") {{ item.name }}
@@ -21,6 +21,12 @@
     async mounted () {
       // TODO consider caching images
       this.results = await SpotifyService.getPlaylists()
+    },
+    methods: {
+      goToPlaylist: function (playlist) {
+        const newRoute = 'playlist/' + playlist.id
+        this.$router.push({path: newRoute})
+      }
     }
   }
 </script>

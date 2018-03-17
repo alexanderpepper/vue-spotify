@@ -38,6 +38,13 @@ module.exports = class SpotifyService {
     })
   }
 
+  getPlaylist (playlistID) {
+    // this.setCredentials()
+    return spotifyApi.getMe().then(data => {
+      return spotifyApi.getPlaylist(data.body.id, playlistID).then(data => data.body)
+    })
+  }
+
   getPlaylists () {
     // this.setCredentials()
     return spotifyApi.getMe().then(data => {

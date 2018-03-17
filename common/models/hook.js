@@ -22,6 +22,13 @@ module.exports = function (Hook) {
     })
   }
 
+  Hook.getPlaylist = function (playlistID, cb) {
+    console.log("Trying to get playlist ", playlistID)
+    spotify.getPlaylist(playlistID).then(results => {
+      cb(null, results)
+    })['catch'](function(error){console.log('caught', error)});
+  }
+
   Hook.remoteMethod('authorizationUrl', {
     returns: {arg: 'url', type: 'string'},
     http: {path: '/authorization-url', verb: 'get'}
@@ -36,5 +43,11 @@ module.exports = function (Hook) {
   Hook.remoteMethod('playlists', {
     returns: {arg: 'results', type: 'object'},
     http: {path: '/playlists', verb: 'get'}
+  })
+
+  Hook.remoteMethod('getPlaylist', {
+    accepts: [{arg: 'playlistID', type: 'string'}],
+    returns: {arg: 'results', type: 'object'},
+    http: {path: '/get-playlist', verb: 'get'}
   })
 }

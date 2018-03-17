@@ -38,6 +38,13 @@ module.exports = class SpotifyService {
     })
   }
 
+  getPlaylist (playlistID) {
+    // this.setCredentials()
+    return spotifyApi.getMe().then(data => {
+      return spotifyApi.getPlaylist(data.body.id, playlistID).then(data => data.body)
+    })
+  }
+
   async getPlaylists () {
     const user = await spotifyApi.getMe().then(data => data.body)
     const sampling = await spotifyApi.getUserPlaylists(user.id, {limit: 1}).then(data => data.body)

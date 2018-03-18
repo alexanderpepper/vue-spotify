@@ -16,5 +16,6 @@ export default {
   authorizationUrl: `${host}/Hooks/authorization-url`,
   setAuthorizationCode: `${host}/Hooks/set-authorization-code`,
   playlists: `${host}/Hooks/playlists`,
-  playlist: (id) => `${host}/Hooks/playlist/${id}`
+  playlist: (id) => `${host}/Hooks/playlist/${id}`,
+  accessToken: `${host}/Hooks/access-token`
 }

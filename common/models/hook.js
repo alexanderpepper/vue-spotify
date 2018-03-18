@@ -16,6 +16,10 @@ module.exports = function (Hook) {
     })
   }
 
+  Hook.accessToken = function (cb) {
+    cb(null, spotify.getAccessToken())
+  }
+
   Hook.playlists = function (cb) {
     spotify.getPlaylists().then(results => {
       cb(null, results)
@@ -32,6 +36,11 @@ module.exports = function (Hook) {
   Hook.remoteMethod('authorizationUrl', {
     returns: {arg: 'url', type: 'string'},
     http: {path: '/authorization-url', verb: 'get'}
+  })
+
+  Hook.remoteMethod('accessToken', {
+    returns: {arg: 'url', type: 'string'},
+    http: {path: '/access-token', verb: 'get'}
   })
 
   Hook.remoteMethod('setAuthorizationCode', {

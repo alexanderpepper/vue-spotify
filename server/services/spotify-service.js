@@ -1,7 +1,7 @@
 const TokenService = require('./token-service')
 const SpotifyWebApi = require('spotify-web-api-node')
 const {clientId, clientSecret, redirectUri} = require('../constants/credentials')
-const scopes = ['playlist-read-private']
+const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private']
 let spotifyApi
 const limit = 50
 
@@ -27,6 +27,10 @@ module.exports = class SpotifyService {
     }, function (err) {
       console.log('Something went wrong!', err)
     })
+  }
+
+  getAccessToken() {
+    return spotifyApi.getAccessToken()
   }
 
   refreshToken () {

@@ -7,5 +7,7 @@ install:
 deploy:
   provider: script
   script: bash ./deploy.sh production
+  on:
+    branch: master
 script:
   - echo "You did it!"

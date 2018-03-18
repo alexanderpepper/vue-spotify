@@ -16,7 +16,7 @@
     "superagent": "^3.8.2",
     "vue": "^2.5.3",
     "vue-router": "^3.0.1",
-    "vuetify": "^0.17.4"
+    "vuetify": "^1.0.8"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

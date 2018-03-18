@@ -16,15 +16,31 @@ module.exports = function (Hook) {
     })
   }
 
+  Hook.accessToken = function (cb) {
+    cb(null, spotify.getAccessToken())
+  }
+
   Hook.playlists = function (cb) {
     spotify.getPlaylists().then(results => {
       cb(null, results)
     })
   }
 
+  Hook.playlist = function (playlistID, cb) {
+    console.log("Trying to get playlist ", playlistID)
+    spotify.getPlaylist(playlistID).then(results => {
+      cb(null, results)
+    }).catch(function(error){console.log('caught', error)});
+  }
+
   Hook.remoteMethod('authorizationUrl', {
     returns: {arg: 'url', type: 'string'},
     http: {path: '/authorization-url', verb: 'get'}
+  })
+
+  Hook.remoteMethod('accessToken', {
+    returns: {arg: 'url', type: 'string'},
+    http: {path: '/access-token', verb: 'get'}
   })
 
   Hook.remoteMethod('setAuthorizationCode', {
@@ -36,5 +52,11 @@ module.exports = function (Hook) {
   Hook.remoteMethod('playlists', {
     returns: {arg: 'results', type: 'object'},
     http: {path: '/playlists', verb: 'get'}
+  })
+
+  Hook.remoteMethod('playlist', {
+    accepts: [{arg: 'playlistID', type: 'string'}],
+    returns: {arg: 'results', type: 'object'},
+    http: {path: '/playlist/:playlistID', verb: 'get'}
   })
 }

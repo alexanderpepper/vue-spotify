@@ -1,7 +1,7 @@
 const TokenService = require('./token-service')
 const SpotifyWebApi = require('spotify-web-api-node')
 const {clientId, clientSecret, redirectUri} = require('../constants/credentials')
-const scopes = ['playlist-read-private']
+const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private']
 let spotifyApi
 const limit = 50
 
@@ -29,12 +29,23 @@ module.exports = class SpotifyService {
     })
   }
 
+  getAccessToken() {
+    return spotifyApi.getAccessToken()
+  }
+
   refreshToken () {
     spotifyApi.refreshAccessToken().then(data => {
       const token = TokenService.normalize(data.body)
       spotifyApi.setAccessToken(token.accessToken)
     }).catch(err => {
       console.log('Could not refresh access token', err)
+    })
+  }
+
+  getPlaylist (playlistID) {
+    // this.setCredentials()
+    return spotifyApi.getMe().then(data => {
+      return spotifyApi.getPlaylist(data.body.id, playlistID).then(data => data.body)
     })
   }
 

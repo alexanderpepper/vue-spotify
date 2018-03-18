@@ -6,8 +6,8 @@ install:
   - sh ./install.sh
 deploy:
   provider: script
-  script: bash ./deploy.sh production
+  script: bash ./deploy.sh productions
   on:
-    branch: master
+    all_branches: true
 script:
   - echo "You did it!"

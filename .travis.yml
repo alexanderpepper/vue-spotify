@@ -4,10 +4,5 @@ node_js:
   - "8.10"
 install:
   - sh ./install.sh
-deploy:
-  provider: script
-  script: bash ./deploy.sh productions
-  on:
-    all_branches: true
 script:
   - echo "You did it!"

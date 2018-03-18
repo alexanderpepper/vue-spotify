@@ -53,7 +53,7 @@ Vue.config.productionTip = false
 
 Vue.filter('capitalize', function (value) {
   if (!value) return ''
-  return value.split([' ']).map(c => { return c[0].toUpperCase() + c.slice(1) })
+  return value.split([' ']).map(c => { return c[0].toUpperCase() + c.slice(1) }).join(' ')
 })
 
 Vue.filter('delimited', function (value) {

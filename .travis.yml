@@ -5,6 +5,7 @@ node_js:
 install:
   - sh ./install.sh
 deploy:
-  - sh ./deploy.sh production
+  provider: script
+  script: bash ./deploy.sh production
 script:
   - echo "You did it!"

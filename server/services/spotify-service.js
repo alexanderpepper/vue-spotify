@@ -56,6 +56,5 @@ module.exports = class SpotifyService {
     const pages = Array.from(Array(pageCount).keys())
     const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
     return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val)))
-
   }
 }

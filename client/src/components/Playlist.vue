@@ -20,6 +20,7 @@
 <script>
   import SpotifyService from '../services/SpotifyService'
   import WebPlaybackService from '../services/WebPlaybackService'
+  import moment from 'moment'
 
   export default {
     name: 'playlist',
@@ -43,12 +44,14 @@
       // TODO consider caching images
       this.playlist = await SpotifyService.getPlaylist(this.id)
       this.tracks = this.playlist.tracks.items.map(item => {
+        const durationMs = item.track.duration_ms
+        const duration = moment.utc(durationMs).format(durationMs > 3600000 ? 'HH:mm:ss' : 'mm:ss')
         return {
           title: item.track.name,
           artist: item.track.artists.map(a => a.name).join(', '),
           album: item.track.album.name,
           uri: item.track.uri,
-          duration: item.track.duration_ms
+          duration
         }
       })
       this.loading = false

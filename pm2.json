@@ -1,12 +1,9 @@
 {
   "apps" : [{
-    "name"        : "things",
+    "name"        : "spotify-utils",
     "script"      : "./server/server.js",
     "env": {
       "NODE_ENV": "development"
-    },
-    "env_cloud": {
-      "NODE_ENV": "cloud"
     },
     "env_staging": {
       "NODE_ENV": "staging"

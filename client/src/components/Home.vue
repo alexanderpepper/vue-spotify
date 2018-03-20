@@ -1,8 +1,8 @@
 <template lang="pug">
   .callback
-    h1 Home
+    h1 Your Playlists
     ul(v-if="results")
-      li(v-for="item in results.results", v-on:click="goToPlaylist(item)") 
+      li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
         img(v-if="item.images[0]", :src="item.images[0].url")
         div(v-else, class="no-image") No image found
         div(class="name") {{ item.name }}

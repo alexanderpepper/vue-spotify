@@ -69,13 +69,9 @@ function getPlayer () {
 }
 
 class WebPlaybackService extends BaseService {
-  static async playSong (song) {
-    const player = await getPlayer()
-
-    play({
-      playerInstance: player,
-      spotifyURI: song.track.uri
-    })
+  static async playSong (spotifyURI) {
+    const playerInstance = await getPlayer()
+    play({playerInstance, spotifyURI})
   }
 }
 

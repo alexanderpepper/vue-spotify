@@ -3,16 +3,14 @@
     h1 Home
     ul(v-if="results")
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
-        v-card
-          v-card-media(height="200px", src="item.images[0].url")
-          v-card-title
-            div {{ item.name }}
-          v-card-actions
-            v-btn(flat color="orange") Export
+        v-container(grid-list-md)
+          v-layout(row wrap)
+            v-flex
+              img(v-if="item.images[0]", :src="item.images[0].url")
+              div(v-else, class="no-image") No image found
+              div(class="name") {{ item.name }}
 
-        img(v-if="item.images[0]", :src="item.images[0].url")
-        div(v-else, class="no-image") No image found
-        div(class="name") {{ item.name }}
+
 </template>
 
 <script>
@@ -31,7 +29,7 @@
     },
     methods: {
       goToPlaylist: function (playlist) {
-        this.$router.push({name: 'playlist', params: {playlist_id: playlist.id}})
+        this.$router.push({name: 'playlist', params: {id: playlist.id}})
       }
     }
   }

@@ -45,7 +45,7 @@ export default new Router({
       component: AuthCallback
     },
     {
-      path: '/playlist/:playlist_id',
+      path: '/playlist/:id',
       name: 'playlist',
       props: true,
       component: Playlist

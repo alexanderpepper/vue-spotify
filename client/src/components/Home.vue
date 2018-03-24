@@ -3,9 +3,9 @@
     h1 Home
     ul(v-if="results")
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
-        v-container(grid-list-md)
+        v-container
           v-layout(row, wrap)
-            v-flex(xl2, lg3, md4, sm6, xs12)
+            v-flex(xs)
               img(v-if="item.images[0]", :src="item.images[0].url")
               .no-image(v-else) No image found
               .name {{ item.name }}

@@ -4,7 +4,7 @@
     ul(v-if="results")
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
         v-container(grid-list-md)
-          v-layout(row wrap)
+          v-layout(row, wrap)
             v-flex
               img(v-if="item.images[0]", :src="item.images[0].url")
               div(v-else, class="no-image") No image found

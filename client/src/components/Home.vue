@@ -4,11 +4,11 @@
     ul(v-if="results")
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
         v-container(grid-list-md)
-          v-layout(row wrap)
-            v-flex
+          v-layout(row, wrap)
+            v-flex(xl2)
               img(v-if="item.images[0]", :src="item.images[0].url")
-              div(v-else, class="no-image") No image found
-              div(class="name") {{ item.name }}
+              .no-image(v-else) No image found
+              .name {{ item.name }}
 
 
 </template>

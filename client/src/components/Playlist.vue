@@ -1,14 +1,19 @@
 <template lang="pug">
-  .playlist.pa-4
-    v-layout(row, wrap, align-center)
+  .playlist
+    v-layout.px-4.pt-4(row, wrap, align-center)
       v-flex(xs12, sm3)
-        img(v-if='playlist.images[0]', :src='playlist.images[0].url')
-        .no-image(v-else) No image found
+        img.elevation-10(v-if='playlist.images[0]', :src='playlist.images[0].url')
+        .no-image.elevation-10(v-else) No image found
       v-flex.px-4.text-sm-left.text-xs-center(xs12, sm9)
         .display-1 {{ playlist.name }}
-      v-flex(md3, offset-md9, sm6, offset-sm6, xs12)
+      v-flex.hidden-xs-only(md3, offset-md9, sm6, offset-sm6, xs12)
         v-text-field(v-model='search', placeholder='Filter tracks', append-icon='search', hide-details)
-    v-data-table(:headers='headers', :items='tracks', :loading='loading', :search='search', no-data-text='Loading playlist...', hide-actions)
+    v-list.px-2.hidden-sm-and-up(two-line)
+      v-list-tile(ripple, @click='playSong(track.uri)', v-for='(track, i) in tracks', :key='i')
+        v-list-tile-content
+          v-list-tile-title {{ track.title }}
+          v-list-tile-sub-title {{ track.artist }} • {{ track.album }}
+    v-data-table.px-4.hidden-xs-only(:headers='headers', :items='tracks', :loading='loading', :search='search', no-data-text='Loading playlist...', hide-actions)
       template(slot='items', slot-scope='props')
         tr(@click='playSong(props.item.uri)')
           td {{ props.item.title }}
@@ -66,7 +71,8 @@
 </script>
 
 <style>
-  .playlist table.datatable.table {
+  .playlist table.datatable.table,
+  .playlist .list {
     background-color: transparent;
   }
 </style>

@@ -5,7 +5,7 @@
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
         v-container
           v-layout(row, wrap)
-            v-flex(xs)
+            v-flex(xl2, lg3, md4, sm6, xs12)
               img(v-if="item.images[0]", :src="item.images[0].url")
               .no-image(v-else) No image found
               .name {{ item.name }}

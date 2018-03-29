@@ -3,9 +3,14 @@
     h1 Home
     ul(v-if="results")
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
-        img(v-if="item.images[0]", :src="item.images[0].url")
-        div(v-else, class="no-image") No image found
-        div(class="name") {{ item.name }}
+        v-container
+          v-layout(row, wrap)
+            v-flex(xl2, lg3, md4, sm6, xs12)
+              img(v-if="item.images[0]", :src="item.images[0].url")
+              .no-image(v-else) No image found
+              .name {{ item.name }}
+
+
 </template>
 
 <script>

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Landing from '@/components/Landing'
 import Home from '@/components/Home'
 import Playlist from '@/components/Playlist'
+import Devices from '@/components/Devices'
 import User from '../components/User'
 import Users from '../components/Users'
 import Password from '../components/Password'
@@ -49,6 +50,11 @@ export default new Router({
       name: 'playlist',
       props: true,
       component: Playlist
+    },
+    {
+      path: '/devices',
+      name: 'devices',
+      component: Devices
     }
   ]
 })

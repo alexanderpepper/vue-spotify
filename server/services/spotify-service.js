@@ -1,7 +1,7 @@
 const TokenService = require('./token-service')
 const SpotifyWebApi = require('spotify-web-api-node')
 const {clientId, clientSecret, redirectUri} = require('../constants/credentials')
-const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private']
+const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private', 'user-read-playback-state']
 let spotifyApi
 const limit = 50
 
@@ -42,11 +42,30 @@ module.exports = class SpotifyService {
     })
   }
 
+  play (spotifyURI) {
+    return spotifyApi.play({uris: [ spotifyURI ]})
+      .then(data => data.body)
+  }
+
+  transferPlayback (deviceID, play) {
+    let argsObject = {device_ids: [ deviceID ]}
+    argsObject.play = typeof play === 'boolean' ? play : false
+
+    console.log('Transferring playback with options object', argsObject)
+    
+    return spotifyApi.transferMyPlayback(argsObject)
+      .then(data => data.body)
+  }
+
   getPlaylist (playlistID) {
     // this.setCredentials()
     return spotifyApi.getMe().then(data => {
       return spotifyApi.getPlaylist(data.body.id, playlistID).then(data => data.body)
     })
+  }
+
+  getDevices() {
+    return spotifyApi.getMyDevices().then(data => data.body)
   }
 
   async getPlaylists () {

@@ -63,7 +63,11 @@
   import Login from './components/Login'
   import LoginService from './services/LoginService'
   import UserService from './services/UserService'
+  import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
+
+  // I'm not 100% sold that this is the right place. It seems to be the first place with service imports available.
+  WebPlaybackService.initializeWebPlaybackSDK()
 
   export default {
     components: {Login, UserPhoto},

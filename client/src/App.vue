@@ -45,6 +45,20 @@
       :current-user='user',
       :set-active-menu-item='setActiveMenuItem',
       :login='login')
+    v-footer.pa-4.elevation-4(height='64', app, fixed)
+      div
+        v-layout(row, wrap, align-center)
+          v-spacer
+          v-btn(icon)
+            v-icon skip_previous
+          v-btn(icon, outline)
+            v-icon play_arrow
+          v-btn(icon)
+            v-icon skip_next
+          v-spacer
+      div
+        v-layout(row, align-center)
+          v-slider(color='black')
     v-snackbar(
     v-model='snackbar',
     :timeout='3000',

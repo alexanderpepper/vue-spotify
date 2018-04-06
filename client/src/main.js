@@ -20,6 +20,8 @@ import {
   VCheckbox,
   VChip,
   VDataTable,
+  VFooter,
+  VSlider,
   transitions
 } from 'vuetify'
 import '../node_modules/vuetify/src/stylus/app.styl'
@@ -45,6 +47,8 @@ Vue.use(Vuetify, {
     VCheckbox,
     VChip,
     VDataTable,
+    VFooter,
+    VSlider,
     transitions
   }
 })

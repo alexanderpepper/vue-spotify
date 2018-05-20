@@ -7,13 +7,8 @@
 
   export default {
     name: 'callback',
-    data () {
-      return {
-        results: {}
-      }
-    },
-    mounted () {
-      SpotifyService.setAuthorizationCode(this.$route.query.code)
+    async mounted () {
+      await SpotifyService.setAuthorizationCode(this.$route.query.code)
       this.$router.push({name: 'home'})
     }
   }

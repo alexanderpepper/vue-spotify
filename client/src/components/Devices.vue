@@ -22,15 +22,15 @@
       // this will update every 2 seconds so that the list updates when we active more players
       // TODO move to websocket
       const updateDevices = async () => {
-        this.devices = await SpotifyService.getDevices()
-        this.devices = this.devices.devices.sort(sortByIgnoreCase)
+        this.devices = (await SpotifyService.getDevices()).devices
+        this.devices.sort(sortByIgnoreCase)
         setTimeout(updateDevices, 2000)
 
         // var array = [ "Spotify .5 Web Player", "iPad cua Mac", "Mac's iMac" ]
 
         function sortByIgnoreCase (a, b) {
-          if (a.toLowerCase < b.toLowerCase) return -1
-          if (a.toLowerCase > b.toLowerCase) return 1
+          if (a.toLowerCase() < b.toLowerCase()) return -1
+          if (a.toLowerCase() > b.toLowerCase()) return 1
           return 0
         }
       }

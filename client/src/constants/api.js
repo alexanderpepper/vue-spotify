@@ -20,5 +20,6 @@ export default {
   transferPlayback: (id, play) => `${host}/Hooks/transferPlayback/${id}/${play}`,
   play: (spotifyURI) => `${host}/Hooks/play/${spotifyURI}`,
   accessToken: `${host}/Hooks/access-token`,
-  devices: `${host}/Hooks/devices`
+  devices: `${host}/Hooks/devices`,
+  currentSpotifyUser: `${host}/Hooks/me`
 }

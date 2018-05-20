@@ -137,7 +137,6 @@
         if (!user) return
         this.user = user
         this.user.isAdmin = user.roleMappings.find(r => r.role.name === 'admin') !== undefined
-        console.log(this.user)
         this.$forceUpdate()
       },
       setActiveMenuItem (name) {

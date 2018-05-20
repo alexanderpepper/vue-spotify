@@ -1,6 +1,6 @@
 <template lang="pug">
   .callback
-    h1 Home
+    h1 Your Playlists
     v-btn(flat, large, color="primary", @click='goToPickDevice()') Pick Device
     ul(v-if="results")
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")

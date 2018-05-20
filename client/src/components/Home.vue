@@ -1,11 +1,17 @@
 <template lang="pug">
   .callback
     h1 Your Playlists
+    v-btn(flat, large, color="primary", @click='goToPickDevice()') Pick Device
     ul(v-if="results")
-      li(v-for="item in results.results", v-on:click="goToPlaylist(item)") 
-        img(v-if="item.images[0]", :src="item.images[0].url")
-        div(v-else, class="no-image") No image found
-        div(class="name") {{ item.name }}
+      li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
+        v-container
+          v-layout(row, wrap)
+            v-flex(xl2, lg3, md4, sm6, xs12)
+              img(v-if="item.images[0]", :src="item.images[0].url")
+              .no-image(v-else) No image found
+              .name {{ item.name }}
+
+
 </template>
 
 <script>
@@ -24,7 +30,10 @@
     },
     methods: {
       goToPlaylist: function (playlist) {
-        this.$router.push({name: 'playlist', params: {playlist_id: playlist.id}})
+        this.$router.push({name: 'playlist', params: {id: playlist.id}})
+      },
+      goToPickDevice () {
+        this.$router.push({name: 'devices'})
       }
     }
   }

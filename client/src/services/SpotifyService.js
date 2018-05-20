@@ -14,8 +14,23 @@ class SpotifyService extends BaseService {
     return this.GET(api.accessToken)
   }
 
+  static play (spotifyURI) {
+    return this.POST(api.play(spotifyURI)).then(response => response.results)
+  }
+
+  static transferPlayback (deviceID, play) {
+    const realPlay = typeof play === 'boolean' ? play : false
+    console.log('realPlay', realPlay, 'deviceID', deviceID)
+
+    return this.POST(api.transferPlayback(deviceID, realPlay)).then(response => response.results)
+  }
+
+  static getDevices () {
+    return this.GET(api.devices).then(response => response.results)
+  }
+
   static getPlaylist (playlistID) {
-    return this.GET(api.playlist(playlistID))
+    return this.GET(api.playlist(playlistID)).then(response => response.results)
   }
 
   static getPlaylists () {

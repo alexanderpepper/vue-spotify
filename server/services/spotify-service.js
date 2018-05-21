@@ -6,18 +6,21 @@ const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-rea
 const limit = 50
 
 module.exports = class SpotifyService {
-  getSpotifyApiForUser (userId) {
+  async getSpotifyApiForUser (userId) {
+    const appUser = await this.getUser(userId)
+    const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
+    if (appUser.spotifyUser && appUser.spotifyUser.token) {
+      spotifyApi.setAccessToken(appUser.spotifyUser.token.accessToken)
+      spotifyApi.setAccessToken(appUser.spotifyUser.token.refreshToken)
+    }
+    return spotifyApi
+  }
+
+  getUser (userId) {
     // Extra promise in here because loopback's ORM isn't fully promise compliant and doesn't work well with async/await
-    return new Promise((resolve, reject) => {
+    return new Promise(resolve => {
       app.models.AppUser.findById(userId).then(appUser => {
-        const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
-        // if (!appUser.spotifyUser || !appUser.spotifyUser.token) {
-        //   resolve(spoti)
-        //   reject(new Error(`No access token fro for user with id: ${userId}`))
-        // }
-        const accessToken = appUser.spotifyUser && appUser.spotifyUser.token && appUser.spotifyUser.token.accessToken
-        spotifyApi.setAccessToken(accessToken)
-        resolve(spotifyApi)
+        resolve(appUser)
       })
     })
   }
@@ -49,61 +52,99 @@ module.exports = class SpotifyService {
   }
 
   async getAccessToken (userId) {
-    const spotifyApi = await this.getSpotifyApiForUser(userId)
-    return spotifyApi.getAccessToken()
+    try {
+      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      return spotifyApi.getAccessToken()
+    } catch (error) {
+      console.log('Something went wrong getting access token', error)
+    }
   }
 
   async getMe (userId) {
-    const spotifyApi = await this.getSpotifyApiForUser(userId)
-    return spotifyApi.getMe().then(data => data.body)
+    try {
+      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const response = await spotifyApi.getMe().then(data => data.body)
+      return response
+    } catch (error) {
+      console.log('Something went wrong getting user spotify account', error)
+    }
   }
 
   async refreshToken (userId) {
-    const spotifyApi = await this.getSpotifyApiForUser(userId)
-    spotifyApi.refreshAccessToken().then(data => {
+    try {
+      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const data = spotifyApi.refreshAccessToken()
       const token = TokenService.normalize(data.body)
       spotifyApi.setAccessToken(token.accessToken)
-    }).catch(err => {
-      console.log('Could not refresh access token', err)
-    })
+      spotifyApi.setRefreshToken(token.refreshToken)
+      const appUser = await this.getUser(userId)
+      appUser.spotifyUser.token = token
+      // May need to find a way to wait for save to finish
+      appUser.save()
+    } catch (error) {
+      console.log('Could not refresh access token', error)
+    }
   }
 
   async play (userId, spotifyURI) {
-    const spotifyApi = await this.getSpotifyApiForUser(userId)
-    return spotifyApi.play({uris: [ spotifyURI ]})
-      .then(data => data.body)
+    try {
+      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const response = spotifyApi.play({uris: [ spotifyURI ]}).then(data => data.body)
+      return response
+    } catch (error) {
+      console.log('Something went wrong trying to play', error)
+    }
+
   }
 
   async transferPlayback (userId, deviceID, play) {
-    let argsObject = {device_ids: [ deviceID ]}
-    argsObject.play = typeof play === 'boolean' ? play : false
-
-    console.log('Transferring playback with options object', argsObject)
-
-    const spotifyApi = await this.getSpotifyApiForUser(userId)
-    return spotifyApi.transferMyPlayback(argsObject).then(data => data.body)
+    try {
+      let argsObject = {device_ids: [ deviceID ]}
+      argsObject.play = typeof play === 'boolean' ? play : false
+      console.log('Transferring playback with options object', argsObject)
+      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const response = await spotifyApi.transferMyPlayback(argsObject).then(data => data.body)
+      return response
+    } catch (error) {
+      console.log('Something went wrong transferring playback', error)
+    }
   }
 
   async getPlaylist (userId, playlistID) {
-    const spotifyApi = await this.getSpotifyApiForUser(userId)
-    // TODO: We should get the user from the database back rather than calling getMe()
-    return spotifyApi.getMe().then(data => {
-      return spotifyApi.getPlaylist(data.body.id, playlistID).then(data => data.body)
-    })
+    try {
+      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      // TODO: We should get the user from the database back rather than calling getMe()
+      const spotifyId = await spotifyApi.getMe().then(data => data.body.id)
+      const playlist = await spotifyApi.getPlaylist(spotifyId, playlistID).then(data => data.body)
+      return playlist
+    } catch (error) {
+      console.log('Something went wrong getting a playlist', error)
+    }
   }
 
   async getDevices (userId) {
-    const spotifyApi = await this.getSpotifyApiForUser(userId)
-    return spotifyApi.getMyDevices().then(data => data.body)
+    try {
+      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const devices = await spotifyApi.getMyDevices().then(data => data.body)
+      return devices
+    } catch (error) {
+      console.log('Something went wrong getting devices', error)
+    }
   }
 
   async getPlaylists (userId) {
-    const spotifyApi = await this.getSpotifyApiForUser(userId)
-    const user = await spotifyApi.getMe().then(data => data.body)
-    const sampling = await spotifyApi.getUserPlaylists(user.id, {limit: 1}).then(data => data.body)
-    const pageCount = Math.ceil(sampling.total / limit)
-    const pages = Array.from(Array(pageCount).keys())
-    const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
-    return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val)))
+    try {
+      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const user = await spotifyApi.getMe().then(data => data.body)
+      const sampling = await spotifyApi.getUserPlaylists(user.id, {limit: 1}).then(data => data.body)
+      const pageCount = Math.ceil(sampling.total / limit)
+      const pages = Array.from(Array(pageCount).keys())
+      const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
+      const playlists = Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val)))
+      return playlists
+    } catch (error) {
+      console.log('Something went wrong getting playlists', error)
+    }
+
   }
 }

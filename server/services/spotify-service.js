@@ -6,15 +6,30 @@ const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-rea
 const limit = 50
 
 module.exports = class SpotifyService {
-  async getSpotifyApiForUser (userId) {
-    const appUser = await this.getUser(userId)
-    const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
-    if (appUser.spotifyUser && appUser.spotifyUser.token) {
-      spotifyApi.setAccessToken(appUser.spotifyUser.token.accessToken)
-      spotifyApi.setAccessToken(appUser.spotifyUser.token.refreshToken)
-    }
-    return spotifyApi
+  getSpotifyApiForUser (userId) {
+    // Extra promise in here because loopback's ORM isn't fully promise compliant and doesn't work well with async/await
+    return new Promise((resolve, reject) => {
+      app.models.AppUser.findById(userId).then(appUser => {
+        const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
+        // if (!appUser.spotifyUser || !appUser.spotifyUser.token) {
+        //   resolve(spoti)
+        //   reject(new Error(`No access token fro for user with id: ${userId}`))
+        // }
+        const accessToken = appUser.spotifyUser && appUser.spotifyUser.token && appUser.spotifyUser.token.accessToken
+        spotifyApi.setAccessToken(accessToken)
+        resolve(spotifyApi)
+      })
+    })
   }
+  // async getSpotifyApiForUser (userId) {
+  //   const appUser = await this.getUser(userId)
+  //   const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
+  //   if (appUser.spotifyUser && appUser.spotifyUser.token) {
+  //     spotifyApi.setAccessToken(appUser.spotifyUser.token.accessToken)
+  //     spotifyApi.setAccessToken(appUser.spotifyUser.token.refreshToken)
+  //   }
+  //   return spotifyApi
+  // }
 
   getUser (userId) {
     // Extra promise in here because loopback's ORM isn't fully promise compliant and doesn't work well with async/await
@@ -140,8 +155,7 @@ module.exports = class SpotifyService {
       const pageCount = Math.ceil(sampling.total / limit)
       const pages = Array.from(Array(pageCount).keys())
       const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
-      const playlists = Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val)))
-      return playlists
+      return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val)))
     } catch (error) {
       console.log('Something went wrong getting playlists', error)
     }

@@ -15,8 +15,12 @@ module.exports = class SpotifyService {
         //   resolve(spoti)
         //   reject(new Error(`No access token fro for user with id: ${userId}`))
         // }
-        const accessToken = appUser.spotifyUser && appUser.spotifyUser.token && appUser.spotifyUser.token.accessToken
-        spotifyApi.setAccessToken(accessToken)
+        const token = appUser.spotifyUser && appUser.spotifyUser.token
+        if (token) {
+          console.log(`setting token :\n${JSON.stringify(token)}`)
+          spotifyApi.setAccessToken(token.accessToken)
+          spotifyApi.setRefreshToken(token.refreshToken)
+        }
         resolve(spotifyApi)
       })
     })

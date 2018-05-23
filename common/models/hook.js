@@ -57,11 +57,17 @@ module.exports = function (Hook) {
   }
 
   Hook.playlist = function (playlistID, options, cb) {
-    console.log('Trying to get playlist ', playlistID)
     const userId = options.accessToken.userId
     spotify.getPlaylist(userId, playlistID)
       .then(results => cb(null, results))
       .catch(error => console.log('caught error when trying to get playlist', error))
+  }
+
+  Hook.refreshAccessToken = function (options, cb) {
+    const userId = options.accessToken.userId
+    spotify.refreshToken(userId).then(results => {
+      cb(null, results)
+    })
   }
 
   Hook.me = function (options, cb) {
@@ -85,6 +91,12 @@ module.exports = function (Hook) {
     accepts: [{arg: 'options', type: 'object', http: 'optionsFromRequest'}],
     returns: {arg: 'url', type: 'string'},
     http: {path: '/access-token', verb: 'get'}
+  })
+
+  Hook.remoteMethod('refreshAccessToken', {
+    accepts: [{arg: 'options', type: 'object', http: 'optionsFromRequest'}],
+    returns: {arg: 'results', type: 'object'},
+    http: {path: '/refresh-access-token', verb: 'post'}
   })
 
   Hook.remoteMethod('setAuthorizationCode', {

@@ -88,16 +88,18 @@ module.exports = class SpotifyService {
   async refreshToken (userId) {
     try {
       const spotifyApi = await this.getSpotifyApiForUser(userId)
-      const data = spotifyApi.refreshAccessToken()
+      const data = await spotifyApi.refreshAccessToken()
       const token = TokenService.normalize(data.body)
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
       const appUser = await this.getUser(userId)
       appUser.spotifyUser.token = token
       // May need to find a way to wait for save to finish
-      appUser.save()
+      return new Promise(resolve => {
+        appUser.save().then(saved => resolve(saved))
+      })
     } catch (error) {
-      console.log('Could not refresh access token', error)
+      console.log('Could not refresh access token', JSON.stringify(error))
     }
   }
 
@@ -159,6 +161,5 @@ module.exports = class SpotifyService {
     } catch (error) {
       console.log('Something went wrong getting playlists', error)
     }
-
   }
 }

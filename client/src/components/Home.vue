@@ -2,6 +2,7 @@
   .callback
     h1 Your Playlists
     v-btn(flat, large, color="primary", @click='goToPickDevice()') Pick Device
+    v-btn(flat, large, color="accent", @click='refreshAccessToken') Refresh Token
     ul(v-if="results")
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
         v-container
@@ -34,6 +35,10 @@
       },
       goToPickDevice () {
         this.$router.push({name: 'devices'})
+      },
+      async refreshAccessToken () {
+        const response = await SpotifyService.refreshAccessToken()
+        console.log(response)
       }
     }
   }

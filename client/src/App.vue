@@ -18,7 +18,7 @@
         .headline.cursor-pointer(@click='$router.push("/")') Home
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
-        .title {{ user.spotifyUser.display_name }}
+        .title {{ user.spotifyUser && user.spotifyUser.display_name }}
       v-btn(flat, v-show='!user.id', @click='login') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
@@ -26,7 +26,7 @@
         v-list
           v-layout.px-3.pb-2.hidden-sm-and-up(column)
             .caption Signed in as
-            .body-2 {{ user.spotifyUser.display_name }}
+            .body-2 {{ user.spotifyUser && user.spotifyUser.display_name }}
           v-divider.hidden-sm-and-up
           v-list-tile(@click='$router.push({ name: "user", params: { id: user.id, editProfile: true } })', ripple)
             v-list-tile-title Edit Profile

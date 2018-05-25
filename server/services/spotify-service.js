@@ -1,87 +1,54 @@
 const TokenService = require('./token-service')
 const SpotifyWebApi = require('spotify-web-api-node')
-const app = require('../server')
 const {clientId, clientSecret, redirectUri} = require('../constants/credentials')
 const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private', 'user-read-playback-state']
 const limit = 50
 
 module.exports = class SpotifyService {
-  getSpotifyApiForUser (userId) {
-    // Extra promise in here because loopback's ORM isn't fully promise compliant and doesn't work well with async/await
-    return new Promise((resolve, reject) => {
-      app.models.AppUser.findById(userId).then(appUser => {
-        const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
-        // if (!appUser.spotifyUser || !appUser.spotifyUser.token) {
-        //   resolve(spoti)
-        //   reject(new Error(`No access token fro for user with id: ${userId}`))
-        // }
-        const token = appUser.spotifyUser && appUser.spotifyUser.token
-        if (token) {
-          console.log(`setting token :\n${JSON.stringify(token)}`)
-          spotifyApi.setAccessToken(token.accessToken)
-          spotifyApi.setRefreshToken(token.refreshToken)
-        }
-        resolve(spotifyApi)
-      })
-    })
-  }
-  // async getSpotifyApiForUser (userId) {
-  //   const appUser = await this.getUser(userId)
-  //   const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
-  //   if (appUser.spotifyUser && appUser.spotifyUser.token) {
-  //     spotifyApi.setAccessToken(appUser.spotifyUser.token.accessToken)
-  //     spotifyApi.setAccessToken(appUser.spotifyUser.token.refreshToken)
-  //   }
-  //   return spotifyApi
-  // }
-
-  getUser (userId) {
-    // Extra promise in here because loopback's ORM isn't fully promise compliant and doesn't work well with async/await
-    return new Promise(resolve => {
-      app.models.AppUser.findById(userId).then(appUser => {
-        resolve(appUser)
-      })
-    })
+  getSpotifyApi (user) {
+    const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
+    const token = user && user.spotifyUser && user.spotifyUser.token
+    if (token) {
+      spotifyApi.setAccessToken(token.accessToken)
+      spotifyApi.setRefreshToken(token.refreshToken)
+    }
+    return spotifyApi
   }
 
   getAuthorizationUrl () {
     return new SpotifyWebApi({clientId, redirectUri}).createAuthorizeURL(scopes, 'some-state-of-my-choice')
   }
 
-  async setAuthorizationCode (userId, code) {
+  async setAuthorizationCode (user, code) {
     try {
       const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
       const tokenResponse = await spotifyApi.authorizationCodeGrant(code)
-      const token = TokenService.normalize(tokenResponse.body)
+      const token = TokenService.create(tokenResponse.body)
 
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
       const spotifyUser = await spotifyApi.getMe().then(data => data.body)
-      spotifyUser.token = token
-
+      user.spotifyUser = {...spotifyUser, token}
       return new Promise(resolve => {
-        app.models.AppUser.findById(userId).then(appUser => {
-          appUser.spotifyUser = spotifyUser
-          appUser.save().then(() => resolve())
-        })
+        user.save().then(() => resolve())
       })
     } catch (error) {
       console.log('Something went wrong!', error)
     }
   }
 
-  async getAccessToken (userId) {
+  async getAccessToken (user) {
     try {
-      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const spotifyApi = this.getSpotifyApi(user)
       return spotifyApi.getAccessToken()
     } catch (error) {
       console.log('Something went wrong getting access token', error)
     }
   }
 
-  async getMe (userId) {
+  async getMe (user) {
     try {
-      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const spotifyApi = this.getSpotifyApi(user)
       const response = await spotifyApi.getMe().then(data => data.body)
       return response
     } catch (error) {
@@ -89,41 +56,37 @@ module.exports = class SpotifyService {
     }
   }
 
-  async refreshToken (userId) {
+  async refreshToken (user) {
     try {
-      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const spotifyApi = this.getSpotifyApi(user)
       const data = await spotifyApi.refreshAccessToken()
-      const token = TokenService.normalize(data.body)
-      spotifyApi.setAccessToken(token.accessToken)
-      spotifyApi.setRefreshToken(token.refreshToken)
-      const appUser = await this.getUser(userId)
-      appUser.spotifyUser.token = token
-      // May need to find a way to wait for save to finish
+      const token = TokenService.create(data.body)
+      // spotifyApi.setAccessToken(token.accessToken)
+      // spotifyApi.setRefreshToken(token.refreshToken)
+      user.spotifyUser.token = token
       return new Promise(resolve => {
-        appUser.save().then(saved => resolve(saved))
+        user.save().then(() => resolve())
       })
     } catch (error) {
       console.log('Could not refresh access token', JSON.stringify(error))
     }
   }
 
-  async play (userId, spotifyURI) {
+  async play (user, spotifyURI) {
     try {
-      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const spotifyApi = this.getSpotifyApi(user)
       const response = spotifyApi.play({uris: [ spotifyURI ]}).then(data => data.body)
       return response
     } catch (error) {
       console.log('Something went wrong trying to play', error)
     }
-
   }
 
-  async transferPlayback (userId, deviceID, play) {
+  async transferPlayback (user, deviceID, play) {
     try {
       let argsObject = {device_ids: [ deviceID ]}
       argsObject.play = typeof play === 'boolean' ? play : false
-      console.log('Transferring playback with options object', argsObject)
-      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const spotifyApi = this.getSpotifyApi(user)
       const response = await spotifyApi.transferMyPlayback(argsObject).then(data => data.body)
       return response
     } catch (error) {
@@ -131,21 +94,19 @@ module.exports = class SpotifyService {
     }
   }
 
-  async getPlaylist (userId, playlistID) {
+  async getPlaylist (user, playlistID) {
     try {
-      const spotifyApi = await this.getSpotifyApiForUser(userId)
-      // TODO: We should get the user from the database back rather than calling getMe()
-      const spotifyId = await spotifyApi.getMe().then(data => data.body.id)
-      const playlist = await spotifyApi.getPlaylist(spotifyId, playlistID).then(data => data.body)
+      const spotifyApi = this.getSpotifyApi(user)
+      const playlist = await spotifyApi.getPlaylist(user.spotifyUser.id, playlistID).then(data => data.body)
       return playlist
     } catch (error) {
       console.log('Something went wrong getting a playlist', error)
     }
   }
 
-  async getDevices (userId) {
+  async getDevices (user) {
     try {
-      const spotifyApi = await this.getSpotifyApiForUser(userId)
+      const spotifyApi = this.getSpotifyApi(user)
       const devices = await spotifyApi.getMyDevices().then(data => data.body)
       return devices
     } catch (error) {
@@ -153,14 +114,13 @@ module.exports = class SpotifyService {
     }
   }
 
-  async getPlaylists (userId) {
+  async getPlaylists (user) {
     try {
-      const spotifyApi = await this.getSpotifyApiForUser(userId)
-      const user = await spotifyApi.getMe().then(data => data.body)
-      const sampling = await spotifyApi.getUserPlaylists(user.id, {limit: 1}).then(data => data.body)
+      const spotifyApi = this.getSpotifyApi(user)
+      const sampling = await spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit: 1}).then(data => data.body)
       const pageCount = Math.ceil(sampling.total / limit)
       const pages = Array.from(Array(pageCount).keys())
-      const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
+      const promises = pages.map(p => spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit, offset: p * limit}).then(data => data.body.items))
       return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val)))
     } catch (error) {
       console.log('Something went wrong getting playlists', error)

@@ -1,78 +1,84 @@
 'use strict'
 
+const moment = require('moment')
 const SpotifyService = require('../../server/services/spotify-service')
 const spotify = new SpotifyService()
 
 module.exports = function (Hook) {
+  Hook.beforeRemote('*', (ctx, unused, next) => {
+    if (!ctx.args.options || !ctx.args.options.accessToken) {
+      return next()
+    }
+    const AppUser = Hook.app.models.AppUser
+    AppUser.findById(ctx.args.options.accessToken.userId, (err, user) => {
+      if (err) return next(err)
+      ctx.args.options.user = user
+      if (user.spotifyUser && moment().isSameOrAfter(user.spotifyUser.token.expirationDate)) {
+        spotify.refreshToken(user).then(() => next())
+      } else {
+        next()
+      }
+    })
+  })
+
   Hook.authorizationUrl = function (cb) {
     cb(null, spotify.getAuthorizationUrl())
   }
 
   Hook.setAuthorizationCode = function (code, options, cb) {
-    const userId = options.accessToken.userId
-    spotify.setAuthorizationCode(userId, code)
+    spotify.setAuthorizationCode(options.user, code)
       .then(results => cb(null, results))
       .catch(error => console.log('Got error!', error))
   }
 
   Hook.accessToken = function (options, cb) {
-    if (!options.accessToken) {
+    if (!options.user) {
       cb(null, '')
       return
     }
-    const userId = options.accessToken.userId
-    spotify.getAccessToken(userId)
+    spotify.getAccessToken(options.user)
       .then(token => cb(null, token))
       .catch(error => console.log('Got error!', error))
   }
 
   Hook.devices = function (options, cb) {
-    const userId = options.accessToken.userId
-    spotify.getDevices(userId)
+    spotify.getDevices(options.user)
       .then(results => cb(null, results))
       .catch(error => console.log('Got error!', error))
   }
 
   Hook.transferPlayback = function (deviceID, play, options, cb) {
-    console.log('Trying to transfer playback to device', deviceID)
-    const userId = options.accessToken.userId
-    spotify.transferPlayback(userId, deviceID, play)
+    spotify.transferPlayback(options.user, deviceID, play)
       .then(results => cb(null, results))
       .catch(error => console.log('caught error when trying to transfer playback.', error))
   }
 
   Hook.play = function (spotifyURI, options, cb) {
-    console.log('Trying to play', spotifyURI)
-    const userId = options.accessToken.userId
-    spotify.play(userId, spotifyURI)
+    spotify.play(options.user, spotifyURI)
       .then(results => cb(null, results))
       .catch(error => console.log('caught error when trying to play song', error))
   }
 
   Hook.playlists = function (options, cb) {
-    const userId = options.accessToken.userId
-    spotify.getPlaylists(userId).then(results => {
+    spotify.getPlaylists(options.user).then(results => {
       cb(null, results)
     })
   }
 
   Hook.playlist = function (playlistID, options, cb) {
-    const userId = options.accessToken.userId
-    spotify.getPlaylist(userId, playlistID)
+    spotify.getPlaylist(options.user, playlistID)
       .then(results => cb(null, results))
       .catch(error => console.log('caught error when trying to get playlist', error))
   }
 
   Hook.refreshAccessToken = function (options, cb) {
-    const userId = options.accessToken.userId
-    spotify.refreshToken(userId).then(results => {
-      cb(null, results)
-    })
+    spotify.refreshToken(options.user)
+      .then(results => cb(null, results))
+      .catch(error => console.log('caught error when trying to refresh token', error))
   }
 
   Hook.me = function (options, cb) {
-    const userId = options.accessToken.userId
-    spotify.getMe(userId)
+    spotify.getMe(options.user)
       .then(results => cb(null, results))
       .catch(error => console.log('caught error getting current user', error))
   }

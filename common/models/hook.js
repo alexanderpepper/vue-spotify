@@ -14,7 +14,10 @@ module.exports = function (Hook) {
       if (err) return next(err)
       ctx.args.options.user = user
       if (user.spotifyUser && moment().isSameOrAfter(user.spotifyUser.token.expirationDate)) {
-        spotify.refreshToken(user).then(() => next())
+        spotify.refreshToken(user).then(refreshedTokenUser => {
+          ctx.args.options.user = refreshedTokenUser
+          next()
+        })
       } else {
         next()
       }

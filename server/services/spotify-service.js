@@ -64,7 +64,7 @@ module.exports = class SpotifyService {
       const data = await spotifyApi.refreshAccessToken()
       const token = TokenService.create(data.body)
       user.spotifyUser.token = token
-      console.log(`setting new token for ${user.email}: ${token.accessToken}`)``
+      console.log(`setting new token for ${user.email}: ${token.accessToken}`)
       return new Promise(resolve => {
         user.save().then(saved => resolve(saved))
       })

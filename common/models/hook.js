@@ -11,7 +11,9 @@ module.exports = function (Hook) {
     }
     const AppUser = Hook.app.models.AppUser
     AppUser.findById(ctx.args.options.accessToken.userId, (err, user) => {
-      if (err) return next(err)
+      if (err) {
+        return next(err)
+      }
       ctx.args.options.user = user
       if (user.spotifyUser && moment().isSameOrAfter(user.spotifyUser.token.expirationDate)) {
         spotify.refreshToken(user).then(refreshedTokenUser => {

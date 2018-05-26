@@ -24,11 +24,12 @@ module.exports = class SpotifyService {
       const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
       const tokenResponse = await spotifyApi.authorizationCodeGrant(code)
       const token = TokenService.create(tokenResponse.body)
-
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
+
       const spotifyUser = await spotifyApi.getMe().then(data => data.body)
       user.spotifyUser = {...spotifyUser, token}
+
       return new Promise(resolve => {
         user.save().then(() => resolve())
       })
@@ -62,6 +63,7 @@ module.exports = class SpotifyService {
       const data = await spotifyApi.refreshAccessToken()
       const token = TokenService.create(data.body)
       user.spotifyUser.token = token
+
       return new Promise(resolve => {
         user.save().then(saved => resolve(saved))
       })

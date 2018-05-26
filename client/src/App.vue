@@ -178,48 +178,8 @@
     text-decoration: none;
   }
 
-  /** DELETE ME **/
-
-  textarea {
-    resize: none;
-  }
-
   .display-none {
     display: none;
-  }
-
-  .uppercase {
-    text-transform: uppercase;
-  }
-
-  .cursor-pointer {
-    cursor: pointer !important;
-  }
-
-  .pointer-events-none {
-    pointer-events: none;
-  }
-
-  .text-shadow {
-    text-shadow: 1px 1px 2px black;
-  }
-
-  .tighten-line-height {
-    line-height: 1.1 !important;
-  }
-
-  .app-toolbar .toolbar__content {
-    max-width: 1280px;
-    margin: 0 auto !important;
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  .mx-auto {
-    margin-left: auto !important;
-    margin-right: auto !important;
   }
 </style>
 

@@ -116,7 +116,13 @@ module.exports = class SpotifyService {
   }
 
   async getPlaylists (user) {
+    if (!user) {
+      console.log('()()()()()()()()()()()()()()')
+    }
     try {
+      if (!user) {
+        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+      }
       const spotifyApi = this.getSpotifyApi(user)
       const sampling = await spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit: 1}).then(data => data.body)
       const pageCount = Math.ceil(sampling.total / limit)

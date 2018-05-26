@@ -9,6 +9,7 @@ module.exports = class SpotifyService {
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
     const token = user && user.spotifyUser && user.spotifyUser.token
     if (token) {
+      console.log(`using token for ${user.email}: ${token.accessToken}`)``
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
     }
@@ -63,7 +64,7 @@ module.exports = class SpotifyService {
       const data = await spotifyApi.refreshAccessToken()
       const token = TokenService.create(data.body)
       user.spotifyUser.token = token
-
+      console.log(`setting new token for ${user.email}: ${token.accessToken}`)``
       return new Promise(resolve => {
         user.save().then(saved => resolve(saved))
       })

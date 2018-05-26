@@ -26,11 +26,39 @@ module.exports = function (Hook) {
     })
   }
 
+  Hook.devices = function (cb) {
+    spotify.getDevices().then(results => {
+      cb(null, results)
+    }).catch(error => {
+      console.log('Got error!', error);
+    })
+  }
+
+  Hook.transferPlayback = function (deviceID, play, cb) {
+    console.log("Trying to transfer playback to device", deviceID)
+    spotify.transferPlayback(deviceID, play).then(results => {
+      cb(null, results)
+    }).catch(error => {
+      console.log('caught error when trying to transfer playback.', error)
+    });
+  }
+
+  Hook.play = function (spotifyURI, cb) {
+    console.log("Trying to play", spotifyURI)
+    spotify.play(spotifyURI).then(results => {
+      cb(null, results)
+    }).catch(error => {
+      console.log('caught error when trying to play song', error)
+    });
+  }
+
   Hook.playlist = function (playlistID, cb) {
     console.log("Trying to get playlist ", playlistID)
     spotify.getPlaylist(playlistID).then(results => {
       cb(null, results)
-    }).catch(function(error){console.log('caught', error)});
+    }).catch(error => {
+      console.log('caught error when trying to get playlist', error)
+    });
   }
 
   Hook.remoteMethod('authorizationUrl', {
@@ -49,6 +77,11 @@ module.exports = function (Hook) {
     http: {path: '/set-authorization-code', verb: 'post'}
   })
 
+  Hook.remoteMethod('devices', {
+    returns: {arg: 'results', type: 'object'},
+    http: {path: '/devices', verb: 'get'}
+  })
+
   Hook.remoteMethod('playlists', {
     returns: {arg: 'results', type: 'object'},
     http: {path: '/playlists', verb: 'get'}
@@ -58,5 +91,17 @@ module.exports = function (Hook) {
     accepts: [{arg: 'playlistID', type: 'string'}],
     returns: {arg: 'results', type: 'object'},
     http: {path: '/playlist/:playlistID', verb: 'get'}
+  })
+
+  Hook.remoteMethod('transferPlayback', {
+    accepts: [{arg: 'deviceID', type: 'string'}, {arg: 'play', type: 'boolean'}],
+    returns: {arg: 'results', type: 'object'},
+    http: {path: '/transferPlayback/:deviceID/:play', verb: 'post'}
+  })
+
+  Hook.remoteMethod('play', {
+    accepts: [{arg: 'spotifyURI', type: 'string'}],
+    returns: {arg: 'results', type: 'object'},
+    http: {path: '/play/:spotifyURI', verb: 'post'}
   })
 }

@@ -17,5 +17,8 @@ export default {
   setAuthorizationCode: `${host}/Hooks/set-authorization-code`,
   playlists: `${host}/Hooks/playlists`,
   playlist: (id) => `${host}/Hooks/playlist/${id}`,
-  accessToken: `${host}/Hooks/access-token`
+  transferPlayback: (id, play) => `${host}/Hooks/transferPlayback/${id}/${play}`,
+  play: (spotifyURI) => `${host}/Hooks/play/${spotifyURI}`,
+  accessToken: `${host}/Hooks/access-token`,
+  devices: `${host}/Hooks/devices`
 }

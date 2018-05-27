@@ -45,20 +45,7 @@
       :current-user='user',
       :set-active-menu-item='setActiveMenuItem',
       :login='login')
-    v-footer.pa-4.elevation-4(height='64', app, fixed)
-      div
-        v-layout(row, wrap, align-center)
-          v-spacer
-          v-btn(icon)
-            v-icon skip_previous
-          v-btn(icon, outline)
-            v-icon play_arrow
-          v-btn(icon)
-            v-icon skip_next
-          v-spacer
-      div
-        v-layout(row, align-center)
-          v-slider(color='black')
+    play-controls
     v-snackbar(
     v-model='snackbar',
     :timeout='3000',
@@ -79,12 +66,13 @@
   import UserService from './services/UserService'
   import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
+  import PlayControls from './components/PlayControls'
 
   // I'm not 100% sold that this is the right place. It seems to be the first place with service imports available.
   WebPlaybackService.initializeWebPlaybackSDK()
 
   export default {
-    components: {Login, UserPhoto},
+    components: {Login, UserPhoto, PlayControls},
     data () {
       return {
         showLogin: false,

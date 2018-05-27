@@ -1,11 +1,10 @@
 <template lang="pug">
-  .devices
+  v-card.devices
     v-list(v-if='devices.length > 0')
       v-list-tile(ripple, @click='selectDevice(device.id)', v-for='(device, index) in devices', :key='index')
         v-list-tile-content
           v-list-tile-title {{ device.name }}
     .empty(v-else) No devices found :(
-    v-btn(flat, large, color="primary", @click='goBack()') Back
 </template>
 
 <script>
@@ -29,8 +28,8 @@
         // var array = [ "Spotify .5 Web Player", "iPad cua Mac", "Mac's iMac" ]
 
         function sortByIgnoreCase (a, b) {
-          if (a.toLowerCase < b.toLowerCase) return -1
-          if (a.toLowerCase > b.toLowerCase) return 1
+          if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
+          if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
           return 0
         }
       }
@@ -41,9 +40,6 @@
       selectDevice: function (deviceID) {
         console.log('switching to', deviceID)
         SpotifyService.transferPlayback(deviceID, true)
-      },
-      goBack: function () {
-        this.$router.go(-1)
       }
     }
   }
@@ -53,20 +49,5 @@
   .playlist table.datatable.table,
   .playlist .list {
     background-color: transparent;
-  }
-</style>
-
-<style scoped>
-  img {
-    width: 100%
-  }
-
-  .no-image {
-    width: 100%;
-    height: 100%;
-    background-color: #c0ffee;
-    line-height:240px;
-    vertical-align: middle;
-    text-align: center;
   }
 </style>

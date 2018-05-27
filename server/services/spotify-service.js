@@ -9,7 +9,7 @@ module.exports = class SpotifyService {
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
     const token = user && user.spotifyUser && user.spotifyUser.token
     if (token) {
-      console.log(`using token for ${user.email}: ${token.accessToken}`)
+      // console.log(`using token for ${user.email}: ${token.accessToken}`)
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
     }
@@ -39,6 +39,24 @@ module.exports = class SpotifyService {
     }
   }
 
+  async refreshToken (user) {
+    try {
+      const spotifyApi = this.getSpotifyApi(user)
+      const data = await spotifyApi.refreshAccessToken()
+      const token = TokenService.create(data.body)
+      user.spotifyUser.token.accessToken = token.accessToken
+      user.spotifyUser.token.expirationDate = token.expirationDate
+      if (token.refreshToken) {
+        user.spotifyUser.token.refreshToken = token.refreshToken
+      }
+      return new Promise(resolve => {
+        user.save().then(saved => resolve(saved))
+      })
+    } catch (error) {
+      console.log('Could not refresh access token', JSON.stringify(error))
+    }
+  }
+
   async getAccessToken (user) {
     try {
       const spotifyApi = this.getSpotifyApi(user)
@@ -55,21 +73,6 @@ module.exports = class SpotifyService {
       return response
     } catch (error) {
       console.log('Something went wrong getting user spotify account', error)
-    }
-  }
-
-  async refreshToken (user) {
-    try {
-      const spotifyApi = this.getSpotifyApi(user)
-      const data = await spotifyApi.refreshAccessToken()
-      const token = TokenService.create(data.body)
-      user.spotifyUser.token = token
-      console.log(`setting new token for ${user.email}: ${token.accessToken}`)
-      return new Promise(resolve => {
-        user.save().then(saved => resolve(saved))
-      })
-    } catch (error) {
-      console.log('Could not refresh access token', JSON.stringify(error))
     }
   }
 
@@ -116,13 +119,7 @@ module.exports = class SpotifyService {
   }
 
   async getPlaylists (user) {
-    if (!user) {
-      console.log('()()()()()()()()()()()()()()')
-    }
     try {
-      if (!user) {
-        console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-      }
       const spotifyApi = this.getSpotifyApi(user)
       const sampling = await spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit: 1}).then(data => data.body)
       const pageCount = Math.ceil(sampling.total / limit)

@@ -4,7 +4,7 @@ module.exports = class TokenService {
     const accessToken = token['access_token']
     const refreshToken = token['refresh_token']
     const expiresIn = token['expires_in']
-    const expirationDate = moment().add(expiresIn * 0.8, 'seconds').toDate()
+    const expirationDate = moment().add(expiresIn * 0.9, 'seconds').toDate()
     return { expirationDate, accessToken, refreshToken }
   }
 }

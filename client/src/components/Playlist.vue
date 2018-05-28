@@ -1,7 +1,6 @@
 <template lang="pug">
   .playlist
     v-btn(flat, large, color="primary", @click='goBack()') Back
-    v-btn(flat, large, color="primary", @click='goToPickDevice()') Pick Device
     v-layout.px-4.pt-4(row, wrap, align-center)
       v-flex(xs12, sm3)
         img.elevation-10(v-if='playlist.images[0]', :src='playlist.images[0].url')
@@ -66,9 +65,6 @@
       playSong: async function (uri) {
         console.log('Trying to play', uri)
         SpotifyService.play(uri)
-      },
-      goToPickDevice () {
-        this.$router.push({name: 'devices'})
       },
       goBack: function () {
         this.$router.go(-1)

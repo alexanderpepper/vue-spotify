@@ -8,6 +8,32 @@
 </template>
 
 <script>
+  /*
+  {
+  "devices" : [ {
+    "id" : "b46689a4cd5",
+    "is_active" : true,
+    "is_restricted" : false,
+    "name" : "Your MacBook",
+    "type" : "Computer",
+    "volume_percent" : 70
+  }, {
+    "id" : "0d184899bc8",
+    "is_active" : false,
+    "is_restricted" : false,
+    "name" : "Living Room",
+    "type" : "TV",
+    "volume_percent" : 25
+  }, {
+    "id" : "2f3c360198ede6",
+    "is_active" : false,
+    "is_restricted" : false,
+    "name" : "Office Speaker",
+    "type" : "Unknown",
+    "volume_percent" : 82
+  } ]
+}
+   */
   import SpotifyService from '../services/SpotifyService'
 
   export default {

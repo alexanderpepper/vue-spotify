@@ -39,25 +39,12 @@
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
     v-content
-      router-view.router-view.mx-auto(
-      :show-snackbar='showSnackbar',
-      :set-title='setTitle',
-      :current-user='user',
-      :set-active-menu-item='setActiveMenuItem',
-      :login='login')
-    play-controls
-    v-snackbar(
-    v-model='snackbar',
-    :timeout='3000',
-    :bottom='true',
-    :color='snackbarStyle') {{ snackbarMessage }}
+      router-view.router-view.mx-auto( :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
+    play-controls(:player='player', :player-state='playerState')
+    v-snackbar( v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
-      login(
-      :create-account='createAccount',
-      :login-success='loginSuccess',
-      :show-snackbar='showSnackbar',
-      :cancel='() => { showLogin = false }')
+      login(:create-account='createAccount', :login-success='loginSuccess', :show-snackbar='showSnackbar', :cancel='() => { showLogin = false }')
 </template>
 
 <script>
@@ -67,9 +54,7 @@
   import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
   import PlayControls from './components/PlayControls'
-
-  // I'm not 100% sold that this is the right place. It seems to be the first place with service imports available.
-  WebPlaybackService.initializeWebPlaybackSDK()
+  import moment from 'moment'
 
   export default {
     components: {Login, UserPhoto, PlayControls},
@@ -87,8 +72,44 @@
         snackbar: false,
         snackbarMessage: '',
         snackbarStyle: '',
-        activeMenuItem: ''
+        activeMenuItem: '',
+        player: null,
+        playerState: {
+          paused: true,
+          repeat: false,
+          shuffle: false,
+          position: 0,
+          track: 'Track Name',
+          artist: 'Artist Name',
+          images: [{}],
+          elapsed: '00:00',
+          duration: '00:00',
+          durationMs: 0,
+          volume: 50
+        }
       }
+    },
+    beforeCreate () {
+      WebPlaybackService.getPlayer().then(player => {
+        this.player = player
+        setInterval(() => {
+          this.player.getCurrentState().then(state => {
+            this.playerState = {
+              paused: state.paused,
+              position: (state.position / state.duration) * 100,
+              shuffle: state.shuffle,
+              repeat: state.repeatMode === 0,
+              track: state.track_window.current_track.name,
+              artist: state.track_window.current_track.artists[0].name,
+              images: state.track_window.current_track.album.images,
+              elapsed: moment.utc(state.position).format(state.duration > 3600000 ? 'HH:mm:ss' : 'mm:ss'),
+              duration: moment.utc(state.duration).format(state.duration > 3600000 ? 'HH:mm:ss' : 'mm:ss'),
+              durationMs: state.duration,
+              volume: this.playerState.volume
+            }
+          })
+        }, 1000)
+      })
     },
     created () {
       this.getUserInfo()
@@ -160,6 +181,25 @@
 
 <style>
 
+  body {
+    padding-bottom: 80px;
+  }
+
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .vertical-center {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .vertical-center-container {
+    display: table;
+  }
+
   .greyed-out::after {
     content: '';
     position: absolute;
@@ -224,7 +264,6 @@
 </style>
 
 <style scoped>
-
   .router-view {
     max-width: 1280px;
   }

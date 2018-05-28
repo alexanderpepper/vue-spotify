@@ -1,7 +1,6 @@
 <template lang="pug">
   .callback
     h1 Your Playlists
-    v-btn(flat, large, color="primary", @click='goToPickDevice()') Pick Device
     ul(v-if="results")
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
         v-container
@@ -31,9 +30,6 @@
     methods: {
       goToPlaylist: function (playlist) {
         this.$router.push({name: 'playlist', params: {id: playlist.id}})
-      },
-      goToPickDevice () {
-        this.$router.push({name: 'devices'})
       }
     }
   }

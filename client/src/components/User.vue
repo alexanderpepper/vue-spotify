@@ -10,7 +10,6 @@
             user-photo.mx-auto(size='large', :user='user')
             upload-button.d-block(:selected-callback='photoSelected', title='Upload New Photo', :loading='uploadingPhoto')
           v-text-field(label='Email', v-model='user.email', required, @blur='populateFullName')
-          v-text-field(label='Name', v-model='user.name', required)
           v-text-field(label='Password', v-model='user.password', v-if='newRegistration || !user.id', type='password', required)
           v-text-field(label='Confirm Password', v-model='confirmPassword', v-if='newRegistration || !user.id', type='password', required)
           v-checkbox(label='Activated', v-model='user.activated', v-if='currentUser.isAdmin')
@@ -25,6 +24,7 @@
                   v-list-tile-title {{ role.name | capitalize }}
     v-layout.my-2(row)
       v-btn(flat, :router='true', :to='{ name: "users" }', v-if='currentUser.isAdmin') Go Back
+      v-btn(@click='deleteSpotifyData') Delete Spotify Data
       v-dialog(v-show='user.id && !editProfile && currentUser.isAdmin', v-model='showDeleteDialog', width='300')
         v-btn(slot='activator') Delete User
         v-card
@@ -75,6 +75,11 @@
       }
     },
     methods: {
+      async deleteSpotifyData () {
+        this.user.spotifyUser = null
+        await UserService.save(this.user)
+        this.$router.push({name: 'landing'})
+      },
       isValid () {
         if (this.user.id) {
           return this.user.email && this.user.name

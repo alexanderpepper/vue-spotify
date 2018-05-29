@@ -13,7 +13,7 @@ import {
   VToolbar,
   VMenu,
   VDivider,
-  VSnackBar,
+  VSnackbar,
   VTextField,
   VCard,
   VDialog,
@@ -27,6 +27,8 @@ import '../node_modules/vuetify/src/stylus/app.styl'
 import App from './App'
 import router from './router'
 
+import { Ripple } from 'vuetify/es5/directives'
+
 Vue.use(Vuetify, {
   components: {
     VApp,
@@ -38,7 +40,7 @@ Vue.use(Vuetify, {
     VToolbar,
     VMenu,
     VDivider,
-    VSnackBar,
+    VSnackbar,
     VTextField,
     VCard,
     VDialog,
@@ -46,6 +48,9 @@ Vue.use(Vuetify, {
     VChip,
     VDataTable,
     transitions
+  },
+  directives: {
+    Ripple
   }
 })
 

@@ -78,7 +78,7 @@
           repeat: false,
           shuffle: false,
           position: 0,
-          track: 'Track Name',
+          track: 'Track Namezzzzzzzz',
           artist: 'Artist Name',
           images: [{}],
           elapsed: '00:00',
@@ -180,6 +180,12 @@
 <style>
   body {
     padding-bottom: 80px;
+  }
+
+  @media (max-width: 599px) {
+    body {
+      padding-bottom: 44px;
+    }
   }
 
   .truncate {

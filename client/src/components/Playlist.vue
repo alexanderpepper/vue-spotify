@@ -1,5 +1,5 @@
 <template lang="pug">
-  .playlist
+  .playlist.pb-4
     v-btn(flat, large, color="primary", @click='goBack()') Back
     v-layout.px-4.pt-4(row, wrap, align-center)
       v-flex(xs12, sm3)

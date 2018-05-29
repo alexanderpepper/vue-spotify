@@ -12,13 +12,13 @@
             v-icon(v-html='item.icon', :class='{ "grey--text": !isActiveMenuItem(item), "text--darken-2": !isActiveMenuItem(item) }')
           v-list-tile-content
             v-list-tile-title(v-text='item.title', :class='{"grey--text": !isActiveMenuItem(item), "text--darken-1": !isActiveMenuItem(item) }')
-    v-toolbar.app-toolbar(app, fixed, clipped-left)
+    v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
       v-toolbar-side-icon(@click.stop='drawer = !drawer', v-if='user.isAdmin')
       v-toolbar-title.mr-3
         .headline.cursor-pointer(@click='$router.push("/")') Home
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
-        .subheader {{ user.name }}
+        .title {{ user.spotifyUser && user.spotifyUser.display_name }}
       v-btn(flat, v-show='!user.id', @click='login') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
@@ -26,8 +26,7 @@
         v-list
           v-layout.px-3.pb-2.hidden-sm-and-up(column)
             .caption Signed in as
-            .body-2 {{ user.name }}
-            .caption.grey--text.toolbar-points {{ user.points | delimited }} Points
+            .body-2 {{ user.spotifyUser && user.spotifyUser.display_name }}
           v-divider.hidden-sm-and-up
           v-list-tile(@click='$router.push({ name: "user", params: { id: user.id, editProfile: true } })', ripple)
             v-list-tile-title Edit Profile
@@ -68,7 +67,7 @@
         ],
         miniVariant: false,
         title: 'Crowd Source',
-        user: {id: 0},
+        user: {id: 0, spotifyUser: {}},
         snackbar: false,
         snackbarMessage: '',
         snackbarStyle: '',
@@ -160,7 +159,6 @@
         if (!user) return
         this.user = user
         this.user.isAdmin = user.roleMappings.find(r => r.role.name === 'admin') !== undefined
-        console.log(this.user)
         this.$forceUpdate()
       },
       setActiveMenuItem (name) {
@@ -180,7 +178,6 @@
 </script>
 
 <style>
-
   body {
     padding-bottom: 80px;
   }
@@ -200,16 +197,6 @@
     display: table;
   }
 
-  .greyed-out::after {
-    content: '';
-    position: absolute;
-    background-color: rgba(255,255,255,.75);
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
-
   .theme--light input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px white inset !important;
     -webkit-text-fill-color: rgba(0, 0, 0, 0.87) !important;
@@ -224,58 +211,15 @@
     resize: none;
   }
 
-  .display-none {
-    display: none;
-  }
-
-  .uppercase {
-    text-transform: uppercase;
-  }
-
   .cursor-pointer {
     cursor: pointer !important;
-  }
-
-  .pointer-events-none {
-    pointer-events: none;
-  }
-
-  .text-shadow {
-    text-shadow: 1px 1px 2px black;
-  }
-
-  .tighten-line-height {
-    line-height: 1.1 !important;
-  }
-
-  .app-toolbar .toolbar__content {
-    max-width: 1280px;
-    margin: 0 auto !important;
   }
 
   a {
     text-decoration: none;
   }
 
-  .mx-auto {
-    margin-left: auto !important;
-    margin-right: auto !important;
+  .display-none {
+    display: none;
   }
 </style>
-
-<style scoped>
-  .router-view {
-    max-width: 1280px;
-  }
-
-  .theme--dark .avatar-container {
-    padding: 6px;
-    background-color: white;
-    border-radius: 50%;
-  }
-
-  img {
-    width: 38px;
-  }
-</style>
-

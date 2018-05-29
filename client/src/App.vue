@@ -15,10 +15,10 @@
     v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
       v-toolbar-side-icon(@click.stop='drawer = !drawer', v-if='user.isAdmin')
       v-toolbar-title.mr-3
-        .headline.cursor-pointer(@click='$router.push("/")') Home
+        .headline.cursor-pointer(@click='$router.push("/")') Spotify
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
-        .title {{ user.spotifyUser && user.spotifyUser.display_name }}
+        .subheading {{ user.spotifyUser && user.spotifyUser.display_name }}
       v-btn(flat, v-show='!user.id', @click='login') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
@@ -38,8 +38,8 @@
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
     v-content
-      router-view.router-view.mx-auto( :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
-    play-controls(:player='player', :player-state='playerState')
+      router-view.router-view.mx-auto(:is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
+    play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState')
     v-snackbar( v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
@@ -53,7 +53,7 @@
   import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
   import PlayControls from './components/PlayControls'
-  import moment from 'moment'
+  import DateService from './services/DateService'
 
   export default {
     components: {Login, UserPhoto, PlayControls},
@@ -101,8 +101,8 @@
               track: state.track_window.current_track.name,
               artist: state.track_window.current_track.artists[0].name,
               images: state.track_window.current_track.album.images,
-              elapsed: moment.utc(state.position).format(state.duration > 3600000 ? 'HH:mm:ss' : 'mm:ss'),
-              duration: moment.utc(state.duration).format(state.duration > 3600000 ? 'HH:mm:ss' : 'mm:ss'),
+              elapsed: DateService.formattedDuration(state.position),
+              duration: DateService.formattedDuration(state.duration),
               durationMs: state.duration,
               volume: this.playerState.volume
             }

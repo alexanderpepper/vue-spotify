@@ -4,7 +4,7 @@
     v-layout.px-4.pt-4(row, wrap, align-center)
       v-flex(xs12, sm3)
         img.elevation-10(v-if='playlist.images[0]', :src='playlist.images[0].url')
-        .no-image.elevation-10(v-else) No image found
+        .no-image.grey.darken-3.elevation-10(v-else) No image found
       v-flex.px-4.text-sm-left.text-xs-center(xs12, sm9)
         .display-1 {{ playlist.name }}
       v-flex.hidden-xs-only(md3, offset-md9, sm6, offset-sm6, xs12)
@@ -25,7 +25,7 @@
 
 <script>
   import SpotifyService from '../services/SpotifyService'
-  import moment from 'moment'
+  import DateService from '../services/DateService'
 
   export default {
     name: 'playlist',
@@ -49,13 +49,12 @@
       // TODO consider caching images
       this.playlist = await SpotifyService.getPlaylist(this.id)
       this.tracks = this.playlist.tracks.items.map(item => {
-        const durationMs = item.track.duration_ms
         return {
           title: item.track.name,
           artist: item.track.artists.map(a => a.name).join(', '),
           album: item.track.album.name,
           uri: item.track.uri,
-          duration: moment.utc(durationMs).format(durationMs > 3600000 ? 'HH:mm:ss' : 'mm:ss')
+          duration: DateService.formattedDuration(item.track.duration_ms)
         }
       })
       this.loading = false
@@ -64,7 +63,7 @@
     methods: {
       playSong: async function (uri) {
         console.log('Trying to play', uri)
-        SpotifyService.play(uri)
+        SpotifyService.play(this.tracks.map(t => t.uri))
       },
       goBack: function () {
         this.$router.go(-1)
@@ -82,14 +81,14 @@
 
 <style scoped>
   img {
-    width: 100%
+    width: 100%;
+    max-width: 320px;
   }
 
   .no-image {
     width: 100%;
     height: 100%;
-    background-color: #c0ffee;
-    line-height:240px;
+    line-height: 240px;
     vertical-align: middle;
     text-align: center;
   }

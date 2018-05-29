@@ -18,7 +18,7 @@ export default {
   playlists: `${host}/Hooks/playlists`,
   playlist: (id) => `${host}/Hooks/playlist/${id}`,
   transferPlayback: (id, play) => `${host}/Hooks/transferPlayback/${id}/${play}`,
-  play: (spotifyURI) => `${host}/Hooks/play/${spotifyURI}`,
+  play: `${host}/Hooks/play`,
   accessToken: `${host}/Hooks/access-token`,
   refreshAccessToken: `${host}/Hooks/refresh-access-token`,
   devices: `${host}/Hooks/devices`,

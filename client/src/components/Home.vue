@@ -4,7 +4,7 @@
       li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
         v-container
           v-layout(row, wrap)
-            v-flex.cursor-pointer(xl2, lg3, md4, sm6, xs12)
+            v-flex.cursor-pointer
               .playlist-artwork.elevation-5.mb-2(v-ripple='{ class: "white--text" }')
                 img(v-if='item.images[0]', :src='item.images[0].url')
                 .no-image.grey.darken-3.subheading(v-else) No image found
@@ -36,13 +36,13 @@
 <style scoped>
   .playlist-artwork img,
   .playlist-artwork {
-    width: 240px;
-    height: 240px;
+    width: 200px;
+    height: 200px;
     display: block;
   }
 
   .playlist-name {
-    width: 240px;
+    width: 200px;
     overflow-wrap: break-word;
 
   }
@@ -59,9 +59,9 @@
   }
 
   .no-image {
-    width: 240px;
-    height: 240px;
-    line-height:240px;
+    width: 200px;
+    height: 200px;
+    line-height:200px;
     color: #fff;
     vertical-align: middle;
     text-align: center;

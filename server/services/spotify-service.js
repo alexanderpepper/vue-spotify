@@ -1,7 +1,7 @@
 const TokenService = require('./token-service')
 const SpotifyWebApi = require('spotify-web-api-node')
 const {clientId, clientSecret, redirectUri} = require('../constants/credentials')
-const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private', 'user-read-playback-state']
+const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private', 'user-read-playback-state', 'user-modify-playback-state']
 const limit = 50
 
 module.exports = class SpotifyService {
@@ -76,10 +76,10 @@ module.exports = class SpotifyService {
     }
   }
 
-  async play (user, spotifyURI) {
+  async play (user, data) {
     try {
       const spotifyApi = this.getSpotifyApi(user)
-      const response = spotifyApi.play({uris: [ spotifyURI ]}).then(data => data.body)
+      const response = spotifyApi.play(data).then(data => data.body)
       return response
     } catch (error) {
       console.log('Something went wrong trying to play', error)

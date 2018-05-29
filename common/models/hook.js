@@ -58,8 +58,10 @@ module.exports = function (Hook) {
       .catch(error => console.log('caught error when trying to transfer playback.', error))
   }
 
-  Hook.play = function (spotifyURI, options, cb) {
-    spotify.play(options.user, spotifyURI)
+  Hook.play = function (data, options, cb) {
+    // console.log(JSON.stringify(data))
+    // cb()
+    spotify.play(options.user, data)
       .then(results => cb(null, results))
       .catch(error => console.log('caught error when trying to play song', error))
   }
@@ -152,10 +154,11 @@ module.exports = function (Hook) {
 
   Hook.remoteMethod('play', {
     accepts: [
-      {arg: 'spotifyURI', type: 'string'},
+      // {arg: 'spotifyURI', type: 'string'},
+      {arg: 'data', type: 'object', http: {source: 'body'}},
       {arg: 'options', type: 'object', http: 'optionsFromRequest'}
     ],
     returns: {arg: 'results', type: 'object'},
-    http: {path: '/play/:spotifyURI', verb: 'post'}
+    http: {path: '/play', verb: 'post'}
   })
 }

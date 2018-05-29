@@ -14,8 +14,8 @@ class SpotifyService extends BaseService {
     return this.GET(api.accessToken)
   }
 
-  static play (spotifyURI) {
-    return this.POST(api.play(spotifyURI)).then(response => response.results)
+  static play (spotifyURIs) {
+    return this.POST(api.play, {uris: spotifyURIs}).then(response => response.results)
   }
 
   static transferPlayback (deviceID, play) {

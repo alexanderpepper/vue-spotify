@@ -78,7 +78,7 @@
           repeat: false,
           shuffle: false,
           position: 0,
-          track: 'Track Namezzzzzzzz',
+          track: 'Track Name',
           artist: 'Artist Name',
           images: [{}],
           elapsed: '00:00',

@@ -14,9 +14,9 @@
         v-list-tile-content
           v-list-tile-title {{ track.title }}
           v-list-tile-sub-title {{ track.artist }} • {{ track.album }}
-    v-data-table.px-4.hidden-xs-only(:headers='headers', :items='tracks', :loading='loading', :search='search', no-data-text='Loading playlist...', hide-actions)
+    v-data-table.px-4.hidden-xs-only(:headers='headers', :items='tracks', :loading='loading', :search='search', no-data-text='Loading playlist...', hide-actions, disable-initial-sort)
       template(slot='items', slot-scope='props')
-        tr(@click='playSong(props.item.uri)')
+        tr(@click='playSong(props.index)')
           td {{ props.item.title }}
           td {{ props.item.artist }}
           td {{ props.item.album }}
@@ -61,9 +61,9 @@
       this.audio = new Audio()
     },
     methods: {
-      playSong: async function (uri) {
-        console.log('Trying to play', uri)
-        SpotifyService.play(this.tracks.map(t => t.uri))
+      playSong: async function (index) {
+        const tracks = this.tracks.slice().splice(index, this.tracks.length - index)
+        SpotifyService.play(tracks.map(t => t.uri))
       },
       goBack: function () {
         this.$router.go(-1)

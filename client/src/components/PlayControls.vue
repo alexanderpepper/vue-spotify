@@ -19,13 +19,6 @@
             .vertical-center.text-xs-center.text-sm-left.pl-3.pa-xs-0.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
               .body-2.truncate.compress(v-text='playerState.artist')
               .body-1.truncate.compress(v-text='playerState.track')
-          // .vertical-center-container(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-          //  .vertical-center.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-          //    .artwork.elevation-5.mx-auto(:class='{"mobile-large": $vuetify.breakpoint.xsOnly, "desktop": $vuetify.breakpoint.smAndUp}')
-          //      img(:src='playerState.images[0].url')
-          //  .vertical-center.text-xs-center.text-sm-left.pl-3.pa-xs-0.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-          //    .body-2.truncate.compress(v-text='playerState.artist')
-          //    .body-1.truncate.compress(v-text='playerState.track')
       v-flex.text-xs-center(sm6, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout.mb-xs-3(row, align-center)
           v-spacer
@@ -50,7 +43,7 @@
           v-menu(v-model='showDevices', top, left, offset-y, fixed)
             v-btn(icon, slot='activator')
               v-icon speaker
-            devices
+            devices(:current-user='currentUser')
           v-slider.pa-0.hidden-xs-only(:color='isDarkTheme ? "white" : "black"', :thumb-color='isDarkTheme ? "white" : "black"', v-model='playerState.volume', @click='setVolume')
           v-spacer.hidden-sm-and-up
 </template>
@@ -61,7 +54,7 @@
 
   export default {
     components: {Devices},
-    props: ['player', 'playerState', 'isDarkTheme'],
+    props: ['player', 'playerState', 'isDarkTheme', 'currentUser'],
     data () {
       return {
         showPlayer: false,
@@ -70,38 +63,20 @@
     },
     methods: {
       setVolume () {
-        if (this.player) {
-          this.player.setVolume(this.playerState.volume / 100)
-        } else {
-          SpotifyService.setVolume(this.playerState.volume / 100)
-        }
+        SpotifyService.setVolume(Number(this.playerState.volume || 0))
       },
       seek () {
-        const positionMs = this.playerState.durationMs * (this.playerState.position / 100)
-        if (this.player) {
-          this.player.seek(positionMs)
-        } else {
-          SpotifyService.seek(positionMs)
-        }
+        const positionMs = Math.floor(this.playerState.durationMs * (this.playerState.position / 100))
+        SpotifyService.seek(positionMs)
       },
       nextTrack () {
-        if (this.player) {
-          this.player.nextTrack()
-        } else {
-          SpotifyService.next()
-        }
+        SpotifyService.next()
       },
       previousTrack () {
-        if (this.player) {
-          this.player.previousTrack()
-        } else {
-          SpotifyService.previous()
-        }
+        SpotifyService.previous()
       },
       togglePlay () {
-        if (this.player) {
-          this.player.togglePlay()
-        } else if (this.playerState.paused) {
+        if (this.playerState.paused) {
           SpotifyService.play()
         } else {
           SpotifyService.pause()

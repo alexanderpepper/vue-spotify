@@ -8,63 +8,28 @@
 </template>
 
 <script>
-  /*
-  {
-  "devices" : [ {
-    "id" : "b46689a4cd5",
-    "is_active" : true,
-    "is_restricted" : false,
-    "name" : "Your MacBook",
-    "type" : "Computer",
-    "volume_percent" : 70
-  }, {
-    "id" : "0d184899bc8",
-    "is_active" : false,
-    "is_restricted" : false,
-    "name" : "Living Room",
-    "type" : "TV",
-    "volume_percent" : 25
-  }, {
-    "id" : "2f3c360198ede6",
-    "is_active" : false,
-    "is_restricted" : false,
-    "name" : "Office Speaker",
-    "type" : "Unknown",
-    "volume_percent" : 82
-  } ]
-}
-   */
   import SpotifyService from '../services/SpotifyService'
 
   export default {
     name: 'devices',
+    props: ['currentUser'],
     data () {
       return {
         devices: []
       }
     },
-    async created () {
+    created () {
       // this will update every 2 seconds so that the list updates when we active more players
       // TODO move to websocket
-      const updateDevices = async () => {
-        this.devices = (await SpotifyService.getDevices()).devices
-        this.devices.sort(sortByIgnoreCase)
-        setTimeout(updateDevices, 2000)
-
-        // var array = [ "Spotify .5 Web Player", "iPad cua Mac", "Mac's iMac" ]
-
-        function sortByIgnoreCase (a, b) {
-          if (a.name.toLowerCase() < b.name.toLowerCase()) return -1
-          if (a.name.toLowerCase() > b.name.toLowerCase()) return 1
-          return 0
+      setInterval(async () => {
+        if (this.currentUser && this.currentUser.spotifyUser && this.currentUser.spotifyUser.id) {
+          this.devices = (await SpotifyService.getDevices()).devices
+          this.devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         }
-      }
-
-      updateDevices()
+      }, 2000)
     },
     methods: {
       selectDevice: function (deviceID) {
-        console.log('switching to', deviceID)
         SpotifyService.transferPlayback(deviceID, true)
       }
     }

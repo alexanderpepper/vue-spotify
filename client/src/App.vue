@@ -39,7 +39,7 @@
             v-list-tile-title Sign Out
     v-content
       router-view.router-view.mx-auto(:is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
-    play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState')
+    play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :current-user='user')
     v-snackbar( v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
@@ -91,46 +91,39 @@
     },
     beforeCreate () {
       setInterval(() => {
-        if (this.user.spotifyUser) {
+        if (this.user && this.user.spotifyUser && this.user.spotifyUser.id) {
+          if (!this.player) {
+            WebPlaybackService.getPlayer().then(player => {
+              this.player = player
+            })
+          }
           SpotifyService.getPlayerState().then(state => {
-            this.playerState = {
-              paused: !state.is_playing,
-              position: (state.position / state.duration) * 100,
-              shuffle: state.shuffle_state,
-              repeat: state.repeat_state !== 'off',
-              track: state.item.name,
-              artist: state.item.artists[0].name,
-              images: state.item.album.images,
-              elapsed: DateService.formattedDuration(state.progress_ms),
-              duration: DateService.formattedDuration(state.item.duration_ms),
-              durationMs: state.item.duration_ms,
-              volume: state.device.volume,
-              device: state.device.name
+            if (state) {
+              this.playerState = {
+                ...this.playerState,
+                paused: !state.is_playing,
+                shuffle: state.shuffle_state,
+                repeat: state.repeat_state !== 'off',
+                volume: state.device.volume,
+                device: state.device.name
+              }
+
+              if (state.item) {
+                this.playerState = {
+                  ...this.playerState,
+                  position: (state.progress_ms / state.item.duration_ms) * 100,
+                  track: state.item.name,
+                  artist: state.item.artists[0].name,
+                  images: state.item.album.images,
+                  elapsed: DateService.formattedDuration(state.progress_ms),
+                  duration: DateService.formattedDuration(state.item.duration_ms),
+                  durationMs: state.item.duration_ms
+                }
+              }
             }
           })
         }
       }, 1000)
-
-      WebPlaybackService.getPlayer().then(player => {
-        this.player = player
-        // setInterval(() => {
-        //   this.player.getCurrentState().then(state => {
-        //     this.playerState = {
-        //       paused: state.paused,
-        //       position: (state.position / state.duration) * 100,
-        //       shuffle: state.shuffle,
-        //       repeat: state.repeatMode === 0,
-        //       track: state.track_window.current_track.name,
-        //       artist: state.track_window.current_track.artists[0].name,
-        //       images: state.track_window.current_track.album.images,
-        //       elapsed: DateService.formattedDuration(state.position),
-        //       duration: DateService.formattedDuration(state.duration),
-        //       durationMs: state.duration,
-        //       volume: this.playerState.volume
-        //     }
-        //   })
-        // }, 1000)
-      })
     },
     created () {
       this.getUserInfo()

@@ -119,7 +119,7 @@ module.exports = class SpotifyService {
     }
   }
 
-  async seek (position, user) {
+  async seek (user, position) {
     try {
       return await this.getSpotifyApi(user).seek(position).then(data => data.body)
     } catch (error) {
@@ -127,7 +127,7 @@ module.exports = class SpotifyService {
     }
   }
 
-  async setVolume (volume, user) {
+  async setVolume (user, volume) {
     try {
       return await this.getSpotifyApi(user).setVolume(volume).then(data => data.body)
     } catch (error) {

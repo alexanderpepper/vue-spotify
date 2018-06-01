@@ -120,6 +120,14 @@
                   durationMs: state.item.duration_ms
                 }
               }
+
+              if (state.device) {
+                this.playerState = {
+                  ...this.playerState,
+                  volume: state.device.volume,
+                  device: state.device.name
+                }
+              }
             }
           })
         }

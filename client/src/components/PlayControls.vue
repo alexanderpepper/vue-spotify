@@ -57,6 +57,7 @@
 
 <script>
   import Devices from './Devices'
+  import SpotifyService from '../services/SpotifyService'
 
   export default {
     components: {Devices},
@@ -69,30 +70,42 @@
     },
     methods: {
       setVolume () {
-        this.player.setVolume(this.playerState.volume / 100).then(() => {
-          console.log('Set the volume to ' + this.playerState.volume)
-        })
+        if (this.player) {
+          this.player.setVolume(this.playerState.volume / 100)
+        } else {
+          SpotifyService.setVolume(this.playerState.volume / 100)
+        }
       },
       seek () {
         const positionMs = this.playerState.durationMs * (this.playerState.position / 100)
-        this.player.seek(positionMs).then(() => {
-          console.log('Seeked to ' + positionMs)
-        })
+        if (this.player) {
+          this.player.seek(positionMs)
+        } else {
+          SpotifyService.seek(positionMs)
+        }
       },
       nextTrack () {
-        this.player.nextTrack().then(() => {
-          console.log('Skipped to next track!')
-        })
+        if (this.player) {
+          this.player.nextTrack()
+        } else {
+          SpotifyService.next()
+        }
       },
       previousTrack () {
-        this.player.previousTrack().then(() => {
-          console.log('Skipped to previous track!')
-        })
+        if (this.player) {
+          this.player.previousTrack()
+        } else {
+          SpotifyService.previous()
+        }
       },
       togglePlay () {
-        this.player.togglePlay().then(() => {
-          console.log('Toggled playback!')
-        })
+        if (this.player) {
+          this.player.togglePlay()
+        } else if (this.playerState.paused) {
+          SpotifyService.play()
+        } else {
+          SpotifyService.pause()
+        }
       }
     }
   }

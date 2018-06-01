@@ -9,7 +9,6 @@ module.exports = class SpotifyService {
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
     const token = user && user.spotifyUser && user.spotifyUser.token
     if (token) {
-      // console.log(`using token for ${user.email}: ${token.accessToken}`)
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
     }
@@ -35,14 +34,13 @@ module.exports = class SpotifyService {
         user.save().then(() => resolve())
       })
     } catch (error) {
-      console.log('Something went wrong!', error)
+      console.log('Error: spotify-service.refreshToken()', error)
     }
   }
 
   async refreshToken (user) {
     try {
-      const spotifyApi = this.getSpotifyApi(user)
-      const data = await spotifyApi.refreshAccessToken()
+      const data = await this.getSpotifyApi(user).refreshAccessToken().then(data => data.body)
       const token = TokenService.create(data.body)
       user.spotifyUser.token.accessToken = token.accessToken
       user.spotifyUser.token.expirationDate = token.expirationDate
@@ -53,68 +51,118 @@ module.exports = class SpotifyService {
         user.save().then(saved => resolve(saved))
       })
     } catch (error) {
-      console.log('Could not refresh access token', JSON.stringify(error))
+      console.log('Error: spotify-service.refreshToken()', error)
     }
   }
 
   async getAccessToken (user) {
     try {
-      const spotifyApi = this.getSpotifyApi(user)
-      return spotifyApi.getAccessToken()
+      return this.getSpotifyApi(user).getAccessToken()
     } catch (error) {
-      console.log('Something went wrong getting access token', error)
+      console.log('Error: spotify-service.getAccessToken()', error)
     }
   }
 
   async getMe (user) {
     try {
-      const spotifyApi = this.getSpotifyApi(user)
-      const response = await spotifyApi.getMe().then(data => data.body)
-      return response
+      return await this.getSpotifyApi(user).getMe().then(data => data.body)
     } catch (error) {
-      console.log('Something went wrong getting user spotify account', error)
+      console.log('Error: spotify-service.getMe()', error)
     }
   }
 
-  async play (user, data) {
+  async play (user, uris) {
     try {
-      const spotifyApi = this.getSpotifyApi(user)
-      const response = spotifyApi.play(data).then(data => data.body)
-      return response
+      return await this.getSpotifyApi(user).play(uris).then(data => data.body)
     } catch (error) {
-      console.log('Something went wrong trying to play', error)
+      console.log('Error: spotify-service.play()', error)
     }
   }
+
+  async pause (user) {
+    try {
+      return await this.getSpotifyApi(user).pause().then(data => data.body)
+    } catch (error) {
+      console.log('Error: spotify-service.pause()', error)
+    }
+  }
+
+  async skipToNext (user) {
+    try {
+      return await this.getSpotifyApi(user).skipToNext().then(data => data.body)
+    } catch (error) {
+      console.log('Error: spotify-service.skipToNext()', error)
+    }
+  }
+
+  async skipToPrevious (user) {
+    try {
+      return await this.getSpotifyApi(user).skipToPrevious().then(data => data.body)
+    } catch (error) {
+      console.log('Error: spotify-service.skipToPrevious()', error)
+    }
+  }
+
+  async getPlaybackState (user) {
+    try {
+      return await this.getSpotifyApi(user).getMyCurrentPlaybackState().then(data => data.body)
+    } catch (error) {
+      console.log('Error: spotify-service.getPlaybackState()', error)
+    }
+  }
+
+  async getPlayingTrack (user) {
+    try {
+      return await this.getSpotifyApi(user).getMyCurrentPlayingTrack().then(data => data.body)
+    } catch (error) {
+      console.log('Error: spotify-service.getPlayingTrack()', error)
+    }
+  }
+
+  async seek (position, user) {
+    try {
+      return await this.getSpotifyApi(user).seek(position).then(data => data.body)
+    } catch (error) {
+      console.log('Error: spotify-service.seek()', error)
+    }
+  }
+
+  async setVolume (volume, user) {
+    try {
+      return await this.getSpotifyApi(user).setVolume(volume).then(data => data.body)
+    } catch (error) {
+      console.log('Error: spotify-service.setVolume()', error)
+    }
+  }
+
+  // setShuffle
+  // setRepeat
 
   async transferPlayback (user, deviceID, play) {
     try {
-      let argsObject = {device_ids: [ deviceID ]}
-      argsObject.play = typeof play === 'boolean' ? play : false
-      const spotifyApi = this.getSpotifyApi(user)
-      const response = await spotifyApi.transferMyPlayback(argsObject).then(data => data.body)
-      return response
+      const argsObject = {
+        device_ids: [ deviceID ],
+        play: typeof play === 'boolean' ? play : false
+      }
+      return await this.getSpotifyApi(user).transferMyPlayback(argsObject).then(data => data.body)
     } catch (error) {
-      console.log('Something went wrong transferring playback', error)
+      console.log('Error: spotify-service.transferPlayback()', error)
     }
   }
 
   async getPlaylist (user, playlistID) {
     try {
-      const spotifyApi = this.getSpotifyApi(user)
-      const playlist = await spotifyApi.getPlaylist(user.spotifyUser.id, playlistID).then(data => data.body)
-      return playlist
+      return await this.getSpotifyApi(user).getPlaylist(user.spotifyUser.id, playlistID).then(data => data.body)
     } catch (error) {
-      console.log('Something went wrong getting a playlist', error)
+      console.log('Error: spotify-service.getPlaylist()', error)
     }
   }
 
   async getDevices (user) {
     try {
-      const spotifyApi = this.getSpotifyApi(user)
-      const devices = await spotifyApi.getMyDevices().then(data => data.body)
-      return devices
+      return await this.getSpotifyApi(user).getMyDevices().then(data => data.body)
     } catch (error) {
-      console.log('Something went wrong getting devices', error)
+      console.log('Error: spotify-service.getDevices()', error)
     }
   }
 
@@ -127,7 +175,7 @@ module.exports = class SpotifyService {
       const promises = pages.map(p => spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit, offset: p * limit}).then(data => data.body.items))
       return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val)))
     } catch (error) {
-      console.log('Something went wrong getting playlists', error)
+      console.log('Error: spotify-service.getPlaylists()', error)
     }
   }
 }

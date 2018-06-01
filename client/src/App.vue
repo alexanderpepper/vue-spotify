@@ -54,6 +54,7 @@
   import UserPhoto from './components/UserPhoto'
   import PlayControls from './components/PlayControls'
   import DateService from './services/DateService'
+  import SpotifyService from './services/SpotifyService'
 
   export default {
     components: {Login, UserPhoto, PlayControls},
@@ -89,25 +90,46 @@
       }
     },
     beforeCreate () {
-      WebPlaybackService.getPlayer().then(player => {
-        this.player = player
-        setInterval(() => {
-          this.player.getCurrentState().then(state => {
+      setInterval(() => {
+        if (this.user.spotifyUser) {
+          SpotifyService.getPlayerState().then(state => {
             this.playerState = {
-              paused: state.paused,
+              paused: !state.is_playing,
               position: (state.position / state.duration) * 100,
-              shuffle: state.shuffle,
-              repeat: state.repeatMode === 0,
-              track: state.track_window.current_track.name,
-              artist: state.track_window.current_track.artists[0].name,
-              images: state.track_window.current_track.album.images,
-              elapsed: DateService.formattedDuration(state.position),
-              duration: DateService.formattedDuration(state.duration),
-              durationMs: state.duration,
-              volume: this.playerState.volume
+              shuffle: state.shuffle_state,
+              repeat: state.repeat_state !== 'off',
+              track: state.item.name,
+              artist: state.item.artists[0].name,
+              images: state.item.album.images,
+              elapsed: DateService.formattedDuration(state.progress_ms),
+              duration: DateService.formattedDuration(state.item.duration_ms),
+              durationMs: state.item.duration_ms,
+              volume: state.device.volume,
+              device: state.device.name
             }
           })
-        }, 1000)
+        }
+      }, 1000)
+
+      WebPlaybackService.getPlayer().then(player => {
+        this.player = player
+        // setInterval(() => {
+        //   this.player.getCurrentState().then(state => {
+        //     this.playerState = {
+        //       paused: state.paused,
+        //       position: (state.position / state.duration) * 100,
+        //       shuffle: state.shuffle,
+        //       repeat: state.repeatMode === 0,
+        //       track: state.track_window.current_track.name,
+        //       artist: state.track_window.current_track.artists[0].name,
+        //       images: state.track_window.current_track.album.images,
+        //       elapsed: DateService.formattedDuration(state.position),
+        //       duration: DateService.formattedDuration(state.duration),
+        //       durationMs: state.duration,
+        //       volume: this.playerState.volume
+        //     }
+        //   })
+        // }, 1000)
       })
     },
     created () {

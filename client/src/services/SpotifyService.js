@@ -15,7 +15,31 @@ class SpotifyService extends BaseService {
   }
 
   static play (spotifyURIs) {
-    return this.POST(api.play, {uris: spotifyURIs}).then(response => response.results)
+    if (spotifyURIs) {
+      return this.POST(api.play, {uris: spotifyURIs}).then(response => response.results)
+    } else {
+      return this.POST(api.play).then(response => response.results)
+    }
+  }
+
+  static pause () {
+    return this.POST(api.pause).then(response => response.results)
+  }
+
+  static next () {
+    return this.POST(api.next).then(response => response.results)
+  }
+
+  static previous () {
+    return this.POST(api.previous).then(response => response.results)
+  }
+
+  static setVolume (volume) {
+    return this.POST(api.setVolume, {volume}).then(response => response.results)
+  }
+
+  static seek (position) {
+    return this.POST(api.seek, {position}).then(response => response.results)
   }
 
   static transferPlayback (deviceID, play) {
@@ -43,6 +67,14 @@ class SpotifyService extends BaseService {
 
   static refreshAccessToken () {
     return this.POST(api.refreshAccessToken).then(response => response.results)
+  }
+
+  static getPlayerState () {
+    return this.GET(api.playerState).then(response => response.results)
+  }
+
+  static getPlayingTrack () {
+    return this.GET(api.playingTrack).then(response => response.results)
   }
 }
 

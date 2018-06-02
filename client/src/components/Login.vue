@@ -11,7 +11,7 @@
         v-text-field.mb-2(label='Email', v-model='credentials.email', required, hide-details)
         v-text-field(label='Password', v-model='credentials.password', :type="hidePassword ? 'password' : 'text'", :append-icon="hidePassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hidePassword = !hidePassword)", @keyup.enter='login', required, hide-details)
       v-btn(small, flat, block, @click='login', :disabled='!isValid()') Sign In
-      v-btn(small, flat, block, @click='createAccount') Create a New Account
+      v-btn(small, flat, block, @click='register') Create New Account
 </template>
 
 <script>
@@ -21,10 +21,10 @@
   export default {
     name: 'login',
     props: {
-      createAccount: Function,
       cancel: Function,
       showSnackbar: Function,
-      loginSuccess: Function
+      loginSuccess: Function,
+      register: Function
     },
     data () {
       return {

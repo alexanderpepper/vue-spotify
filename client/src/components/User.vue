@@ -6,9 +6,6 @@
         v-spacer
       v-card-text
         form(@submit.prevent='save')
-          .d-inline-block.mb-4
-            user-photo.mx-auto(size='large', :user='user')
-            upload-button.d-block(:selected-callback='photoSelected', title='Upload New Photo', :loading='uploadingPhoto')
           v-text-field(label='Email', v-model='user.email', required, @blur='populateFullName')
           v-text-field(label='Password', v-model='user.password', v-if='newRegistration || !user.id', type='password', required)
           v-text-field(label='Confirm Password', v-model='confirmPassword', v-if='newRegistration || !user.id', type='password', required)

@@ -40,14 +40,17 @@
     v-content
       router-view.router-view.mx-auto(:is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
     play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :current-user='user')
-    v-snackbar( v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
+    v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
-      login(:create-account='createAccount', :login-success='loginSuccess', :show-snackbar='showSnackbar', :cancel='() => { showLogin = false }')
+      login(:login-success='loginSuccess', :show-snackbar='showSnackbar', :cancel='() => { showLogin = false }', :register='register')
+    v-dialog(v-model='showRegister', peristent, width='300')
+      register(:login='login', :show-snackbar='showSnackbar', :login-success='loginSuccess', :cancel='() => { showRegister = false }')
 </template>
 
 <script>
   import Login from './components/Login'
+  import Register from './components/Register'
   import LoginService from './services/LoginService'
   import UserService from './services/UserService'
   import WebPlaybackService from './services/WebPlaybackService'
@@ -57,9 +60,10 @@
   import SpotifyService from './services/SpotifyService'
 
   export default {
-    components: {Login, UserPhoto, PlayControls},
+    components: {Register, Login, UserPhoto, PlayControls},
     data () {
       return {
+        showRegister: false,
         showLogin: false,
         isDarkTheme: true,
         drawer: false,
@@ -139,20 +143,21 @@
     },
     methods: {
       login () {
+        this.showRegister = false
         this.showLogin = true
+      },
+      register () {
+        this.showRegister = true
+        this.showLogin = false
       },
       toggleTheme () {
         this.isDarkTheme = !this.isDarkTheme
         window.localStorage['dark'] = this.isDarkTheme
       },
-      createAccount () {
-        this.showLogin = false
-        this.$router.push('/user')
-      },
       loginSuccess (user) {
-        console.log(user)
         this.setUser(user)
         this.showLogin = false
+        this.showRegister = false
       },
       async logout () {
         try {

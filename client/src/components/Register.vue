@@ -16,6 +16,7 @@
 <script>
   import UserService from '../services/UserService'
   import LoginService from '../services/LoginService'
+  import SpotifyService from '../services/SpotifyService'
 
   export default {
     name: 'register',
@@ -43,8 +44,7 @@
         try {
           await UserService.save(this.credentials)
           await LoginService.login(this.credentials)
-          const user = await UserService.me()
-          this.loginSuccess(user)
+          window.location.href = await SpotifyService.authorizationUrl()
         } catch (error) {
           this.showSnackbar(error, 'error')
         }

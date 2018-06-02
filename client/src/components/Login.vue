@@ -16,7 +16,6 @@
 
 <script>
   import LoginService from '../services/LoginService'
-  import UserService from '../services/UserService'
 
   export default {
     name: 'login',
@@ -43,8 +42,7 @@
       login: async function () {
         try {
           await LoginService.login(this.credentials)
-          const user = await UserService.me()
-          this.loginSuccess(user)
+          this.loginSuccess()
         } catch (error) {
           this.showSnackbar('Account not found', 'error')
         }

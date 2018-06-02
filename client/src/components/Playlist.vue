@@ -1,6 +1,5 @@
 <template lang="pug">
   .playlist.pb-4
-    v-btn(flat, large, color="primary", @click='goBack()') Back
     v-layout.px-4.pt-4(row, wrap, align-center)
       v-flex(xs12, sm3)
         img.elevation-10(v-if='playlist.images[0]', :src='playlist.images[0].url')
@@ -29,7 +28,7 @@
 
   export default {
     name: 'playlist',
-    props: ['id'],
+    props: ['id', 'setShowBackButton'],
     data () {
       return {
         headers: [
@@ -59,14 +58,12 @@
       })
       this.loading = false
       this.audio = new Audio()
+      this.setShowBackButton(true)
     },
     methods: {
       playSong: async function (index) {
         const tracks = this.tracks.slice().splice(index, this.tracks.length - index)
         SpotifyService.play(tracks.map(t => t.uri))
-      },
-      goBack: function () {
-        this.$router.go(-1)
       }
     }
   }

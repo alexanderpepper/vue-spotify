@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-footer.elevation-4.play-controls(:height='$vuetify.breakpoint.smAndUp ? 80 : showPlayer ? 450 : 44', fixed)
+  v-footer.elevation-4.play-controls(:height='$vuetify.breakpoint.smAndUp ? 80 : showPlayer ? 450 : 44', fixed, app)
     v-layout(align-center, wrap)
       v-flex.hidden-sm-and-up(xs12)
         v-layout(align-center)

@@ -1,14 +1,11 @@
 <template lang="pug">
   .callback
-    ul(v-if="results")
-      li(v-for="item in results.results", v-on:click="goToPlaylist(item)")
-        v-container
-          v-layout(row, wrap)
-            v-flex.cursor-pointer
-              .playlist-artwork.elevation-5.mb-2(v-ripple='{ class: "white--text" }')
-                img(v-if='item.images[0]', :src='item.images[0].url')
-                .no-image.grey.darken-3.subheading(v-else) No image found
-              .playlist-name.body-2.text-xs-center {{ item.name }}
+    v-layout(row, wrap)
+      v-flex.cursor-pointer.my-1.pa-2(v-for="item in results.results", @click="goToPlaylist(item)")
+        .playlist-artwork.elevation-5.mb-2.mx-auto(v-ripple='{ class: "white--text" }')
+          img(v-if='item.images[0]', :src='item.images[0].url')
+          .no-image.grey.darken-3.subheading(v-else) No image found
+        .playlist-name.body-2.text-xs-center.mx-auto {{ item.name }}
 </template>
 
 <script>
@@ -16,14 +13,16 @@
 
   export default {
     name: 'callback',
+    props: ['setShowBackButton'],
     data () {
       return {
         results: {}
       }
     },
-    async mounted () {
+    async created () {
       // TODO consider caching images
       this.results = await SpotifyService.getPlaylists()
+      this.setShowBackButton(false)
     },
     methods: {
       goToPlaylist: function (playlist) {

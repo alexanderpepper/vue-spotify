@@ -79,10 +79,11 @@
       },
       isValid () {
         if (this.user.id) {
-          return this.user.email && this.user.name
+          return this.user.email
         } else {
-          return this.user.email && this.user.name &&
-            this.user.password && this.confirmPassword &&
+          return this.user.email &&
+            this.user.password &&
+            this.confirmPassword &&
             this.user.password === this.confirmPassword &&
             this.user.password.length >= 8
         }

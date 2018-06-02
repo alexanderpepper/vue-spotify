@@ -1,6 +1,6 @@
 <template lang="pug">
   .user-photo-container.text-xs-center(row, align-center)
-    v-icon(v-if='!user.spotifyUser || !user.spotifyUser.images', :class='{"display-4": size === "large"}') account_circle
+    v-icon(v-if='!user.spotifyUser || !user.spotifyUser.images', size='36') account_circle
     img.user-photo(:src='user.spotifyUser && user.spotifyUser.images && user.spotifyUser.images[0].url' v-if='user.spotifyUser && user.spotifyUser.images', :class='[size]')
 </template>
 

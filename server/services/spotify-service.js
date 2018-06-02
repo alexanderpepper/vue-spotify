@@ -30,9 +30,7 @@ module.exports = class SpotifyService {
       const spotifyUser = await spotifyApi.getMe().then(data => data.body)
       user.spotifyUser = {...spotifyUser, token}
 
-      return new Promise(resolve => {
-        user.save().then(() => resolve())
-      })
+      return new Promise(resolve => user.save().then(resolve))
     } catch (error) {
       console.log('Error: spotify-service.refreshToken()', error)
     }

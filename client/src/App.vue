@@ -14,6 +14,8 @@
             v-list-tile-title(v-text='item.title', :class='{"grey--text": !isActiveMenuItem(item), "text--darken-1": !isActiveMenuItem(item) }')
     v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
       v-toolbar-side-icon(@click.stop='drawer = !drawer', v-if='user.isAdmin')
+      v-btn(icon, v-if='showBackButton', @click='$router.go(-1)')
+        v-icon arrow_back
       v-toolbar-title.mr-3
         .headline.cursor-pointer(@click='$router.push("/")') Spotify
       v-spacer
@@ -38,7 +40,7 @@
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
     v-content
-      router-view.router-view.mx-auto(:is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
+      router-view.router-view.mx-auto(:set-show-back-button='setShowBackButton', :is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-user='setUser', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
     play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :current-user='user')
     v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
@@ -63,6 +65,7 @@
     components: {Register, Login, UserPhoto, PlayControls},
     data () {
       return {
+        showBackButton: false,
         showRegister: false,
         showLogin: false,
         isDarkTheme: true,
@@ -138,10 +141,17 @@
       }, 1000)
     },
     created () {
-      this.getUserInfo()
+      this.getUserInfo().then(async () => {
+        if (!this.user.spotifyUser || !this.user.spotifyUser.id) {
+          window.location.href = await SpotifyService.authorizationUrl()
+        }
+      })
       this.isDarkTheme = window.localStorage['dark'] === 'true'
     },
     methods: {
+      setShowBackButton (showBackButton) {
+        this.showBackButton = showBackButton
+      },
       login () {
         this.showRegister = false
         this.showLogin = true
@@ -154,10 +164,16 @@
         this.isDarkTheme = !this.isDarkTheme
         window.localStorage['dark'] = this.isDarkTheme
       },
-      loginSuccess (user) {
+      async loginSuccess () {
+        const user = await UserService.me()
         this.setUser(user)
         this.showLogin = false
         this.showRegister = false
+        if (!user.spotifyUser || !user.spotifyUser.id) {
+          window.location.href = await SpotifyService.authorizationUrl()
+        } else {
+          this.$router.push({name: 'home'})
+        }
       },
       async logout () {
         try {
@@ -169,9 +185,7 @@
       },
       getUserInfo () {
         if (UserService.hasToken()) {
-          UserService.me().then(this.setUser).catch(() => {
-            console.log('Token expired.')
-          })
+          return UserService.me().then(this.setUser).catch(() => console.log('Token expired.'))
         }
       },
       showSnackbar (message, style) {
@@ -206,16 +220,6 @@
 </script>
 
 <style>
-  body {
-    padding-bottom: 80px;
-  }
-
-  @media (max-width: 599px) {
-    body {
-      padding-bottom: 44px;
-    }
-  }
-
   .truncate {
     white-space: nowrap;
     overflow: hidden;

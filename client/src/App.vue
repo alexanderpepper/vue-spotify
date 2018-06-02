@@ -15,10 +15,10 @@
     v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
       v-toolbar-side-icon(@click.stop='drawer = !drawer', v-if='user.isAdmin')
       v-toolbar-title.mr-3
-        .headline.cursor-pointer(@click='$router.push("/")') Home
+        .headline.cursor-pointer(@click='$router.push("/")') Spotify
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
-        .title {{ user.spotifyUser && user.spotifyUser.display_name }}
+        .subheading {{ user.spotifyUser && user.spotifyUser.display_name }}
       v-btn(flat, v-show='!user.id', @click='login') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
@@ -38,24 +38,12 @@
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
     v-content
-      router-view.router-view.mx-auto(
-      :show-snackbar='showSnackbar',
-      :set-title='setTitle',
-      :current-user='user',
-      :set-active-menu-item='setActiveMenuItem',
-      :login='login')
-    v-snackbar(
-    v-model='snackbar',
-    :timeout='3000',
-    :bottom='true',
-    :color='snackbarStyle') {{ snackbarMessage }}
+      router-view.router-view.mx-auto(:is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
+    play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :current-user='user')
+    v-snackbar( v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
-      login(
-      :create-account='createAccount',
-      :login-success='loginSuccess',
-      :show-snackbar='showSnackbar',
-      :cancel='() => { showLogin = false }')
+      login(:create-account='createAccount', :login-success='loginSuccess', :show-snackbar='showSnackbar', :cancel='() => { showLogin = false }')
 </template>
 
 <script>
@@ -64,12 +52,12 @@
   import UserService from './services/UserService'
   import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
-
-  // I'm not 100% sold that this is the right place. It seems to be the first place with service imports available.
-  WebPlaybackService.initializeWebPlaybackSDK()
+  import PlayControls from './components/PlayControls'
+  import DateService from './services/DateService'
+  import SpotifyService from './services/SpotifyService'
 
   export default {
-    components: {Login, UserPhoto},
+    components: {Login, UserPhoto, PlayControls},
     data () {
       return {
         showLogin: false,
@@ -84,8 +72,66 @@
         snackbar: false,
         snackbarMessage: '',
         snackbarStyle: '',
-        activeMenuItem: ''
+        activeMenuItem: '',
+        player: null,
+        playerState: {
+          paused: true,
+          repeat: false,
+          shuffle: false,
+          position: 0,
+          track: 'Track Name',
+          artist: 'Artist Name',
+          images: [{}],
+          elapsed: '00:00',
+          duration: '00:00',
+          durationMs: 0,
+          volume: 50
+        }
       }
+    },
+    beforeCreate () {
+      setInterval(() => {
+        if (this.user && this.user.spotifyUser && this.user.spotifyUser.id) {
+          if (!this.player) {
+            WebPlaybackService.getPlayer().then(player => {
+              this.player = player
+            })
+          }
+          SpotifyService.getPlayerState().then(state => {
+            if (state) {
+              this.playerState = {
+                ...this.playerState,
+                paused: !state.is_playing,
+                shuffle: state.shuffle_state,
+                repeat: state.repeat_state !== 'off',
+                volume: state.device.volume,
+                device: state.device.name
+              }
+
+              if (state.item) {
+                this.playerState = {
+                  ...this.playerState,
+                  position: (state.progress_ms / state.item.duration_ms) * 100,
+                  track: state.item.name,
+                  artist: state.item.artists[0].name,
+                  images: state.item.album.images,
+                  elapsed: DateService.formattedDuration(state.progress_ms),
+                  duration: DateService.formattedDuration(state.item.duration_ms),
+                  durationMs: state.item.duration_ms
+                }
+              }
+
+              if (state.device) {
+                this.playerState = {
+                  ...this.playerState,
+                  volume: state.device.volume,
+                  device: state.device.name
+                }
+              }
+            }
+          })
+        }
+      }, 1000)
     },
     created () {
       this.getUserInfo()
@@ -155,6 +201,30 @@
 </script>
 
 <style>
+  body {
+    padding-bottom: 80px;
+  }
+
+  @media (max-width: 599px) {
+    body {
+      padding-bottom: 44px;
+    }
+  }
+
+  .truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .vertical-center {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .vertical-center-container {
+    display: table;
+  }
 
   .theme--light input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 1000px white inset !important;
@@ -182,17 +252,3 @@
     display: none;
   }
 </style>
-
-<style scoped>
-
-  .theme--dark .avatar-container {
-    padding: 6px;
-    background-color: white;
-    border-radius: 50%;
-  }
-
-  img {
-    width: 38px;
-  }
-</style>
-

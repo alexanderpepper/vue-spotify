@@ -18,9 +18,16 @@ export default {
   playlists: `${host}/Hooks/playlists`,
   playlist: (id) => `${host}/Hooks/playlist/${id}`,
   transferPlayback: (id, play) => `${host}/Hooks/transferPlayback/${id}/${play}`,
-  play: (spotifyURI) => `${host}/Hooks/play/${spotifyURI}`,
+  play: `${host}/Hooks/play`,
+  pause: `${host}/Hooks/pause`,
+  next: `${host}/Hooks/next`,
+  previous: `${host}/Hooks/previous`,
   accessToken: `${host}/Hooks/access-token`,
   refreshAccessToken: `${host}/Hooks/refresh-access-token`,
   devices: `${host}/Hooks/devices`,
-  currentSpotifyUser: `${host}/Hooks/me`
+  currentSpotifyUser: `${host}/Hooks/me`,
+  playerState: `${host}/Hooks/player-state`,
+  playingTrack: `${host}/Hooks/playing-track`,
+  setVolume: `${host}/Hooks/set-volume`,
+  seek: `${host}/Hooks/seek`
 }

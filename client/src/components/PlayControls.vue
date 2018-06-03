@@ -63,11 +63,19 @@
     },
     methods: {
       setVolume () {
-        SpotifyService.setVolume(Number(this.playerState.volume || 0))
+        if (this.player) {
+          this.player.setVolume(this.playerState.volume / 100)
+        }
+        // Available in spotify-web-api-node v3.1.1, which is currently broken
+        // SpotifyService.setVolume(Number(this.playerState.volume || 0))
       },
       seek () {
-        const positionMs = Math.floor(this.playerState.durationMs * (this.playerState.position / 100))
-        SpotifyService.seek(positionMs)
+        if (this.player) {
+          const positionMs = Math.floor(this.playerState.durationMs * (this.playerState.position / 100))
+          this.player.seek(positionMs)
+        }
+        // Available in spotify-web-api-node v3.1.1, which is currently broken
+        // SpotifyService.seek(positionMs)
       },
       nextTrack () {
         SpotifyService.next()

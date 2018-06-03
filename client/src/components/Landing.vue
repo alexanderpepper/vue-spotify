@@ -4,6 +4,16 @@
 
 <script>
   export default {
-    name: 'landing'
+    name: 'landing',
+    props: ['currentUser'],
+    watch: {
+      currentUser: {
+        handler () {
+          if (this.currentUser && this.currentUser.spotifyUser && this.currentUser.spotifyUser.id) {
+             this.$router.push({name: 'home'})
+          }
+        }
+      }
+    }
   }
 </script>

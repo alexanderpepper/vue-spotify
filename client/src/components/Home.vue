@@ -1,12 +1,12 @@
 <template lang="pug">
   .callback
     v-layout(row, wrap)
-      v-flex.cursor-pointer.my-1.pa-2(v-for='(playlist, index) in playlists', :key='index')
+      v-flex.my-1.pa-2(v-for='(playlist, index) in playlists', :key='index')
         router-link(:to='{name: "playlist", params: {id: playlist.id}}')
           .playlist-artwork.elevation-5.mb-2.mx-auto(v-ripple='{ class: "white--text" }')
             img(v-if='playlist.images[0]', :src='playlist.images[0].url')
             .no-image.grey.darken-3.subheading(v-else) No image found
-          .playlist-name.body-2.text-xs-center.mx-auto {{ playlist.name }}
+        .playlist-name.body-2.text-xs-center.mx-auto {{ playlist.name }}
 </template>
 
 <script>

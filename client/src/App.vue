@@ -41,7 +41,7 @@
             v-list-tile-title Sign Out
     v-content
       router-view.router-view.mx-auto(:set-show-back-button='setShowBackButton', :is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-user='setUser', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
-    play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :current-user='user')
+    play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :current-user='user', v-if='user && user.spotifyUser && user.spotifyUser.id')
     v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
@@ -140,7 +140,7 @@
     },
     created () {
       this.getUserInfo().then(() => {
-        if (this.user && this.user.id && (!this.user.spotifyUser || !this.user.spotifyUser.id) && !this.$route.name === 'callback') {
+        if (this.user && this.user.id && (!this.user.spotifyUser || !this.user.spotifyUser.id)) {
           SpotifyService.authorizationUrl(url => {
             window.location.href = url
           })

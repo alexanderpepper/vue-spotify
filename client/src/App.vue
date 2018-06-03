@@ -110,9 +110,7 @@
                 ...this.playerState,
                 paused: !state.is_playing,
                 shuffle: state.shuffle_state,
-                repeat: state.repeat_state !== 'off',
-                volume: state.device.volume,
-                device: state.device.name
+                repeat: state.repeat_state !== 'off'
               }
 
               if (state.item) {
@@ -141,9 +139,11 @@
       }, 1000)
     },
     created () {
-      this.getUserInfo().then(async () => {
-        if (!this.user.spotifyUser || !this.user.spotifyUser.id) {
-          window.location.href = await SpotifyService.authorizationUrl()
+      this.getUserInfo().then(() => {
+        if (this.user && this.user.id && (!this.user.spotifyUser || !this.user.spotifyUser.id) && !this.$route.name === 'callback') {
+          SpotifyService.authorizationUrl(url => {
+            window.location.href = url
+          })
         }
       })
       this.isDarkTheme = window.localStorage['dark'] === 'true'

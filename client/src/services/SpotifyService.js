@@ -58,7 +58,7 @@ class SpotifyService extends BaseService {
   }
 
   static getPlaylists () {
-    return this.GET(api.playlists)
+    return this.GET(api.playlists).then(response => response.results)
   }
 
   static getCurrentSpotifyUser () {

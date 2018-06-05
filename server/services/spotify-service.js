@@ -70,6 +70,7 @@ module.exports = class SpotifyService {
   }
 
   async play (user, uris) {
+    console.log(`Got URIs: ${JSON.stringify(uris)}`)
     try {
       return await this.getSpotifyApi(user).play(uris).then(data => data.body)
     } catch (error) {

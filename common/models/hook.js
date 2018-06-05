@@ -108,9 +108,6 @@ module.exports = function (Hook) {
   }
 
   Hook.playerState = function (options, cb) {
-    if (!options.user) {
-      console.log('11111111111')
-    }
     spotify.getPlaybackState(options.user)
       .then(results => cb(null, results))
       .catch(error => cb(error))

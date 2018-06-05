@@ -9,7 +9,7 @@
       v-flex.hidden-xs-only(md3, offset-md9, sm6, offset-sm6, xs12)
         v-text-field(v-model='search', placeholder='Filter tracks', append-icon='search', hide-details)
     v-list.px-2.hidden-sm-and-up(two-line)
-      v-list-tile(ripple, @click='playSong(track.uri)', v-for='(track, i) in tracks', :key='i')
+      v-list-tile(ripple, v-for='(track, index) in tracks', :key='index', @click='playSong(index)',)
         v-list-tile-content
           v-list-tile-title {{ track.title }}
           v-list-tile-sub-title {{ track.artist }} • {{ track.album }}

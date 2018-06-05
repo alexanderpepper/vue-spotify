@@ -27,7 +27,7 @@
           v-btn.my-0(icon, @click='previousTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_previous
           v-btn.my-0(icon, outline, @click='togglePlay', :large='$vuetify.breakpoint.xsOnly')
-            v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46') {{ playerState.paused ? 'play_arrow' : 'pause' }}
+            v-icon(:size='$vuetify.breakpoint.smAndUp ? 26 : 32') {{ playerState.paused ? 'play_arrow' : 'pause' }}
           v-btn.my-0(icon, @click='nextTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_next
           v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp')

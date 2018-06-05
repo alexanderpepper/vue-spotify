@@ -39,14 +39,14 @@ module.exports = class SpotifyService {
   async refreshToken (user) {
     try {
       const data = await this.getSpotifyApi(user).refreshAccessToken().then(data => data.body)
-      const token = TokenService.create(data.body)
+      const token = TokenService.create(data)
       user.spotifyUser.token.accessToken = token.accessToken
       user.spotifyUser.token.expirationDate = token.expirationDate
-      // if (token.refreshToken) {
-      //   user.spotifyUser.token.refreshToken = token.refreshToken
-      // }
+      if (token.refreshToken) {
+        user.spotifyUser.token.refreshToken = token.refreshToken
+      }
       return new Promise(resolve => {
-        user.save().then(saved => resolve(saved))
+        user.save().then(savedUser => resolve(savedUser))
       })
     } catch (error) {
       console.log('Error: spotify-service.refreshToken()', error)
@@ -70,7 +70,6 @@ module.exports = class SpotifyService {
   }
 
   async play (user, uris) {
-    console.log(`Got URIs: ${JSON.stringify(uris)}`)
     try {
       return await this.getSpotifyApi(user).play(uris).then(data => data.body)
     } catch (error) {

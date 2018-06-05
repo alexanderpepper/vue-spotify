@@ -7,6 +7,7 @@ const spotify = new SpotifyService()
 module.exports = function (Hook) {
   Hook.beforeRemote('*', (ctx, unused, next) => {
     if (!ctx.args.options || !ctx.args.options.accessToken) {
+
       return next()
     }
     const AppUser = Hook.app.models.AppUser
@@ -19,7 +20,7 @@ module.exports = function (Hook) {
         spotify.refreshToken(user).then(refreshedTokenUser => {
           ctx.args.options.user = refreshedTokenUser
           next()
-        })
+        }).catch(err => console.log(err))
       } else {
         next()
       }
@@ -107,6 +108,9 @@ module.exports = function (Hook) {
   }
 
   Hook.playerState = function (options, cb) {
+    if (!options.user) {
+      console.log('11111111111')
+    }
     spotify.getPlaybackState(options.user)
       .then(results => cb(null, results))
       .catch(error => cb(error))

@@ -42,9 +42,9 @@ module.exports = class SpotifyService {
       const token = TokenService.create(data.body)
       user.spotifyUser.token.accessToken = token.accessToken
       user.spotifyUser.token.expirationDate = token.expirationDate
-      if (token.refreshToken) {
-        user.spotifyUser.token.refreshToken = token.refreshToken
-      }
+      // if (token.refreshToken) {
+      //   user.spotifyUser.token.refreshToken = token.refreshToken
+      // }
       return new Promise(resolve => {
         user.save().then(saved => resolve(saved))
       })

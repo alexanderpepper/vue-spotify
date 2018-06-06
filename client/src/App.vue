@@ -100,7 +100,7 @@
       setInterval(() => {
         if (this.user && this.user.spotifyUser && this.user.spotifyUser.id) {
           if (!this.player) {
-            WebPlaybackService.getPlayer().then(player => {
+            WebPlaybackService.getPlayer(this.user).then(player => {
               this.player = player
             })
           }
@@ -172,7 +172,7 @@
         if (!user.spotifyUser || !user.spotifyUser.id) {
           window.location.href = await SpotifyService.authorizationUrl()
         } else {
-          this.$router.push({name: 'home'})
+          this.$router.push({name: 'playlists'})
         }
       },
       async logout () {
@@ -259,5 +259,30 @@
 
   .display-none {
     display: none;
+  }
+
+  @media (max-width: 599px) {
+    .mb-xs-3 {
+      margin-bottom: 16px !important;
+    }
+
+    .mx-xs-5 {
+      margin-left: 32px !important;
+      margin-right: 32px !important;
+    }
+
+    .pa-xs-0 {
+      padding: 0 !important;
+    }
+
+    .px-xs-0 {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .mx-xs-auto {
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
   }
 </style>

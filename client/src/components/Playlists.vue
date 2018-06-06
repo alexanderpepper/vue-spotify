@@ -1,6 +1,7 @@
 <template lang="pug">
-  .callback
-    v-layout(row, wrap)
+  v-layout.playlists(fill-height)
+    modal-spinner(v-if='!playlists.length')
+    v-layout(row, wrap, v-if='playlists.length')
       v-flex.my-1.pa-2(v-for='(playlist, index) in playlists', :key='index')
         router-link(:to='{name: "playlist", params: {id: playlist.id}}')
           .playlist-artwork.elevation-5.mb-2.mx-auto(v-ripple='{ class: "white--text" }')
@@ -11,13 +12,15 @@
 
 <script>
   import SpotifyService from '../services/SpotifyService'
+  import ModalSpinner from './ModalSpinner'
 
   export default {
     name: 'callback',
+    components: {ModalSpinner},
     props: ['setShowBackButton'],
     data () {
       return {
-        playlists: {}
+        playlists: []
       }
     },
     async created () {

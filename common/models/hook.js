@@ -38,13 +38,9 @@ module.exports = function (Hook) {
   }
 
   Hook.accessToken = function (options, cb) {
-    if (!options.user) {
-      cb(null, '')
-      return
-    }
-    spotify.getAccessToken(options.user)
-      .then(token => cb(null, token))
-      .catch(error => cb(error))
+    cb(null, spotify.getAccessToken(options.user))
+      // .then(token => cb(null, token))
+      // .catch(error => cb(error))
   }
 
   Hook.devices = function (options, cb) {
@@ -108,9 +104,6 @@ module.exports = function (Hook) {
   }
 
   Hook.playerState = function (options, cb) {
-    if (!options.user) {
-      console.log('11111111111')
-    }
     spotify.getPlaybackState(options.user)
       .then(results => cb(null, results))
       .catch(error => cb(error))

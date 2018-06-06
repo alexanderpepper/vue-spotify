@@ -10,7 +10,7 @@
       currentUser: {
         handler () {
           if (this.currentUser && this.currentUser.spotifyUser && this.currentUser.spotifyUser.id) {
-            this.$router.push({name: 'home'})
+            this.$router.push({name: 'playlists'})
           }
         }
       }

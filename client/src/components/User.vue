@@ -9,7 +9,6 @@
           v-text-field(label='Email', v-model='user.email', required, @blur='populateFullName')
           v-text-field(label='Password', v-model='user.password', v-if='newRegistration || !user.id', type='password', required)
           v-text-field(label='Confirm Password', v-model='confirmPassword', v-if='newRegistration || !user.id', type='password', required)
-          v-checkbox(label='Activated', v-model='user.activated', v-if='currentUser.isAdmin')
           div(v-if='!editProfile && currentUser.isAdmin')
             .caption.grey--text.text--lighten-1 Roles*
             v-chip(v-for='(roleMapping, index) in user.roleMappings', v-model='roleMapping.enabled', :key='index', close, @input='removeRole') {{ roleMapping.role.name | capitalize }}
@@ -21,9 +20,9 @@
                   v-list-tile-title {{ role.name | capitalize }}
     v-layout.my-2(row)
       v-btn(flat, :router='true', :to='{ name: "users" }', v-if='currentUser.isAdmin') Go Back
-      v-btn(@click='deleteSpotifyData') Delete Spotify Data
+      v-spacer
       v-dialog(v-show='user.id && !editProfile && currentUser.isAdmin', v-model='showDeleteDialog', width='300')
-        v-btn(slot='activator') Delete User
+        v-btn(slot='activator', outline) Delete
         v-card
           v-card-title.headline Delete this user?
           v-card-text Are you sure you want to delete this user? This action cannot be undone.
@@ -31,7 +30,7 @@
             v-spacer
             v-btn(flat, @click='showDeleteDialog = false') Cancel
             v-btn(@click='deleteUser') Delete
-      v-btn(@click='save', :disabled='!isValid()') {{ newRegistration ? 'Create Account' : 'Save' }}
+      v-btn(@click='save', :disabled='!isValid()', outline) {{ newRegistration ? 'Create Account' : 'Save' }}
 </template>
 
 <script>
@@ -72,11 +71,6 @@
       }
     },
     methods: {
-      async deleteSpotifyData () {
-        this.user.spotifyUser = null
-        await UserService.save(this.user)
-        this.$router.push({name: 'landing'})
-      },
       isValid () {
         if (this.user.id) {
           return this.user.email

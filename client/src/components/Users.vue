@@ -2,7 +2,7 @@
   v-container(fluid)
     v-card
       v-card-title
-        v-btn(:router='true', :to='{name: "user"}') Create New User
+        v-btn(outline, :router='true', :to='{name: "user"}') Create New User
         v-spacer
         v-text-field(append-icon='search', label='Search', single-line, hide-details, v-model='search')
       v-data-table.elevation-1(:headers='headers', :items='users', :search='search')

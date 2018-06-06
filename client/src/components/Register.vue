@@ -9,7 +9,7 @@
         v-text-field.mb-2(label='Email', v-model='credentials.email', required, hide-details)
         v-text-field.mb-2(label='Password', v-model='credentials.password', :type="hidePassword ? 'password' : 'text'", :append-icon="hidePassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hidePassword = !hidePassword)", @keyup.enter='register', required, hide-details)
         v-text-field.mb-2(label='Confirm Password', v-model='confirmPassword', :type="hideConfirmPassword ? 'password' : 'text'", :append-icon="hideConfirmPassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hideConfirmPassword = !hideConfirmPassword)", @keyup.enter='register', required, hide-details)
-      v-btn(small, flat, block, @click='register', :disabled='!isValid()') Create New Account
+      v-btn(outline, block, @click='register', :disabled='!isValid()') Register
       v-btn(small, flat, block, @click='login') Back to Sign In
 </template>
 

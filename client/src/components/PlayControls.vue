@@ -122,24 +122,4 @@
   .artwork img {
     width: 100%;
   }
-
-  @media (max-width: 599px) {
-    .mb-xs-3 {
-      margin-bottom: 16px !important;
-    }
-
-    .mx-xs-5 {
-      margin-left: 32px !important;
-      margin-right: 32px !important;
-    }
-
-    .pa-xs-0 {
-      padding: 0 !important;
-    }
-
-    .mx-xs-auto {
-      margin-left: auto !important;
-      margin-right: auto !important;
-    }
-  }
 </style>

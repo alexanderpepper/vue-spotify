@@ -4,15 +4,9 @@ import SpotifyService from './SpotifyService'
 let singletonPlayer
 
 class WebPlaybackService extends BaseService {
-  static initializeWebPlaybackSDK () {
-    this.getPlayer()
-      .then(player => console.log('Player initialized successfully.', player))
-      .catch(error => console.log('Unable to initialize player. Error:', error))
-  }
-
   // TODO handle the case where this gets called twice in quick succession
   // if the function is called again before the first one resolves, it could create two players.
-  static getPlayer () {
+  static getPlayer (user) {
     // giving it a name so we can recur
     const getPlayerWithRetries = retriesLeft => async resolve => {
       if (typeof singletonPlayer !== 'undefined') {
@@ -31,10 +25,9 @@ class WebPlaybackService extends BaseService {
         return
       }
 
-      const token = await SpotifyService.getAccessToken()
       const player = new window.Spotify.Player({
         name: 'Spotify .5 Web Player',
-        getOAuthToken: cb => { cb(token.url) }
+        getOAuthToken: cb => { cb(user.spotifyUser.token.accessToken) }
       })
 
       player.addListener('initialization_error', ({ message }) => { console.error(message) })
@@ -45,8 +38,6 @@ class WebPlaybackService extends BaseService {
       player.addListener('player_state_changed', state => { console.log(state) })
 
       player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id)
-
         singletonPlayer = player
         SpotifyService.transferPlayback(player._options.id)
         resolve(player)

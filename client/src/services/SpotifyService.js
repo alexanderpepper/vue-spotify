@@ -44,8 +44,6 @@ class SpotifyService extends BaseService {
 
   static transferPlayback (deviceID, play) {
     const realPlay = typeof play === 'boolean' ? play : false
-    console.log('realPlay', realPlay, 'deviceID', deviceID)
-
     return this.POST(api.transferPlayback(deviceID, realPlay)).then(response => response.results)
   }
 

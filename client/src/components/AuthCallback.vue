@@ -1,18 +1,20 @@
 <template lang="pug">
-  .callback.display-2.text-xs-center.mt-3 CALLBACK
+  modal-spinner
 </template>
 
 <script>
   import SpotifyService from '../services/SpotifyService'
   import UserService from '../services/UserService'
+  import ModalSpinner from './ModalSpinner'
 
   export default {
     name: 'callback',
+    components: {ModalSpinner},
     props: ['setUser'],
     async mounted () {
       await SpotifyService.setAuthorizationCode(this.$route.query.code)
       this.setUser(await UserService.me())
-      this.$router.push({name: 'home'})
+      this.$router.push({name: 'playlists'})
     }
   }
 </script>

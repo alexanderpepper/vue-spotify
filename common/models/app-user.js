@@ -1,8 +1,31 @@
 'use strict'
+const moment = require('moment')
+const SpotifyService = require('../../server/services/spotify-service')
+const spotify = new SpotifyService()
 
 module.exports = function (AppUser) {
   AppUser.settings.acls.length = 0
   AppUser.settings.acls = require('./app-user-acl.json')
+
+  AppUser.getUserWithFreshToken = function (ctx, next) {
+    if (!ctx.args.options || !ctx.args.options.accessToken) {
+      return next()
+    }
+    AppUser.findById(ctx.args.options.accessToken.userId, (err, user) => {
+      if (err) {
+        return next(err)
+      }
+      ctx.args.options.user = user
+      if (user.spotifyUser && moment().isSameOrAfter(user.spotifyUser.token.expirationDate)) {
+        spotify.refreshToken(user).then(refreshedTokenUser => {
+          ctx.args.options.user = refreshedTokenUser
+          next()
+        }).catch(err => console.log(err))
+      } else {
+        next()
+      }
+    })
+  }
 
   AppUser.paginated = function (filter, cb) {
     const query = {
@@ -29,7 +52,7 @@ module.exports = function (AppUser) {
       find()
     }
     async function addRoleFilter () {
-      const roleMappings = await AppUser.app.models.RoleMapping.find({ roleId: filter.role })
+      const roleMappings = await AppUser.app.models.AppRoleMapping.find({ roleId: filter.role })
       const userIds = roleMappings.map(r => r.principalId)
       query.where.and.push({ id: { inq: userIds } })
     }

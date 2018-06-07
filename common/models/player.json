@@ -1,9 +1,8 @@
 {
-  "name": "Container",
-  "plural": "Containers",
+  "name": "Player",
+  "plural": "player",
   "base": "Model",
   "properties": {},
-  "validations": [],
   "relations": {},
   "acls": [],
   "methods": {}

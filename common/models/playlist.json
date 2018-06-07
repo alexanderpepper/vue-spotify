@@ -1,0 +1,9 @@
+{
+  "name": "Playlist",
+  "plural": "playlist",
+  "base": "Model",
+  "properties": {},
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

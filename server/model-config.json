@@ -14,7 +14,8 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "db",
+    "public": false
   },
   "AccessToken": {
     "dataSource": "db",
@@ -26,12 +27,23 @@
   },
   "RoleMapping": {
     "dataSource": "db",
-    "public": true,
+    "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
+    "dataSource": "db",
+    "public": false
+  },
+  "AppRoleMapping": {
+    "dataSource": "db",
+    "public": true,
+    "options": {
+      "strictObjectIDCoercion": true
+    }
+  },
+  "AppRole": {
     "dataSource": "db",
     "public": true
   },
@@ -39,7 +51,15 @@
     "dataSource": "db",
     "public": true
   },
-  "Hook": {
+  "Player": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Playlist": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Token": {
     "dataSource": "db",
     "public": true
   }

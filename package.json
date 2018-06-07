@@ -20,7 +20,6 @@
     "loopback": "^3.0.0",
     "loopback-boot": "^2.6.5",
     "loopback-component-explorer": "^5.0.0",
-    "loopback-component-storage": "^3.3.1",
     "moment": "^2.22.1",
     "pm2": "^2.10.1",
     "serve-favicon": "^2.0.1",

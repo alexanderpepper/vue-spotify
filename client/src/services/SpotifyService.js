@@ -10,10 +10,6 @@ class SpotifyService extends BaseService {
     return this.POST(api.setAuthorizationCode, {code})
   }
 
-  static getAccessToken () {
-    return this.GET(api.accessToken)
-  }
-
   static play (spotifyURIs) {
     if (spotifyURIs) {
       return this.POST(api.play, {uris: spotifyURIs}).then(response => response.results)
@@ -57,10 +53,6 @@ class SpotifyService extends BaseService {
 
   static getPlaylists () {
     return this.GET(api.playlists).then(response => response.results)
-  }
-
-  static getCurrentSpotifyUser () {
-    return this.GET(api.currentSpotifyUser).then(response => response.results)
   }
 
   static refreshAccessToken () {

@@ -1,0 +1,12 @@
+{
+  "name": "AppRole",
+  "plural": "appRole",
+  "base": "Role",
+  "relations": {
+    "principals": {
+      "type": "hasMany",
+      "model": "AppRoleMapping",
+      "foreignKey": "roleId"
+    }
+  }
+}

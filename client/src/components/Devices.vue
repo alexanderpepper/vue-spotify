@@ -12,7 +12,7 @@
 
   export default {
     name: 'devices',
-    props: ['currentUser'],
+    props: ['isSpotifyConnected'],
     data () {
       return {
         devices: []
@@ -22,7 +22,7 @@
       // this will update every 2 seconds so that the list updates when we active more players
       // TODO move to websocket
       setInterval(async () => {
-        if (this.currentUser && this.currentUser.spotifyUser && this.currentUser.spotifyUser.id) {
+        if (this.isSpotifyConnected()) {
           this.devices = (await SpotifyService.getDevices()).devices
           this.devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         }

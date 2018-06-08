@@ -5,11 +5,11 @@
 <script>
   export default {
     name: 'landing',
-    props: ['currentUser'],
+    props: ['isSpotifyConnected'],
     watch: {
-      currentUser: {
+      user: {
         handler () {
-          if (this.currentUser && this.currentUser.spotifyUser && this.currentUser.spotifyUser.id) {
+          if (this.isSpotifyConnected()) {
             this.$router.push({name: 'playlists'})
           }
         }

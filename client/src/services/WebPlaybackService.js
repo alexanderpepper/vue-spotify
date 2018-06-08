@@ -34,7 +34,6 @@ class WebPlaybackService extends BaseService {
       player.addListener('authentication_error', ({ message }) => { console.error(message) })
       player.addListener('account_error', ({ message }) => { console.error(message) })
       player.addListener('playback_error', ({ message }) => { console.error(message) })
-
       player.addListener('player_state_changed', state => { console.log(state) })
 
       player.addListener('ready', ({ device_id }) => {

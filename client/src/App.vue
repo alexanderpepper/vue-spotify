@@ -20,15 +20,15 @@
         .headline.cursor-pointer(@click='$router.push("/")') Spotify
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
-        .subheading {{ user.spotifyUser && user.spotifyUser.display_name }}
+        .subheading {{ userFullName }}
       v-btn(flat, v-show='!user.id', @click='login') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
-          user-photo(size='medium', :user='user')
+          user-photo(size='medium', :user='user', :is-spotify-connected="isSpotifyConnected")
         v-list
           v-layout.px-3.pb-2.hidden-sm-and-up(column)
             .caption Signed in as
-            .body-2 {{ user.spotifyUser && user.spotifyUser.display_name }}
+            .body-2 {{ userFullName }}
           v-divider.hidden-sm-and-up
           v-list-tile(@click='$router.push({ name: "user", params: { id: user.id, editProfile: true } })', ripple)
             v-list-tile-title Edit Profile
@@ -40,8 +40,8 @@
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
     v-content
-      router-view.router-view.mx-auto(:set-show-back-button='setShowBackButton', :is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-user='setUser', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
-    play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :current-user='user', v-if='user && user.spotifyUser && user.spotifyUser.id')
+      router-view.router-view.mx-auto(:set-show-back-button='setShowBackButton', :is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :user='user', :set-user='setUser', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player', :is-spotify-connected='isSpotifyConnected')
+    play-controls(v-if='isSpotifyConnected()', :is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :user='user', :is-spotify-connected='isSpotifyConnected')
     v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
@@ -98,7 +98,7 @@
     },
     beforeCreate () {
       setInterval(() => {
-        if (this.user && this.user.spotifyUser && this.user.spotifyUser.id) {
+        if (this.isSpotifyConnected()) {
           if (!this.player) {
             WebPlaybackService.getPlayer(this.user).then(player => {
               this.player = player
@@ -147,6 +147,11 @@
         }
       })
       this.isDarkTheme = window.localStorage['dark'] === 'true'
+    },
+    computed: {
+      userFullName () {
+        return this.isSpotifyConnected() ? this.user.spotifyUser.display_name : ''
+      }
     },
     methods: {
       setShowBackButton (showBackButton) {
@@ -214,6 +219,9 @@
       },
       isActiveMenuItem (item) {
         return this.activeMenuItem === item.name
+      },
+      isSpotifyConnected () {
+        return this.user && this.user.spotifyUser && this.user.spotifyUser.id
       }
     }
   }

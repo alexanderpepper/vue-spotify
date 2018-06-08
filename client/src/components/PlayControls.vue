@@ -43,7 +43,7 @@
           v-menu(v-model='showDevices', top, left, offset-y, fixed)
             v-btn(icon, slot='activator')
               v-icon speaker
-            devices(:current-user='currentUser')
+            devices(:is-spotify-connected='isSpotifyConnected')
           v-slider.pa-0.hidden-xs-only(:color='isDarkTheme ? "white" : "black"', :thumb-color='isDarkTheme ? "white" : "black"', v-model='playerState.volume', @click='setVolume')
           v-spacer.hidden-sm-and-up
 </template>
@@ -54,7 +54,7 @@
 
   export default {
     components: {Devices},
-    props: ['player', 'playerState', 'isDarkTheme', 'currentUser'],
+    props: ['player', 'playerState', 'isDarkTheme', 'isSpotifyConnected'],
     data () {
       return {
         showPlayer: false,

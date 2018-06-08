@@ -3,7 +3,7 @@
     v-list.py-0
       v-list-tile(ripple, @click='selectDevice(device.id)', v-for='(device, index) in devices', :key='index')
         v-list-tile-content
-          v-list-tile-title {{ device.name }}
+          v-list-tile-title(:class='{bold: device.is_active}') {{ device.name }}
       v-list-tile.grey--text(v-if='!devices.length')
         v-list-tile-content
           v-list-tile-title No devices found

@@ -226,6 +226,10 @@
 </script>
 
 <style>
+  .bold {
+    font-weight: 700;
+  }
+
   .truncate {
     white-space: nowrap;
     overflow: hidden;

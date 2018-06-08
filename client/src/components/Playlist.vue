@@ -2,8 +2,7 @@
   .playlist.pb-4
     v-layout.px-4.pt-4(row, wrap, align-center)
       v-flex.text-xs-center(xs12, sm3)
-        img.elevation-10(v-if='playlist.images[0]', :src='playlist.images[0].url')
-        .no-image.grey.darken-3.elevation-10(v-else) No image found
+        playlist-artwork(:playlist='playlist', elevation='10', size='100%')
       v-flex.px-4.text-sm-left.text-xs-center(xs12, sm9)
         .display-1 {{ playlist.name }}
       v-flex.hidden-xs-only(md3, offset-md9, sm6, offset-sm6, xs12)
@@ -26,6 +25,7 @@
   import PlaylistService from '../services/PlaylistService'
   import PlayerService from '../services/PlayerService'
   import DateService from '../services/DateService'
+  import PlaylistArtwork from './PlaylistArtwork'
 
   export default {
     name: 'playlist',
@@ -33,6 +33,7 @@
       id: String,
       setShowBackButton: Function
     },
+    components: {PlaylistArtwork},
     data () {
       return {
         headers: [

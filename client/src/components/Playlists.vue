@@ -4,8 +4,8 @@
     v-layout(row, wrap, v-if='playlists.length')
       v-flex.my-1.pa-2(v-for='(playlist, index) in playlists', :key='index')
         router-link(:to='{name: "playlist", params: {id: playlist.id}}')
-          playlist-artwork(:playlist='playlist')
-        .playlist-name.body-2.text-xs-center.mx-auto.truncate {{ playlist.name }}
+          playlist-artwork(:playlist='playlist', size='200px')
+        .playlist-name.truncate.body-2.text-xs-center.mt-2.mx-auto {{ playlist.name }}
 </template>
 
 <script>

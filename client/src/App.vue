@@ -40,7 +40,7 @@
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
     v-content
-      router-view.router-view.mx-auto(:set-show-back-button='setShowBackButton', :is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :user='user', :set-user='setUser', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player', :is-spotify-connected='isSpotifyConnected')
+      router-view.router-view.mx-auto(:set-show-back-button='setShowBackButton', :is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :user='user', :set-user='setUser', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player', :player-state='playerState', :is-spotify-connected='isSpotifyConnected')
     play-controls(v-if='isSpotifyConnected()', :is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :user='user', :is-spotify-connected='isSpotifyConnected')
     v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
@@ -119,6 +119,7 @@
                   ...this.playerState,
                   position: (state.progress_ms / state.item.duration_ms) * 100,
                   track: state.item.name,
+                  trackId: state.item.id,
                   artist: state.item.artists[0].name,
                   images: state.item.album.images,
                   elapsed: DateService.formattedDuration(state.progress_ms),
@@ -227,7 +228,7 @@
 
 <style>
   .bold {
-    font-weight: 700;
+    font-weight: 700 !important;
   }
 
   .truncate {

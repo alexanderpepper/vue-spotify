@@ -1,24 +1,30 @@
 <template lang="pug">
-  .playlist.pb-4
+  .playlist.pb-4.pa-xs-0
     v-layout.px-4.pt-4(row, wrap, align-center)
       v-flex.text-xs-center(xs12, sm3)
-        playlist-artwork(:playlist='playlist', elevation='10', size='100%')
+        playlist-artwork.mb-xs-3(:playlist='playlist', elevation='10', size='100%')
       v-flex.px-4.text-sm-left.text-xs-center(xs12, sm9)
-        .display-1 {{ playlist.name }}
+        .caption PLAYLIST
+        .display-1.mb-2.bold {{ playlist.name }}
+        .body-1.grey--text {{ tracks.length }} songs, {{ totalDuration }}
       v-flex.hidden-xs-only(md3, offset-md9, sm6, offset-sm6, xs12)
         v-text-field(v-model='search', placeholder='Filter tracks', append-icon='search', hide-details)
-    v-list.hidden-sm-and-up(two-line)
+    v-list.hidden-sm-and-up.py-0(two-line)
       v-list-tile(ripple, v-for='(track, index) in tracks', :key='index', @click='playSong(index)',)
         v-list-tile-content
-          v-list-tile-title {{ track.title }}
-          v-list-tile-sub-title {{ track.artist }} • {{ track.album }}
+          v-list-tile-title
+            v-icon.playing-indicator.mr-1(v-if='isPlayingTrack(track)', size='17') volume_up
+            span(:class='{bold: isPlayingTrack(track)}') {{ track.title }}
+          v-list-tile-sub-title(:class='{bold: isPlayingTrack(track)}') {{ track.artist }} • {{ track.album }}
     v-data-table.px-4.hidden-xs-only(:headers='headers', :items='tracks', :loading='loading', :search='search', no-data-text='Loading playlist...', hide-actions, disable-initial-sort)
       template(slot='items', slot-scope='props')
         tr(@click='playSong(props.index)')
-          td {{ props.item.title }}
-          td {{ props.item.artist }}
-          td {{ props.item.album }}
-          td.text-xs-right {{ props.item.duration }}
+          td
+            v-icon.data-table.playing-indicator.mr-1(v-if='isPlayingTrack(props.item)', size='17') volume_up
+            span(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.title }}
+          td(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.artist }}
+          td(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.album }}
+          td.text-xs-right(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.duration }}
 </template>
 
 <script>
@@ -31,7 +37,8 @@
     name: 'playlist',
     props: {
       id: String,
-      setShowBackButton: Function
+      setShowBackButton: Function,
+      playerState: Object
     },
     components: {PlaylistArtwork},
     data () {
@@ -44,6 +51,7 @@
         ],
         playlist: {images: []},
         tracks: [],
+        totalDuration: 0,
         loading: true,
         search: '',
         audio: undefined
@@ -53,21 +61,28 @@
       this.playlist = await PlaylistService.getPlaylist(this.id)
       this.tracks = this.playlist.tracks.items.map(item => {
         return {
+          id: item.track.id,
           title: item.track.name,
           artist: item.track.artists.map(a => a.name).join(', '),
           album: item.track.album.name,
           uri: item.track.uri,
-          duration: DateService.formattedDuration(item.track.duration_ms)
+          duration: DateService.formattedDuration(item.track.duration_ms),
+          durationMs: item.track.duration_ms
         }
       })
+      const totalMs = this.tracks.reduce((accumulator, current) => accumulator + Number(current.durationMs), 0)
+      this.totalDuration = DateService.englishFormattedDuration(totalMs)
       this.loading = false
       this.audio = new Audio()
       this.setShowBackButton(true)
     },
     methods: {
-      playSong: async function (index) {
+      async playSong (index) {
         const tracks = this.tracks.slice().splice(index, this.tracks.length - index)
         PlayerService.play(tracks.map(t => t.uri))
+      },
+      isPlayingTrack (track) {
+        return this.playerState.trackId === track.id
       }
     }
   }
@@ -81,6 +96,15 @@
 </style>
 
 <style scoped>
+
+  .playing-indicator {
+    margin-bottom: 2px;
+  }
+
+  .data-table.playing-indicator {
+    margin-left: -22px;
+  }
+
   img {
     width: 100%;
     max-width: 320px;

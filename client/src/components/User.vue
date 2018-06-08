@@ -6,23 +6,23 @@
         v-spacer
       v-card-text
         form(@submit.prevent='save')
-          v-text-field(label='Email', v-model='editUser.email', required, @blur='populateFullName')
+          v-text-field(label='Email', v-model='editUser.email', required)
           v-text-field(label='Password', v-model='editUser.password', v-if='!editUser.id', type='password', required)
           v-text-field(label='Confirm Password', v-model='confirmPassword', v-if='!editUser.id', type='password', required)
-          div(v-if='!editProfile && editUser.isAdmin')
+          div(v-if='!editProfile && user.isAdmin')
             .caption.grey--text.text--lighten-1 Roles*
             v-chip(v-for='(roleMapping, index) in editUser.roleMappings', v-model='roleMapping.enabled', :key='index', close, @input='removeRole') {{ roleMapping.role.name | capitalize }}
             v-menu(offset-y, right, v-show='availableRoles.length')
               v-btn(fab, small, slot='activator')
                 v-icon add
-              v-list
+              v-list.py-0
                 v-list-tile(@click='addRole(role)', v-for='(role, index) in availableRoles', :key='index')
                   v-list-tile-title {{ role.name | capitalize }}
     v-layout.my-2(row)
       v-btn(flat, :router='true', :to='{ name: "users" }', v-if='user.isAdmin') Go Back
       v-spacer
       v-dialog(v-show='editUser.id && !editProfile && user.isAdmin', v-model='showDeleteDialog', width='300')
-        v-btn(slot='activator', outline) Delete
+        v-btn(slot='activator', flat) Delete
         v-card
           v-card-title.headline Delete this user?
           v-card-text Are you sure you want to delete this user? This action cannot be undone.
@@ -42,7 +42,7 @@
 
   export default {
     name: 'user',
-    props: ['id', 'editProfile', 'showSnackbar', 'setTitle', 'setActiveMenuItem', 'user'],
+    props: ['id', 'editProfile', 'showSnackbar', 'setShowBackButton', 'setTitle', 'setActiveMenuItem', 'user'],
     components: {UploadButton, UserPhoto},
     data () {
       return {

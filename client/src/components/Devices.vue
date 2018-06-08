@@ -1,10 +1,12 @@
 <template lang="pug">
   v-card.devices
-    v-list(v-if='devices.length > 0')
+    v-list.py-0
       v-list-tile(ripple, @click='selectDevice(device.id)', v-for='(device, index) in devices', :key='index')
         v-list-tile-content
           v-list-tile-title {{ device.name }}
-    .empty(v-else) No devices found :(
+      v-list-tile.grey--text(v-if='!devices.length')
+        v-list-tile-content
+          v-list-tile-title No devices found
 </template>
 
 <script>
@@ -20,7 +22,6 @@
     },
     created () {
       // this will update every 2 seconds so that the list updates when we active more players
-      // TODO move to websocket
       setInterval(async () => {
         if (this.isSpotifyConnected()) {
           this.devices = (await SpotifyService.getDevices()).devices

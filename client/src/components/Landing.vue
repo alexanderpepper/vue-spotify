@@ -5,7 +5,7 @@
 <script>
   export default {
     name: 'landing',
-    props: ['isSpotifyConnected'],
+    props: ['isSpotifyConnected', 'user'],
     watch: {
       user: {
         handler () {

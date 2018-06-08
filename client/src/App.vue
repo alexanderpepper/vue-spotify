@@ -1,7 +1,7 @@
 <template lang="pug">
   v-app(:dark='isDarkTheme', :light='!isDarkTheme')
     v-navigation-drawer(app, fixed, temporary, clipped, :mini-variant='miniVariant', v-model='drawer', v-show='user.isAdmin', :enable-resize-watcher='false', disable-route-watcher)
-      v-list
+      v-list.py-0
         v-list-tile(@click.stop='miniVariant = !miniVariant', ripple)
           v-list-tile-action
             v-icon(v-html="miniVariant ? 'chevron_right' : 'chevron_left'")
@@ -25,8 +25,8 @@
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
           user-photo(size='medium', :user='user', :is-spotify-connected="isSpotifyConnected")
-        v-list
-          v-layout.px-3.pb-2.hidden-sm-and-up(column)
+        v-list.py-0
+          v-layout.px-3.pb-2.hidden-sm-and-up.pt-2(column)
             .caption Signed in as
             .body-2 {{ userFullName }}
           v-divider.hidden-sm-and-up
@@ -146,7 +146,7 @@
           })
         }
       })
-      this.isDarkTheme = window.localStorage['dark'] === 'true'
+      this.isDarkTheme = window.localStorage['dark'] !== 'false'
     },
     computed: {
       userFullName () {

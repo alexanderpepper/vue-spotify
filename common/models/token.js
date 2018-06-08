@@ -8,7 +8,7 @@ module.exports = function (Token) {
     Token.app.models.AppUser.getUserWithFreshToken(ctx, next)
   })
 
-  Token.authorizationUrl = function (cb) {
+  Token.getAuthorizationUrl = function (cb) {
     cb(null, spotify.getAuthorizationUrl())
   }
 
@@ -29,7 +29,7 @@ module.exports = function (Token) {
     http: {path: '/me', verb: 'get'}
   })
 
-  Token.remoteMethod('authorizationUrl', {
+  Token.remoteMethod('getAuthorizationUrl', {
     returns: {arg: 'url', type: 'string'},
     http: {path: '/authorization-url', verb: 'get'}
   })

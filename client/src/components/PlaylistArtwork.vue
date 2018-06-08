@@ -8,7 +8,9 @@
 <script>
   export default {
     name: 'playlistArtwork',
-    props: ['playlist']
+    props: {
+      playlist: Object
+    }
   }
 </script>
 

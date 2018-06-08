@@ -50,11 +50,16 @@
 
 <script>
   import Devices from './Devices'
-  import SpotifyService from '../services/SpotifyService'
+  import PlayerService from '../services/PlayerService'
 
   export default {
     components: {Devices},
-    props: ['player', 'playerState', 'isDarkTheme', 'isSpotifyConnected'],
+    props: {
+      player: Object,
+      playerState: Object,
+      isDarkTheme: Boolean,
+      isSpotifyConnected: Function
+    },
     data () {
       return {
         showPlayer: false,
@@ -67,7 +72,7 @@
           this.player.setVolume(this.playerState.volume / 100)
         }
         // Available in spotify-web-api-node v3.1.1, which is currently broken
-        // SpotifyService.setVolume(Number(this.playerState.volume || 0))
+        // PlayerService.setVolume(Number(this.playerState.volume || 0))
       },
       seek () {
         if (this.player) {
@@ -75,19 +80,19 @@
           this.player.seek(positionMs)
         }
         // Available in spotify-web-api-node v3.1.1, which is currently broken
-        // SpotifyService.seek(positionMs)
+        // PlayerService.seek(positionMs)
       },
       nextTrack () {
-        SpotifyService.next()
+        PlayerService.next()
       },
       previousTrack () {
-        SpotifyService.previous()
+        PlayerService.previous()
       },
       togglePlay () {
         if (this.playerState.paused) {
-          SpotifyService.play()
+          PlayerService.play()
         } else {
-          SpotifyService.pause()
+          PlayerService.pause()
         }
       }
     }

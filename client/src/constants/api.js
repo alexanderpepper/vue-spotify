@@ -11,7 +11,7 @@ export default {
   roleMapping: (id) => `${host}/app-role-mapping/${id}`,
   usersPaginated: `${host}/app-user/paginated`,
   user: (id) => `${host}/app-user/${id}`,
-  authorizationUrl: `${host}/token/authorization-url`,
+  getAuthorizationUrl: `${host}/token/authorization-url`,
   setAuthorizationCode: `${host}/token/authorization-code`,
   playlists: `${host}/playlist`,
   playlist: (id) => `${host}/playlist/${id}`,

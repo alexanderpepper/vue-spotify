@@ -37,13 +37,18 @@
   import UserService from '../services/UserService'
   import RoleService from '../services/RoleService'
   import { clone } from 'lodash'
-  import UploadButton from './UploadButton'
-  import UserPhoto from './UserPhoto.vue'
 
   export default {
     name: 'user',
-    props: ['id', 'editProfile', 'showSnackbar', 'setShowBackButton', 'setTitle', 'setActiveMenuItem', 'user'],
-    components: {UploadButton, UserPhoto},
+    props: {
+      id: String,
+      editProfile: Boolean,
+      showSnackbar: Function,
+      setShowBackButton: Function,
+      setTitle: Function,
+      setActiveMenuItem: Function,
+      user: Object
+    },
     data () {
       return {
         showDeleteDialog: false,

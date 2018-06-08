@@ -23,12 +23,16 @@
 </template>
 
 <script>
-  import SpotifyService from '../services/SpotifyService'
+  import PlaylistService from '../services/PlaylistService'
+  import PlayerService from '../services/PlayerService'
   import DateService from '../services/DateService'
 
   export default {
     name: 'playlist',
-    props: ['id', 'setShowBackButton'],
+    props: {
+      id: String,
+      setShowBackButton: Function
+    },
     data () {
       return {
         headers: [
@@ -45,8 +49,7 @@
       }
     },
     async created () {
-      // TODO consider caching images
-      this.playlist = await SpotifyService.getPlaylist(this.id)
+      this.playlist = await PlaylistService.getPlaylist(this.id)
       this.tracks = this.playlist.tracks.items.map(item => {
         return {
           title: item.track.name,
@@ -63,7 +66,7 @@
     methods: {
       playSong: async function (index) {
         const tracks = this.tracks.slice().splice(index, this.tracks.length - index)
-        SpotifyService.play(tracks.map(t => t.uri))
+        PlayerService.play(tracks.map(t => t.uri))
       }
     }
   }

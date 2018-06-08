@@ -9,21 +9,23 @@
 </template>
 
 <script>
-  import SpotifyService from '../services/SpotifyService'
+  import PlaylistService from '../services/PlaylistService'
   import ModalSpinner from './ModalSpinner'
   import PlaylistArtwork from './PlaylistArtwork'
 
   export default {
     name: 'callback',
     components: {ModalSpinner, PlaylistArtwork},
-    props: ['setShowBackButton'],
+    props: {
+      setShowBackButton: Function
+    },
     data () {
       return {
         playlists: []
       }
     },
     async created () {
-      this.playlists = await SpotifyService.getPlaylists()
+      this.playlists = await PlaylistService.getPlaylists()
       this.setShowBackButton(false)
     }
   }

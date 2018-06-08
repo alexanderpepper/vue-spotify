@@ -59,7 +59,8 @@
   import UserPhoto from './components/UserPhoto'
   import PlayControls from './components/PlayControls'
   import DateService from './services/DateService'
-  import SpotifyService from './services/SpotifyService'
+  import PlayerService from './services/PlayerService'
+  import TokenService from './services/TokenService'
 
   export default {
     components: {Register, Login, UserPhoto, PlayControls},
@@ -104,7 +105,7 @@
               this.player = player
             })
           }
-          SpotifyService.getPlayerState().then(state => {
+          PlayerService.getPlayerState().then(state => {
             if (state) {
               this.playerState = {
                 ...this.playerState,
@@ -141,7 +142,7 @@
     created () {
       this.getUserInfo().then(() => {
         if (this.user && this.user.id && (!this.user.spotifyUser || !this.user.spotifyUser.id)) {
-          SpotifyService.authorizationUrl(url => {
+          TokenService.getAuthorizationUrl().then(url => {
             window.location.href = url
           })
         }
@@ -175,7 +176,7 @@
         this.showLogin = false
         this.showRegister = false
         if (!user.spotifyUser || !user.spotifyUser.id) {
-          window.location.href = await SpotifyService.authorizationUrl()
+          window.location.href = await TokenService.getAuthorizationUrl()
         } else {
           this.$router.push({name: 'playlists'})
         }

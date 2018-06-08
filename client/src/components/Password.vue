@@ -20,7 +20,10 @@
 
   export default {
     name: 'password',
-    props: ['showSnackbar', 'setTitle'],
+    props: {
+      showSnackbar: Function,
+      setTitle: Function
+    },
     created () {
       this.setTitle('Change Password')
       setTimeout(() => {

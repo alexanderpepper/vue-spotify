@@ -5,7 +5,10 @@
 <script>
   export default {
     name: 'landing',
-    props: ['isSpotifyConnected', 'user'],
+    props: {
+      isSpotifyConnected: Function,
+      user: Object
+    },
     watch: {
       user: {
         handler () {

@@ -10,11 +10,13 @@
 </template>
 
 <script>
-  import SpotifyService from '../services/SpotifyService'
+  import PlayerService from '../services/PlayerService'
 
   export default {
     name: 'devices',
-    props: ['isSpotifyConnected'],
+    props: {
+      isSpotifyConnected: Function
+    },
     data () {
       return {
         devices: []
@@ -24,14 +26,14 @@
       // this will update every 2 seconds so that the list updates when we active more players
       setInterval(async () => {
         if (this.isSpotifyConnected()) {
-          this.devices = (await SpotifyService.getDevices()).devices
+          this.devices = (await PlayerService.getDevices()).devices
           this.devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         }
       }, 2000)
     },
     methods: {
       selectDevice: function (deviceID) {
-        SpotifyService.transferPlayback(deviceID, true)
+        PlayerService.transferPlayback(deviceID, true)
       }
     }
   }

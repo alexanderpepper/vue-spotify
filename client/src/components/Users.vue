@@ -19,7 +19,11 @@
 
   export default {
     name: 'users',
-    props: ['showSnackbar', 'setTitle', 'setActiveMenuItem'],
+    props: {
+      showSnackbar: Function,
+      setTitle: Function,
+      setActiveMenuItem: Function
+    },
     data () {
       return {
         search: '',
@@ -89,9 +93,3 @@
     }
   }
 </script>
-
-<style scoped>
-    .list__tile.no-highlight:hover {
-        background-color: transparent;
-    }
-</style>

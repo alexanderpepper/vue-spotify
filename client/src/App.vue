@@ -139,14 +139,11 @@
         }
       }, 1000)
     },
-    created () {
-      this.getUserInfo().then(() => {
-        if (this.user && this.user.id && (!this.user.spotifyUser || !this.user.spotifyUser.id)) {
-          TokenService.getAuthorizationUrl().then(url => {
-            window.location.href = url
-          })
-        }
-      })
+    async created () {
+      await this.getUserInfo()
+      if (this.user.id && !this.isSpotifyConnected()) {
+        window.location.href = await TokenService.getAuthorizationUrl()
+      }
       this.isDarkTheme = window.localStorage['dark'] !== 'false'
     },
     computed: {

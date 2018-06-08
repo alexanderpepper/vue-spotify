@@ -1,5 +1,5 @@
 import BaseService from './BaseService'
-import PlaylistService from './PlaylistService'
+import PlayerService from './PlayerService'
 
 let singletonPlayer
 
@@ -38,7 +38,7 @@ class WebPlaybackService extends BaseService {
 
       player.addListener('ready', ({ device_id }) => {
         singletonPlayer = player
-        PlaylistService.transferPlayback(player._options.id)
+        PlayerService.transferPlayback(player._options.id)
         resolve(player)
       })
 

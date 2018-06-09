@@ -1,7 +1,7 @@
 import BaseService from './BaseService'
 import api from '../constants/api.js'
 
-class TokenService extends BaseService {
+class AuthorizationService extends BaseService {
   static getAuthorizationUrl () {
     return this.GET(api.getAuthorizationUrl).then(results => results.url)
   }
@@ -11,4 +11,4 @@ class TokenService extends BaseService {
   }
 }
 
-export default TokenService
+export default AuthorizationService

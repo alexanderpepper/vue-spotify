@@ -5,7 +5,7 @@ const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-rea
 const limit = 50
 
 module.exports = class SpotifyService {
-  getSpotifyApi (user) {
+  static getSpotifyApi (user) {
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
     const token = user && user.spotifyUser && user.spotifyUser.token
     if (token) {
@@ -15,11 +15,11 @@ module.exports = class SpotifyService {
     return spotifyApi
   }
 
-  getAuthorizationUrl () {
+  static getAuthorizationUrl () {
     return new SpotifyWebApi({clientId, redirectUri}).createAuthorizeURL(scopes, 'new-spotify-utils-user')
   }
 
-  async setAuthorizationCode (user, code) {
+  static async setAuthorizationCode (user, code) {
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
     const tokenResponse = await spotifyApi.authorizationCodeGrant(code)
     const token = TokenService.create(tokenResponse.body)
@@ -32,7 +32,7 @@ module.exports = class SpotifyService {
     return new Promise(resolve => user.save().then(resolve))
   }
 
-  async refreshToken (user) {
+  static async refreshToken (user) {
     const data = await this.getSpotifyApi(user)
       .refreshAccessToken()
       .then(data => data.body)
@@ -52,68 +52,63 @@ module.exports = class SpotifyService {
     })
   }
 
-  getAccessToken (user) {
-    return this.getSpotifyApi(user)
-      .getAccessToken()
-  }
-
-  getMe (user) {
+  static getMe (user) {
     return this.getSpotifyApi(user)
       .getMe()
       .then(data => data.body)
       .catch(console.log)
   }
 
-  play (user, uris) {
+  static play (user, uris) {
     return this.getSpotifyApi(user)
       .play(uris)
       .then(data => data.body)
       .catch(console.log)
   }
 
-  pause (user) {
+  static pause (user) {
     return this.getSpotifyApi(user)
       .pause()
       .then(data => data.body)
       .catch(console.log)
   }
 
-  skipToNext (user) {
+  static skipToNext (user) {
     return this.getSpotifyApi(user)
       .skipToNext()
       .then(data => data.body)
       .catch(console.log)
   }
 
-  skipToPrevious (user) {
+  static skipToPrevious (user) {
     return this.getSpotifyApi(user)
       .skipToPrevious()
       .then(data => data.body)
       .catch(console.log)
   }
 
-  getPlaybackState (user) {
+  static getPlaybackState (user) {
     return this.getSpotifyApi(user)
       .getMyCurrentPlaybackState()
       .then(data => data.body)
       .catch(console.log)
   }
 
-  getPlayingTrack (user) {
+  static getPlayingTrack (user) {
     return this.getSpotifyApi(user)
       .getMyCurrentPlayingTrack()
       .then(data => data.body)
       .catch(console.log)
   }
 
-  seek (user, position) {
+  static seek (user, position) {
     return this.getSpotifyApi(user)
       .seek(position)
       .then(data => data.body)
       .catch(console.log)
   }
 
-  setVolume (user, volume) {
+  static setVolume (user, volume) {
     return this.getSpotifyApi(user)
       .setVolume(volume)
       .then(data => data.body)
@@ -123,7 +118,7 @@ module.exports = class SpotifyService {
   // setShuffle
   // setRepeat
 
-  transferPlayback (user, deviceID, play) {
+  static transferPlayback (user, deviceID, play) {
     const argsObject = {
       device_ids: [deviceID],
       play: typeof play === 'boolean' ? play : false
@@ -134,21 +129,21 @@ module.exports = class SpotifyService {
       .catch(console.log)
   }
 
-  getPlaylist (user, playlistID) {
+  static getPlaylist (user, playlistID) {
     return this.getSpotifyApi(user)
       .getPlaylist(user.spotifyUser.id, playlistID)
       .then(data => data.body)
       .catch(console.log)
   }
 
-  getDevices (user) {
+  static getDevices (user) {
     return this.getSpotifyApi(user)
       .getMyDevices()
       .then(data => data.body)
       .catch(console.log)
   }
 
-  async getPlaylists (user) {
+  static async getPlaylists (user) {
     const spotifyApi = this.getSpotifyApi(user)
     const sampling = await spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit: 1}).then(data => data.body)
     const pageCount = Math.ceil(sampling.total / limit)

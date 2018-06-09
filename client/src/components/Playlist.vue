@@ -1,6 +1,6 @@
 <template lang="pug">
   .playlist.pb-4.pa-xs-0
-    v-layout.px-4.pt-4(row, wrap, align-center)
+    v-layout.px-4.pt-4.mb-4(row, wrap, align-center)
       v-flex.text-xs-center(xs12, sm3)
         playlist-artwork.mb-xs-3(:playlist='playlist', elevation='10', size='100%')
       v-flex.px-4.text-sm-left.text-xs-center(xs12, sm9)
@@ -8,7 +8,7 @@
         .display-1.mb-2.bold {{ playlist.name }}
         .body-1.grey--text {{ tracks.length }} songs, {{ totalDuration }}
       v-flex.hidden-xs-only(md3, offset-md9, sm6, offset-sm6, xs12)
-        v-text-field(v-model='search', placeholder='Filter tracks', append-icon='search', hide-details)
+        v-text-field.filter-field.pt-0(v-model='search', placeholder='Filter', append-icon='search', hide-details)
     v-list.hidden-sm-and-up.py-0(two-line)
       v-list-tile(ripple, v-for='(track, index) in tracks', :key='index', @click='playSong(index)',)
         v-list-tile-content
@@ -44,10 +44,10 @@
     data () {
       return {
         headers: [
-          {text: 'Title', value: 'title', align: 'left'},
-          {text: 'Artist', value: 'artist', align: 'left'},
-          {text: 'Album', value: 'album', align: 'left'},
-          {text: 'Duration', value: 'duration', align: 'right'}
+          {text: 'TITLE', value: 'title', align: 'left'},
+          {text: 'ARTIST', value: 'artist', align: 'left'},
+          {text: 'ALBUM', value: 'album', align: 'left'},
+          {text: 'TIME', value: 'duration', align: 'right'}
         ],
         playlist: {images: []},
         tracks: [],
@@ -96,6 +96,9 @@
 </style>
 
 <style scoped>
+  .filter-field {
+    margin-top: -32px;
+  }
 
   .playing-indicator {
     margin-bottom: 2px;

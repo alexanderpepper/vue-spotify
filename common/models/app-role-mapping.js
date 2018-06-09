@@ -1,4 +1,3 @@
 'use strict'
 
-module.exports = function (AppRoleMapping) {
-}
+module.exports = (AppRoleMapping) => {}

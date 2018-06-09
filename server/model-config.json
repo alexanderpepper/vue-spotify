@@ -59,7 +59,7 @@
     "dataSource": "db",
     "public": true
   },
-  "Token": {
+  "Authorization": {
     "dataSource": "db",
     "public": true
   }

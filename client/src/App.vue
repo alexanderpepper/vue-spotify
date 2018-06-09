@@ -60,7 +60,7 @@
   import PlayControls from './components/PlayControls'
   import DateService from './services/DateService'
   import PlayerService from './services/PlayerService'
-  import TokenService from './services/TokenService'
+  import AuthorizationService from './services/AuthorizationService'
 
   export default {
     components: {Register, Login, UserPhoto, PlayControls},
@@ -143,7 +143,7 @@
     async created () {
       await this.getUserInfo()
       if (this.user.id && !this.isSpotifyConnected()) {
-        window.location.href = await TokenService.getAuthorizationUrl()
+        window.location.href = await AuthorizationService.getAuthorizationUrl()
       }
       this.isDarkTheme = window.localStorage['dark'] !== 'false'
     },
@@ -174,7 +174,7 @@
         this.showLogin = false
         this.showRegister = false
         if (!user.spotifyUser || !user.spotifyUser.id) {
-          window.location.href = await TokenService.getAuthorizationUrl()
+          window.location.href = await AuthorizationService.getAuthorizationUrl()
         } else {
           this.$router.push({name: 'playlists'})
         }
@@ -227,73 +227,5 @@
 </script>
 
 <style>
-  .bold {
-    font-weight: 700 !important;
-  }
 
-  .truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .vertical-center {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  .vertical-center-container {
-    display: table;
-  }
-
-  .theme--light input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px white inset !important;
-    -webkit-text-fill-color: rgba(0, 0, 0, 0.87) !important;
-  }
-
-  .theme--dark input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px #424242 inset !important;
-    -webkit-text-fill-color: white !important;
-  }
-
-  textarea {
-    resize: none;
-  }
-
-  .cursor-pointer {
-    cursor: pointer !important;
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  .display-none {
-    display: none;
-  }
-
-  @media (max-width: 599px) {
-    .mb-xs-3 {
-      margin-bottom: 16px !important;
-    }
-
-    .mx-xs-5 {
-      margin-left: 32px !important;
-      margin-right: 32px !important;
-    }
-
-    .pa-xs-0 {
-      padding: 0 !important;
-    }
-
-    .px-xs-0 {
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-    }
-
-    .mx-xs-auto {
-      margin-left: auto !important;
-      margin-right: auto !important;
-    }
-  }
 </style>

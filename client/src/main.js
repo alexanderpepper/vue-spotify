@@ -1,7 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-
 import {
   Vuetify,
   VApp,
@@ -26,11 +25,10 @@ import {
   transitions
 } from 'vuetify'
 import '../node_modules/vuetify/src/stylus/app.styl'
-
 import App from './App'
 import router from './router'
-
 import { Ripple } from 'vuetify/es5/directives'
+import './main.css'
 
 Vue.use(Vuetify, {
   components: {
@@ -61,16 +59,6 @@ Vue.use(Vuetify, {
 })
 
 Vue.config.productionTip = false
-
-Vue.filter('capitalize', function (value) {
-  if (!value) return ''
-  return value.split([' ']).map(c => { return c[0].toUpperCase() + c.slice(1) }).join(' ')
-})
-
-Vue.filter('delimited', function (value) {
-  if (!value) return '0'
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-})
 
 /* eslint-disable no-new */
 new Vue({

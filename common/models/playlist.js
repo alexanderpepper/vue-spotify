@@ -1,37 +1,24 @@
 'use strict'
 
 const SpotifyService = require('../../server/services/spotify-service')
-const spotify = new SpotifyService()
+const remoteDefaults = require('../../server/constants/remote-defaults')
 
-module.exports = function (Playlist) {
-  Playlist.beforeRemote('*', (ctx, unused, next) => {
-    Playlist.app.models.AppUser.getUserWithFreshToken(ctx, next)
-  })
+module.exports = (Playlist) => {
+  Playlist.beforeRemote('*', (ctx, unused, next) => Playlist.app.models.AppUser.getUserWithFreshToken(ctx, next))
 
-  Playlist.playlists = function (options, cb) {
-    spotify.getPlaylists(options.user)
-      .then(results => cb(null, results))
-      .catch(error => cb(error))
-  }
-
-  Playlist.playlist = function (playlistID, options, cb) {
-    spotify.getPlaylist(options.user, playlistID)
-      .then(results => cb(null, results))
-      .catch(error => cb(error))
-  }
-
+  Playlist.playlists = (options) => SpotifyService.getPlaylists(options.user)
   Playlist.remoteMethod('playlists', {
-    accepts: [{arg: 'options', type: 'object', http: 'optionsFromRequest'}],
-    returns: {arg: 'results', type: 'object'},
+    ...remoteDefaults.method,
     http: {path: '/', verb: 'get'}
   })
 
+  Playlist.playlist = (playlistID, options) => SpotifyService.getPlaylist(options.user, playlistID)
   Playlist.remoteMethod('playlist', {
+    ...remoteDefaults.method,
     accepts: [
       {arg: 'playlistID', type: 'string'},
-      {arg: 'options', type: 'object', http: 'optionsFromRequest'}
+      remoteDefaults.options
     ],
-    returns: {arg: 'results', type: 'object'},
     http: {path: '/:playlistID', verb: 'get'}
   })
 }

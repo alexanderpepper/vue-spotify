@@ -3,7 +3,7 @@
 </template>
 
 <script>
-  import TokenService from '../services/TokenService'
+  import AuthorizationService from '../services/AuthorizationService'
   import UserService from '../services/UserService'
   import ModalSpinner from './ModalSpinner'
 
@@ -14,7 +14,7 @@
       setUser: Function
     },
     async mounted () {
-      await TokenService.setAuthorizationCode(this.$route.query.code)
+      await AuthorizationService.setAuthorizationCode(this.$route.query.code)
       this.setUser(await UserService.me())
       this.$router.push({name: 'playlists'})
     }

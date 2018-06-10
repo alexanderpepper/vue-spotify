@@ -74,8 +74,12 @@
     },
     methods: {
       async playSong (index) {
-        const tracks = this.tracks.slice().splice(index, this.tracks.length - index)
-        PlayerService.play(tracks.map(t => t.uri))
+        // const tracks = this.tracks.slice().splice(index, this.tracks.length - index)
+        // if (tracks.length && tracks[0].id === this.app.playerState.trackId) {
+        //   return
+        // }
+        console.log(index)
+        PlayerService.play(this.tracks.map(t => t.uri), index)
       },
       isPlayingTrack (track) {
         return this.app.playerState.trackId === track.id

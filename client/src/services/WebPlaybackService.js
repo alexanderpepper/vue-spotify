@@ -10,7 +10,6 @@ class WebPlaybackService extends BaseService {
     // giving it a name so we can recur
     const getPlayerWithRetries = retriesLeft => async resolve => {
       if (typeof singletonPlayer !== 'undefined') {
-        console.log('Returning already-initialized player.')
         resolve(singletonPlayer)
         return
       }
@@ -26,7 +25,7 @@ class WebPlaybackService extends BaseService {
       }
 
       const player = new window.Spotify.Player({
-        name: 'Spotify .5 Web Player',
+        name: 'VueSpotify Player',
         getOAuthToken: cb => { cb(user.spotifyUser.token.accessToken) }
       })
 
@@ -34,7 +33,7 @@ class WebPlaybackService extends BaseService {
       player.addListener('authentication_error', ({ message }) => { console.error(message) })
       player.addListener('account_error', ({ message }) => { console.error(message) })
       player.addListener('playback_error', ({ message }) => { console.error(message) })
-      player.addListener('player_state_changed', state => { console.log(state) })
+      // player.addListener('player_state_changed', state => { console.log(state) })
 
       player.addListener('ready', ({ device_id }) => {
         singletonPlayer = player
@@ -44,7 +43,7 @@ class WebPlaybackService extends BaseService {
 
       player.connect().then(success => {
         if (success) {
-          console.log('The Web Playback SDK successfully connected to Spotify!')
+          console.log('Playback SDK connected to Spotify')
         }
       })
     }

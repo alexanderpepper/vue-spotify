@@ -2,9 +2,9 @@ import BaseService from './BaseService'
 import api from '../constants/api.js'
 
 class PlayerService extends BaseService {
-  static play (spotifyURIs) {
-    if (spotifyURIs) {
-      return this.POST(api.play, {uris: spotifyURIs}).then(response => response.results)
+  static play (uris, position) {
+    if (uris) {
+      return this.POST(api.play, {uris, offset: {position}}).then(response => response.results)
     } else {
       return this.POST(api.play).then(response => response.results)
     }

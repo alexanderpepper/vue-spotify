@@ -28,7 +28,7 @@ import '../node_modules/vuetify/src/stylus/app.styl'
 import App from './App'
 import router from './router'
 import { Ripple } from 'vuetify/es5/directives'
-import './main.css'
+import './common.css'
 
 Vue.use(Vuetify, {
   components: {
@@ -55,10 +55,24 @@ Vue.use(Vuetify, {
   },
   directives: {
     Ripple
+  },
+  theme: {
+    primary: '#1db954'
   }
 })
 
 Vue.config.productionTip = false
+
+Vue.filter('capitalize', function (value) {
+  if (!value) return ''
+  return value.split([' ']).map(c => { return c[0].toUpperCase() + c.slice(1) }).join(' ')
+})
+
+Vue.filter('delimited', function (value) {
+  if (!value) return '0'
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+})
+
 
 /* eslint-disable no-new */
 new Vue({

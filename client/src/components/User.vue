@@ -9,7 +9,7 @@
           v-text-field(label='Email', v-model='editUser.email', required)
           v-text-field(label='Password', v-model='editUser.password', v-if='!editUser.id', type='password', required)
           v-text-field(label='Confirm Password', v-model='confirmPassword', v-if='!editUser.id', type='password', required)
-          div(v-if='!editProfile && user.isAdmin')
+          div(v-if='!editProfile && app.user.isAdmin')
             .caption.grey--text.text--lighten-1 Roles*
             v-chip(v-for='(roleMapping, index) in editUser.roleMappings', v-model='roleMapping.enabled', :key='index', close, @input='removeRole') {{ roleMapping.role.name | capitalize }}
             v-menu(offset-y, right, v-show='availableRoles.length')
@@ -19,9 +19,9 @@
                 v-list-tile(@click='addRole(role)', v-for='(role, index) in availableRoles', :key='index')
                   v-list-tile-title {{ role.name | capitalize }}
     v-layout.my-2(row)
-      v-btn(flat, :router='true', :to='{ name: "users" }', v-if='user.isAdmin') Go Back
+      v-btn(flat, :router='true', :to='{ name: "users" }', v-if='app.user.isAdmin') Go Back
       v-spacer
-      v-dialog(v-show='editUser.id && !editProfile && user.isAdmin', v-model='showDeleteDialog', width='300')
+      v-dialog(v-show='editUser.id && !editProfile && app.user.isAdmin', v-model='showDeleteDialog', width='300')
         v-btn(slot='activator', flat) Delete
         v-card
           v-card-title.headline Delete this user?
@@ -43,11 +43,7 @@
     props: {
       id: String,
       editProfile: Boolean,
-      showSnackbar: Function,
-      setShowBackButton: Function,
-      setTitle: Function,
-      setActiveMenuItem: Function,
-      user: Object
+      app: Object
     },
     data () {
       return {
@@ -63,7 +59,7 @@
     async created () {
       this.roles = await RoleService.all()
       this.initialize()
-      this.setShowBackButton(true)
+      this.app.setShowBackButton(true)
     },
     watch: {
       $route: {
@@ -90,7 +86,7 @@
           this.oldRoles = clone(this.editUser.roleMappings)
         }
         this.title = this.editProfile ? 'Edit Profile' : (this.editUser.id ? 'Edit User' : 'Create a New Account')
-        this.setActiveMenuItem('users')
+        this.app.setActiveMenuItem('users')
       },
       async save () {
         if (this.isValid()) {
@@ -100,9 +96,9 @@
               this.$router.push({ name: 'user', params: { id: savedUser.id } })
             }
             await this.updateRoles()
-            this.showSnackbar('Success!')
+            this.app.showSnackbar('Success!')
           } catch (error) {
-            this.showSnackbar(`Error: ${error}`)
+            this.app.showSnackbar(`Error: ${error}`)
           }
         }
       },

@@ -14,9 +14,7 @@
 
   export default {
     name: 'devices',
-    props: {
-      isSpotifyConnected: Function
-    },
+    props: {app: Object},
     data () {
       return {
         devices: []
@@ -25,7 +23,7 @@
     created () {
       // this will update every 2 seconds so that the list updates when we active more players
       setInterval(async () => {
-        if (this.isSpotifyConnected()) {
+        if (this.app.isSpotifyConnected()) {
           this.devices = (await PlayerService.getDevices()).devices
           this.devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
         }

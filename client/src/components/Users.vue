@@ -19,11 +19,7 @@
 
   export default {
     name: 'users',
-    props: {
-      showSnackbar: Function,
-      setTitle: Function,
-      setActiveMenuItem: Function
-    },
+    props: {app: Object},
     data () {
       return {
         search: '',
@@ -41,8 +37,8 @@
     async created () {
       this.getUsers()
       this.getRoles()
-      this.setTitle('Users')
-      this.setActiveMenuItem('users')
+      this.app.setTitle('Users')
+      this.app.setActiveMenuItem('users')
     },
     methods: {
       edit (user) {
@@ -88,7 +84,7 @@
         delete this.removeUser
         this.confirmRemoveDialog = false
         this.getUsers()
-        this.showSnackbar('Success!')
+        this.app.showSnackbar('Success!')
       }
     }
   }

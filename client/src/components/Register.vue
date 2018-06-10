@@ -4,13 +4,13 @@
       v-layout.mb-3(row, align-center)
         .headline Create New Account
         v-spacer
-        v-icon.cursor-pointer(@click='cancel') close
+        v-icon.cursor-pointer(@click='app.closeRegister') close
       form.mb-5(@submit.prevent='register')
         v-text-field.mb-2(label='Email', v-model='credentials.email', required, hide-details)
         v-text-field.mb-2(label='Password', v-model='credentials.password', :type="hidePassword ? 'password' : 'text'", :append-icon="hidePassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hidePassword = !hidePassword)", @keyup.enter='register', required, hide-details)
         v-text-field.mb-2(label='Confirm Password', v-model='confirmPassword', :type="hideConfirmPassword ? 'password' : 'text'", :append-icon="hideConfirmPassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hideConfirmPassword = !hideConfirmPassword)", @keyup.enter='register', required, hide-details)
       v-btn(outline, block, @click='register', :disabled='!isValid()') Register
-      v-btn(small, flat, block, @click='login') Back to Sign In
+      v-btn(small, flat, block, @click='app.login') Back to Sign In
 </template>
 
 <script>
@@ -19,19 +19,13 @@
 
   export default {
     name: 'register',
-    props: {
-      login: Function,
-      cancel: Function,
-      showSnackbar: Function,
-      loginSuccess: Function
-    },
+    props: {app: Object},
     data () {
       return {
         hidePassword: true,
         hideConfirmPassword: true,
         confirmPassword: '',
         credentials: {
-          // name: 'Spotify Explorer',
           email: '',
           password: ''
         },
@@ -43,9 +37,9 @@
         try {
           await UserService.save(this.credentials)
           await LoginService.login(this.credentials)
-          this.loginSuccess()
+          this.app.loginSuccess()
         } catch (error) {
-          this.showSnackbar(error, 'error')
+          this.app.showSnackbar(error, 'error')
         }
       },
       isValid () {

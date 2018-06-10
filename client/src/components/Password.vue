@@ -1,18 +1,16 @@
 <template lang="pug">
   v-dialog(v-model='dialog', persistent, width='300')
     v-card
-      v-toolbar
-        v-toolbar-title Password
-        v-spacer
-        v-btn(icon, light, @click='closeDialog')
-          v-icon close
       v-card-text
-        form(novalidate, @submit.stop.prevent='changePassword', autocomplete='off')
-          v-text-field(label='Old Password', v-model='password.oldPassword', type='password')
-          v-text-field(label='New Password', v-model='password.newPassword', type='password')
-          v-text-field(label='Confirm Password', v-model='confirmPassword', type='password')
-      v-card-actions
-        v-btn.primary--text(flat, @click='changePassword', :disabled='!buttonEnabled') Change Password
+        v-layout.mb-3(row, align-center)
+          .headline Change Password
+          v-spacer
+          v-icon.cursor-pointer(@click='closeDialog') close
+        form.mb-5(novalidate, @submit.stop.prevent='changePassword', autocomplete='off')
+          v-text-field.mb-2(label='Old Password', v-model='password.oldPassword', type='password', hide-details)
+          v-text-field.mb-2(label='New Password', v-model='password.newPassword', type='password', hide-details)
+          v-text-field(label='Confirm Password', v-model='confirmPassword', type='password', hide-details)
+        v-btn(outline, block, @click='changePassword', :disabled='!buttonEnabled') Change Password
 </template>
 
 <script>
@@ -20,12 +18,8 @@
 
   export default {
     name: 'password',
-    props: {
-      showSnackbar: Function,
-      setTitle: Function
-    },
+    props: {app: Object},
     created () {
-      this.setTitle('Change Password')
       setTimeout(() => {
         this.dialog = true
       })
@@ -51,7 +45,7 @@
       async changePassword () {
         try {
           await UserService.changePassword(this.password)
-          this.showSnackbar('Success!')
+          this.app.showSnackbar('Success!')
           this.closeDialog()
         } catch (err) {
           console.log(err)
@@ -60,8 +54,8 @@
       closeDialog () {
         this.dialog = false
         setTimeout(() => {
-          this.$router.push({name: 'users'})
-        }, 400)
+          this.$router.push({name: 'playlists'})
+        }, 333)
       }
     }
   }

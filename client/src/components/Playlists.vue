@@ -14,11 +14,9 @@
   import PlaylistArtwork from './PlaylistArtwork'
 
   export default {
-    name: 'callback',
+    name: 'playlists',
     components: {ModalSpinner, PlaylistArtwork},
-    props: {
-      setShowBackButton: Function
-    },
+    props: {app: Object},
     data () {
       return {
         playlists: []
@@ -26,7 +24,7 @@
     },
     async created () {
       this.playlists = await PlaylistService.getPlaylists()
-      this.setShowBackButton(false)
+      this.app.setShowBackButton(false)
     }
   }
 </script>

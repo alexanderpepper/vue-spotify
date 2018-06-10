@@ -20,7 +20,7 @@
       template(slot='items', slot-scope='props')
         tr(@click='playSong(props.index)')
           td
-            v-icon.data-table.playing-indicator.mr-1(v-if='isPlayingTrack(props.item)', size='17') volume_up
+            v-icon.data-table.playing-indicator.mr-1.primary--text(v-if='isPlayingTrack(props.item)', size='17') volume_up
             span(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.title }}
           td(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.artist }}
           td(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.album }}
@@ -35,11 +35,7 @@
 
   export default {
     name: 'playlist',
-    props: {
-      id: String,
-      setShowBackButton: Function,
-      playerState: Object
-    },
+    props: {app: Object, id: String},
     components: {PlaylistArtwork},
     data () {
       return {
@@ -74,7 +70,7 @@
       this.totalDuration = DateService.englishFormattedDuration(totalMs)
       this.loading = false
       this.audio = new Audio()
-      this.setShowBackButton(true)
+      this.app.setShowBackButton(true)
     },
     methods: {
       async playSong (index) {
@@ -82,7 +78,7 @@
         PlayerService.play(tracks.map(t => t.uri))
       },
       isPlayingTrack (track) {
-        return this.playerState.trackId === track.id
+        return this.app.playerState.trackId === track.id
       }
     }
   }

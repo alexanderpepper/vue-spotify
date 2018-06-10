@@ -40,14 +40,14 @@
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
     v-content
-      router-view.router-view.mx-auto(:set-show-back-button='setShowBackButton', :is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :user='user', :set-user='setUser', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player', :player-state='playerState', :is-spotify-connected='isSpotifyConnected')
-    play-controls(v-if='isSpotifyConnected()', :is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :user='user', :is-spotify-connected='isSpotifyConnected')
+      router-view.router-view.mx-auto(:app='getApp()')
+    play-controls(v-if='isSpotifyConnected()', :app='getApp()')
     v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
-      login(:login-success='loginSuccess', :show-snackbar='showSnackbar', :cancel='() => { showLogin = false }', :register='register')
+      login(:app='getApp()')
     v-dialog(v-model='showRegister', peristent, width='300')
-      register(:login='login', :show-snackbar='showSnackbar', :login-success='loginSuccess', :cancel='() => { showRegister = false }')
+      register(:app='getApp()')
 </template>
 
 <script>
@@ -153,6 +153,9 @@
       }
     },
     methods: {
+      getApp () {
+        return this
+      },
       setShowBackButton (showBackButton) {
         this.showBackButton = showBackButton
       },
@@ -160,9 +163,15 @@
         this.showRegister = false
         this.showLogin = true
       },
+      closeLogin () {
+        this.showLogin = false
+      },
       register () {
         this.showRegister = true
         this.showLogin = false
+      },
+      closeRegister () {
+        this.showRegister = false
       },
       toggleTheme () {
         this.isDarkTheme = !this.isDarkTheme
@@ -225,7 +234,3 @@
     }
   }
 </script>
-
-<style>
-
-</style>

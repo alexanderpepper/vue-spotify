@@ -23,5 +23,7 @@ export default {
   devices: `${host}/player/devices`,
   playerState: `${host}/player/state`,
   setVolume: `${host}/player/volume`,
+  setShuffle: `${host}/player/shuffle`,
+  setRepeat: `${host}/player/repeat`,
   seek: `${host}/player/seek`
 }

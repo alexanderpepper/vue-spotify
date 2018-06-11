@@ -17,7 +17,7 @@
       v-btn(icon, v-if='showBackButton', @click='$router.go(-1)')
         v-icon arrow_back
       v-toolbar-title.mr-3
-        .headline.cursor-pointer(@click='$router.push("/")') Spotify
+        router-link.headline.cursor-pointer(:to='{name: "playlists"}') Spotify
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
         .subheading {{ userFullName }}
@@ -30,9 +30,9 @@
             .caption Signed in as
             .body-2 {{ userFullName }}
           v-divider.hidden-sm-and-up
-          v-list-tile(@click='$router.push({ name: "user", params: { id: user.id, editProfile: true } })', ripple)
+          v-list-tile(:to='{name: "user", params: {id: user.id, editProfile: true}}', ripple)
             v-list-tile-title Edit Profile
-          v-list-tile(@click='$router.push({ name: "password" })', ripple)
+          v-list-tile(:to='{name: "password"}', ripple)
             v-list-tile-title Change Password
           v-list-tile(@click='toggleTheme', :ripple='true')
             v-list-tile-title Switch Theme
@@ -58,7 +58,6 @@
   import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
   import PlayControls from './components/PlayControls'
-  import DateService from './services/DateService'
   import PlayerService from './services/PlayerService'
   import AuthorizationService from './services/AuthorizationService'
 
@@ -82,19 +81,7 @@
         snackbarStyle: '',
         activeMenuItem: '',
         player: null,
-        playerState: {
-          paused: true,
-          repeat: false,
-          shuffle: false,
-          position: 0,
-          track: 'Track Name',
-          artist: 'Artist Name',
-          images: [{}],
-          elapsed: '00:00',
-          duration: '00:00',
-          durationMs: 0,
-          volume: 50
-        }
+        playerState: PlayerService.initialPlayerState()
       }
     },
     beforeCreate () {
@@ -106,36 +93,7 @@
             })
           }
           PlayerService.getPlayerState().then(state => {
-            if (state) {
-              this.playerState = {
-                ...this.playerState,
-                paused: !state.is_playing,
-                shuffle: state.shuffle_state,
-                repeat: state.repeat_state !== 'off'
-              }
-
-              if (state.item) {
-                this.playerState = {
-                  ...this.playerState,
-                  position: (state.progress_ms / state.item.duration_ms) * 100,
-                  track: state.item.name,
-                  trackId: state.item.id,
-                  artist: state.item.artists[0].name,
-                  images: state.item.album.images,
-                  elapsed: DateService.formattedDuration(state.progress_ms),
-                  duration: DateService.formattedDuration(state.item.duration_ms),
-                  durationMs: state.item.duration_ms
-                }
-              }
-
-              if (state.device) {
-                this.playerState = {
-                  ...this.playerState,
-                  volume: state.device.volume,
-                  device: state.device.name
-                }
-              }
-            }
+            this.playerState = PlayerService.parsePlayerState(this.playerState, state)
           })
         }
       }, 1000)

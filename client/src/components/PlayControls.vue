@@ -23,7 +23,7 @@
         v-layout.mb-xs-3(row, align-center)
           v-spacer
           v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp')
-            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18') shuffle
+            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"text--primary": app.playerState.shuffle}') shuffle
           v-btn.my-0(icon, @click='previousTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_previous
           v-btn.my-0(icon, outline, @click='togglePlay', :large='$vuetify.breakpoint.xsOnly')
@@ -31,7 +31,7 @@
           v-btn.my-0(icon, @click='nextTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_next
           v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp')
-            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18') repeat
+            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"text--primary": app.playerState.repeat !== repeatModes.off }') {{ app.playerState.repeat === repeatModes.track ? 'repeat_one' : 'repeat' }}
           v-spacer
         v-layout.mx-xs-5(row, align-center)
           .caption(v-text='app.playerState.elapsed')
@@ -51,12 +51,14 @@
 <script>
   import Devices from './Devices'
   import PlayerService from '../services/PlayerService'
+  import repeatModes from '../constants/repeat-modes'
 
   export default {
     components: {Devices},
     props: {app: Object},
     data () {
       return {
+        repeatModes,
         showPlayer: false,
         showDevices: false
       }

@@ -16,6 +16,26 @@ module.exports = (Player) => {
     http: {path: '/seek', verb: 'post'}
   })
 
+  Player.setShuffle = (shuffle, options) => SpotifyService.setShuffle(options.user, shuffle)
+  Player.remoteMethod('setShuffle', {
+    ...remoteDefaults.method,
+    accepts: [
+      {arg: 'shuffle', type: 'boolean'},
+      remoteDefaults.options
+    ],
+    http: {path: '/shuffle', verb: 'post'}
+  })
+
+  Player.setRepeat = (repeat, options) => SpotifyService.setRepeat(options.user, repeat)
+  Player.remoteMethod('setRepeat', {
+    ...remoteDefaults.method,
+    accepts: [
+      {arg: 'repeat', type: 'string'},
+      remoteDefaults.options
+    ],
+    http: {path: '/repeat', verb: 'post'}
+  })
+
   Player.setVolume = (volume, options) => SpotifyService.setVolume(options.user, volume)
   Player.remoteMethod('setVolume', {
     ...remoteDefaults.method,

@@ -3,6 +3,7 @@ const SpotifyWebApi = require('spotify-web-api-node')
 const {clientId, clientSecret, redirectUri} = require('../constants/credentials')
 const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private', 'user-read-playback-state', 'user-modify-playback-state']
 const limit = 50
+const resolver = (promise) => promise.then(data => data.body).catch(console.log)
 
 module.exports = class SpotifyService {
   static getSpotifyApi (user) {
@@ -33,10 +34,7 @@ module.exports = class SpotifyService {
   }
 
   static async refreshToken (user) {
-    const data = await this.getSpotifyApi(user)
-      .refreshAccessToken()
-      .then(data => data.body)
-      .catch(console.log)
+    const data = await resolver(this.getSpotifyApi(user).refreshAccessToken())
 
     if (!data) return user
 
@@ -52,95 +50,56 @@ module.exports = class SpotifyService {
     })
   }
 
-  static getMe (user) {
-    return this.getSpotifyApi(user)
-      .getMe()
-      .then(data => data.body)
-      .catch(console.log)
-  }
-
-  static play (user, uris) {
-    return this.getSpotifyApi(user)
-      .play(uris)
-      .then(data => data.body)
-      .catch(console.log)
+  static play (user, songs) {
+    return resolver(this.getSpotifyApi(user).play(songs))
   }
 
   static pause (user) {
-    return this.getSpotifyApi(user)
-      .pause()
-      .then(data => data.body)
-      .catch(console.log)
+    return resolver(this.getSpotifyApi(user).pause())
   }
 
   static skipToNext (user) {
-    return this.getSpotifyApi(user)
-      .skipToNext()
-      .then(data => data.body)
-      .catch(console.log)
+    return resolver(this.getSpotifyApi(user).skipToNext())
   }
 
   static skipToPrevious (user) {
-    return this.getSpotifyApi(user)
-      .skipToPrevious()
-      .then(data => data.body)
-      .catch(console.log)
+    return resolver(this.getSpotifyApi(user).skipToPrevious())
   }
 
   static getPlaybackState (user) {
-    return this.getSpotifyApi(user)
-      .getMyCurrentPlaybackState()
-      .then(data => data.body)
-      .catch(console.log)
-  }
-
-  static getPlayingTrack (user) {
-    return this.getSpotifyApi(user)
-      .getMyCurrentPlayingTrack()
-      .then(data => data.body)
-      .catch(console.log)
+    return resolver(this.getSpotifyApi(user).getMyCurrentPlaybackState())
   }
 
   static seek (user, position) {
-    return this.getSpotifyApi(user)
-      .seek(position)
-      .then(data => data.body)
-      .catch(console.log)
+    return resolver(this.getSpotifyApi(user).seek(position))
   }
 
   static setVolume (user, volume) {
-    return this.getSpotifyApi(user)
-      .setVolume(volume)
-      .then(data => data.body)
-      .catch(console.log)
+    return resolver(this.getSpotifyApi(user).setVolume(volume))
   }
 
-  // setShuffle
-  // setRepeat
+  static setShuffle (user, shuffle) {
+    return resolver(this.getSpotifyApi(user).setShuffle(shuffle))
+  }
+
+  static setRepeat (user, repeat) {
+    return resolver(this.getSpotifyApi(user).setRepeat(repeat))
+  }
 
   static transferPlayback (user, deviceID, play) {
     const argsObject = {
       device_ids: [deviceID],
       play: typeof play === 'boolean' ? play : false
     }
-    return this.getSpotifyApi(user)
-      .transferMyPlayback(argsObject)
-      .then(data => data.body)
-      .catch(console.log)
+    return resolver(this.getSpotifyApi(user).transferMyPlayback(argsObject))
   }
 
   static getPlaylist (user, playlistID) {
-    return this.getSpotifyApi(user)
-      .getPlaylist(user.spotifyUser.id, playlistID)
-      .then(data => data.body)
-      .catch(console.log)
+    return resolver(this.getSpotifyApi(user).getPlaylist(user.spotifyUser.id, playlistID))
   }
 
   static getDevices (user) {
-    return this.getSpotifyApi(user)
-      .getMyDevices()
-      .then(data => data.body)
-      .catch(console.log)
+    return resolver(this.getSpotifyApi(user).getMyDevices())
   }
 
   static async getPlaylists (user) {

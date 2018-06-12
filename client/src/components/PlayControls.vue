@@ -23,15 +23,15 @@
         v-layout.mb-xs-3(row, align-center)
           v-spacer
           v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp', @click='setShuffle')
-            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"text--primary": app.playerState.shuffle}') shuffle
+            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"primary--text": app.playerState.shuffle}') shuffle
           v-btn.my-0(icon, @click='previousTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_previous
           v-btn.my-0(icon, outline, @click='togglePlay', :large='$vuetify.breakpoint.xsOnly')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 26 : 32') {{ app.playerState.paused ? 'play_arrow' : 'pause' }}
           v-btn.my-0(icon, @click='nextTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_next
-          v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp')
-            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"text--primary": app.playerState.repeat !== repeatModes.off }', @click='setRepeat') {{ app.playerState.repeat === repeatModes.track ? 'repeat_one' : 'repeat' }}
+          v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp', @click='setRepeat')
+            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"primary--text": app.playerState.repeat !== repeatModes.off }') {{ app.playerState.repeat === repeatModes.track ? 'repeat_one' : 'repeat' }}
           v-spacer
         v-layout.mx-xs-5(row, align-center)
           .caption(v-text='app.playerState.elapsed')

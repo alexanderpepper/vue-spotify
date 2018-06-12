@@ -84,7 +84,9 @@
         playerState: PlayerService.initialPlayerState()
       }
     },
-    beforeCreate () {
+    async created () {
+      this.isDarkTheme = window.localStorage['dark'] !== 'false'
+      await this.getUserInfo()
       setInterval(() => {
         if (this.isSpotifyConnected()) {
           if (!this.player) {
@@ -97,13 +99,6 @@
           })
         }
       }, 1000)
-    },
-    async created () {
-      await this.getUserInfo()
-      if (this.user.id && !this.isSpotifyConnected()) {
-        window.location.href = await AuthorizationService.getAuthorizationUrl()
-      }
-      this.isDarkTheme = window.localStorage['dark'] !== 'false'
     },
     computed: {
       userFullName () {

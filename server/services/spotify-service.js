@@ -79,11 +79,11 @@ module.exports = class SpotifyService {
   }
 
   static setShuffle (user, shuffle) {
-    return resolver(this.getSpotifyApi(user).setShuffle(shuffle))
+    return resolver(this.getSpotifyApi(user).setShuffle({state: shuffle}))
   }
 
   static setRepeat (user, repeat) {
-    return resolver(this.getSpotifyApi(user).setRepeat(repeat))
+    return resolver(this.getSpotifyApi(user).setRepeat({state: repeat}))
   }
 
   static transferPlayback (user, deviceID, play) {

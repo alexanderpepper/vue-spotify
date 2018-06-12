@@ -24,6 +24,14 @@ class PlayerService extends BaseService {
     return this.POST(api.previous)
   }
 
+  static setShuffle (shuffle) {
+    return this.POST(api.setShuffle, shuffle)
+  }
+
+  static setRepeat (repeat) {
+    return this.POST(api.setRepeat, repeat)
+  }
+
   static setVolume (volume) {
     return this.POST(api.setVolume, {volume})
   }

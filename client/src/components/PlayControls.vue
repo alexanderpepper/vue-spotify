@@ -22,7 +22,7 @@
       v-flex.text-xs-center(sm6, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout.mb-xs-3(row, align-center)
           v-spacer
-          v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp')
+          v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp', @click='setShuffle')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"text--primary": app.playerState.shuffle}') shuffle
           v-btn.my-0(icon, @click='previousTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_previous
@@ -31,7 +31,7 @@
           v-btn.my-0(icon, @click='nextTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_next
           v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp')
-            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"text--primary": app.playerState.repeat !== repeatModes.off }') {{ app.playerState.repeat === repeatModes.track ? 'repeat_one' : 'repeat' }}
+            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"text--primary": app.playerState.repeat !== repeatModes.off }', @click='setRepeat') {{ app.playerState.repeat === repeatModes.track ? 'repeat_one' : 'repeat' }}
           v-spacer
         v-layout.mx-xs-5(row, align-center)
           .caption(v-text='app.playerState.elapsed')
@@ -64,6 +64,14 @@
       }
     },
     methods: {
+      setShuffle () {
+        PlayerService.setShuffle(!this.app.playerState.shuffle)
+      },
+      setRepeat () {
+        const repeatModeKeys = Object.keys(repeatModes)
+        const repeatModeIndex = (repeatModeKeys.indexOf(this.app.playerState.repeat) + 1) % 3
+        PlayerService.setRepeat(repeatModeKeys[repeatModeIndex])
+      },
       setVolume () {
         if (this.app.player) {
           this.app.player.setVolume(this.app.playerState.volume / 100)

@@ -1,10 +1,10 @@
 <template lang="pug">
   v-card.devices
     v-list.py-0
-      v-list-tile(ripple, @click='selectDevice(device.id)', v-for='(device, index) in devices', :key='index')
+      v-list-tile(ripple, @click='selectDevice(device.id)', v-for='(device, index) in app.devices', :key='index')
         v-list-tile-content
-          v-list-tile-title(:class='{bold: device.is_active}') {{ device.name }}
-      v-list-tile.grey--text(v-if='!devices.length')
+          v-list-tile-title(:class='{"primary--text": device.is_active}') {{ device.name }}
+      v-list-tile.grey--text(v-if='!app.devices.length')
         v-list-tile-content
           v-list-tile-title No devices found
 </template>
@@ -15,20 +15,6 @@
   export default {
     name: 'devices',
     props: {app: Object},
-    data () {
-      return {
-        devices: []
-      }
-    },
-    created () {
-      // this will update every 2 seconds so that the list updates when we active more players
-      setInterval(async () => {
-        if (this.app.isSpotifyConnected()) {
-          this.devices = (await PlayerService.getDevices()).devices
-          this.devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-        }
-      }, 2000)
-    },
     methods: {
       selectDevice: function (deviceID) {
         PlayerService.transferPlayback(deviceID, true)

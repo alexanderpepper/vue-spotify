@@ -80,6 +80,7 @@
         snackbarMessage: '',
         snackbarStyle: '',
         activeMenuItem: '',
+        devices: [],
         player: null,
         playerState: PlayerService.initialPlayerState()
       }
@@ -87,15 +88,17 @@
     async created () {
       this.isDarkTheme = window.localStorage['dark'] !== 'false'
       await this.getUserInfo()
+
       setInterval(() => {
         if (this.isSpotifyConnected()) {
-          if (!this.player) {
-            WebPlaybackService.getPlayer(this.user).then(player => {
-              this.player = player
-            })
-          }
+          this.player || WebPlaybackService.getPlayer(this.user).then(player => {
+            this.player = player
+          })
           PlayerService.getPlayerState().then(state => {
             this.playerState = PlayerService.parsePlayerState(this.playerState, state)
+          })
+          PlayerService.getDevices().then(devices => {
+            this.devices = devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
           })
         }
       }, 1000)

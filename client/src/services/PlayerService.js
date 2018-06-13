@@ -46,7 +46,7 @@ class PlayerService extends BaseService {
   }
 
   static getDevices () {
-    return this.GET(api.devices)
+    return this.GET(api.devices).then(results => results.devices)
   }
 
   static getPlayerState () {

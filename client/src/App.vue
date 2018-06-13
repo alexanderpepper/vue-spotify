@@ -15,7 +15,7 @@
     v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
       v-toolbar-side-icon(@click.stop='drawer = !drawer', v-if='user.isAdmin')
       v-btn(icon, v-if='showBackButton', @click='$router.go(-1)')
-        v-icon arrow_back
+        v-icon.primary--text arrow_back
       v-toolbar-title.mr-3
         router-link.headline.cursor-pointer(:to='{name: "playlists"}') Spotify
       v-spacer

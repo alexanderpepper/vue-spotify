@@ -24,25 +24,12 @@
     },
     async created () {
       this.playlists = await PlaylistService.getPlaylists()
-      this.app.setShowBackButton(false)
     }
   }
 </script>
 
 <style scoped>
-
   .playlist-name {
     width: 200px;
-  }
-
-  ul {
-    display: flex;
-    flex-wrap: wrap;
-  }
-
-  li {
-    list-style-type: none;
-    margin: 10px;
-
   }
 </style>

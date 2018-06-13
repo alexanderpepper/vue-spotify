@@ -15,16 +15,16 @@
           v-list-tile-title
             v-icon.playing-indicator.mr-1(v-if='isPlayingTrack(track)', size='17') volume_up
             span(:class='{bold: isPlayingTrack(track)}') {{ track.title }}
-          v-list-tile-sub-title(:class='{bold: isPlayingTrack(track)}') {{ track.artist }} • {{ track.album }}
+          v-list-tile-sub-title(:class='{"primary--text": isPlayingTrack(track)}') {{ track.artist }} • {{ track.album }}
     v-data-table.px-4.hidden-xs-only(:headers='headers', :items='tracks', :loading='loading', :search='search', no-data-text='Loading playlist...', hide-actions, disable-initial-sort)
       template(slot='items', slot-scope='props')
         tr(@click='playSong(props.index)')
           td
             v-icon.data-table.playing-indicator.mr-1.primary--text(v-if='isPlayingTrack(props.item)', size='17') volume_up
-            span(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.title }}
-          td(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.artist }}
-          td(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.album }}
-          td.text-xs-right(:class='{bold: isPlayingTrack(props.item)}') {{ props.item.duration }}
+            span(:class='{"primary--text": isPlayingTrack(props.item)}') {{ props.item.title }}
+          td(:class='{"primary--text": isPlayingTrack(props.item)}') {{ props.item.artist }}
+          td(:class='{"primary--text": isPlayingTrack(props.item)}') {{ props.item.album }}
+          td.text-xs-right(:class='{"primary--text": isPlayingTrack(props.item)}') {{ props.item.duration }}
 </template>
 
 <script>
@@ -40,10 +40,10 @@
     data () {
       return {
         headers: [
-          {text: 'TITLE', value: 'title', align: 'left'},
-          {text: 'ARTIST', value: 'artist', align: 'left'},
-          {text: 'ALBUM', value: 'album', align: 'left'},
-          {text: 'TIME', value: 'duration', align: 'right'}
+          {text: 'TITLE', value: 'title', align: 'left', sortable: false},
+          {text: 'ARTIST', value: 'artist', align: 'left', sortable: false},
+          {text: 'ALBUM', value: 'album', align: 'left', sortable: false},
+          {text: 'TIME', value: 'duration', align: 'right', sortable: false}
         ],
         playlist: {images: []},
         tracks: [],
@@ -74,11 +74,6 @@
     },
     methods: {
       async playSong (index) {
-        // const tracks = this.tracks.slice().splice(index, this.tracks.length - index)
-        // if (tracks.length && tracks[0].id === this.app.playerState.trackId) {
-        //   return
-        // }
-        console.log(index)
         PlayerService.play(this.tracks.map(t => t.uri), index)
       },
       isPlayingTrack (track) {

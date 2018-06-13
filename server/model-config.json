@@ -14,41 +14,41 @@
     ]
   },
   "User": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": false
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": false
   },
   "AppRoleMapping": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": true,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "AppRole": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": true
   },
   "AppUser": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": true
   },
   "Player": {

@@ -7,7 +7,7 @@ import Devices from '@/components/Devices'
 import User from '../components/User'
 import Users from '../components/Users'
 import Password from '../components/Password'
-import AuthCallback from '../components/AuthCallback'
+import Callback from '../components/Callback'
 
 Vue.use(Router)
 
@@ -43,7 +43,7 @@ export default new Router({
     {
       path: '/callback',
       name: 'callback',
-      component: AuthCallback
+      component: Callback
     },
     {
       path: '/playlist/:id',

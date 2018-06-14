@@ -21,7 +21,7 @@
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
         .subheading {{ userFullName }}
-      v-btn(flat, v-show='!user.id', @click='login') Sign Up / Sign In
+      v-btn(flat, v-show='!user.id', @click='showLogin = true') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
           user-photo(size='medium', :user='user', :is-spotify-connected="isSpotifyConnected")
@@ -32,7 +32,7 @@
           v-divider.hidden-sm-and-up
           v-list-tile(:to='{name: "user", params: {id: user.id, editProfile: true}}', ripple)
             v-list-tile-title Edit Profile
-          v-list-tile(:to='{name: "password"}', ripple)
+          v-list-tile(@click='showChangePassword = true', ripple)
             v-list-tile-title Change Password
           v-list-tile(@click='toggleTheme', :ripple='true')
             v-list-tile-title Switch Theme
@@ -40,17 +40,20 @@
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
     v-content
-      router-view.router-view.mx-auto(:app='getApp()')
-    play-controls(v-if='isSpotifyConnected()', :app='getApp()')
+      router-view.router-view.mx-auto(:app='app')
+    play-controls(v-if='isSpotifyConnected()', :app='app')
     v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
-      login(:app='getApp()')
+      login(:app='app')
     v-dialog(v-model='showRegister', peristent, width='300')
-      register(:app='getApp()')
+      register(:app='app')
+    v-dialog(v-model='showChangePassword', persistent, width='300')
+      password(:app='app')
 </template>
 
 <script>
+  import Password from './components/Password'
   import Login from './components/Login'
   import Register from './components/Register'
   import LoginService from './services/LoginService'
@@ -62,19 +65,19 @@
   import AuthorizationService from './services/AuthorizationService'
 
   export default {
-    components: {Register, Login, UserPhoto, PlayControls},
+    components: {Register, Login, UserPhoto, PlayControls, Password},
     data () {
       return {
         showBackButton: false,
         showRegister: false,
         showLogin: false,
+        showChangePassword: false,
         isDarkTheme: true,
         drawer: false,
         items: [
           {icon: 'people', title: 'Manage Users', name: 'users'}
         ],
         miniVariant: false,
-        title: 'Crowd Source',
         user: {id: 0, spotifyUser: {}},
         snackbar: false,
         snackbarMessage: '',
@@ -82,7 +85,8 @@
         activeMenuItem: '',
         devices: [],
         player: null,
-        playerState: PlayerService.initialPlayerState()
+        playerState: PlayerService.initialPlayerState(),
+        app: this
       }
     },
     watch: {
@@ -121,26 +125,6 @@
       }
     },
     methods: {
-      getApp () {
-        return this
-      },
-      setShowBackButton (showBackButton) {
-        this.showBackButton = showBackButton
-      },
-      login () {
-        this.showRegister = false
-        this.showLogin = true
-      },
-      closeLogin () {
-        this.showLogin = false
-      },
-      register () {
-        this.showRegister = true
-        this.showLogin = false
-      },
-      closeRegister () {
-        this.showRegister = false
-      },
       toggleTheme () {
         this.isDarkTheme = !this.isDarkTheme
         window.localStorage['dark'] = this.isDarkTheme
@@ -150,7 +134,7 @@
         this.setUser(user)
         this.showLogin = false
         this.showRegister = false
-        if (!user.spotifyUser || !user.spotifyUser.id) {
+        if (!this.isSpotifyConnected()) {
           window.location.href = await AuthorizationService.getAuthorizationUrl()
         } else {
           this.$router.push({name: 'playlists'})
@@ -173,10 +157,6 @@
         this.snackbarMessage = message
         this.snackbarStyle = style
         this.snackbar = true
-      },
-      setTitle (title) {
-        this.title = title
-        this.$forceUpdate()
       },
       setUser (user) {
         if (!user) return

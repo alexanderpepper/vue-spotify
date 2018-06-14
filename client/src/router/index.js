@@ -3,10 +3,8 @@ import Router from 'vue-router'
 import Landing from '@/components/Landing'
 import Playlists from '@/components/Playlists'
 import Playlist from '@/components/Playlist'
-import Devices from '@/components/Devices'
 import User from '../components/User'
 import Users from '../components/Users'
-import Password from '../components/Password'
 import Callback from '../components/Callback'
 
 Vue.use(Router)
@@ -16,7 +14,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Landing',
+      name: 'landing',
       component: Landing
     },
     {
@@ -29,11 +27,6 @@ export default new Router({
       path: '/users',
       name: 'users',
       component: Users
-    },
-    {
-      path: '/password',
-      name: 'password',
-      component: Password
     },
     {
       path: '/playlists',
@@ -50,11 +43,6 @@ export default new Router({
       name: 'playlist',
       props: true,
       component: Playlist
-    },
-    {
-      path: '/devices',
-      name: 'devices',
-      component: Devices
     }
   ]
 })

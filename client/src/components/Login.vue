@@ -4,14 +4,14 @@
       v-layout.mb-3(row, align-center)
         .headline Sign In
         v-spacer
-        v-icon.cursor-pointer(@click='app.closeLogin') close
+        v-icon.cursor-pointer(@click='app.showLogin = false') close
       form.mb-5(@submit.prevent='login')
         input.display-none(type='email', name='fakeUsername')
         input.display-none(type='password', name='fakePassword')
         v-text-field.mb-2(label='Email', v-model='credentials.email', required, hide-details)
         v-text-field(label='Password', v-model='credentials.password', :type="hidePassword ? 'password' : 'text'", :append-icon="hidePassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hidePassword = !hidePassword)", @keyup.enter='login', required, hide-details)
       v-btn.mb-3(outline, block, @click='login', :disabled='!isValid()') Sign In
-      v-btn(small, flat, block, @click='app.register') Create New Account
+      v-btn(small, flat, block, @click='showRegister') Create New Account
 </template>
 
 <script>
@@ -31,6 +31,10 @@
       }
     },
     methods: {
+      showRegister () {
+        this.app.showLogin = false
+        this.app.showRegister = true
+      },
       isValid () {
         return this.credentials.password && this.credentials.email && this.credentials.email.indexOf('@') > -1
       },

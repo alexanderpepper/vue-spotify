@@ -59,7 +59,7 @@
     async created () {
       this.roles = await RoleService.all()
       this.initialize()
-      this.app.setShowBackButton(true)
+      this.app.showBackButton = true
     },
     watch: {
       $route: {

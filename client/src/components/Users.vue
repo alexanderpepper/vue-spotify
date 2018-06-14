@@ -37,7 +37,6 @@
     async created () {
       this.getUsers()
       this.getRoles()
-      this.app.setTitle('Users')
       this.app.setActiveMenuItem('users')
     },
     methods: {

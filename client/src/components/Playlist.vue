@@ -70,7 +70,7 @@
       this.totalDuration = DateService.englishFormattedDuration(totalMs)
       this.loading = false
       this.audio = new Audio()
-      this.app.setShowBackButton(true)
+      this.app.showBackButton = true
     },
     methods: {
       async playSong (index) {

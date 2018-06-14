@@ -2,7 +2,7 @@ import request from 'superagent'
 
 const apiRequest = (request) => request
   .set('Authorization', window.localStorage['token'])
-  .then(response => response.body.results || response.body)
+  .then(response => (response.body && response.body.results) || response.body)
 
 class BaseService {
   static GET (url, query) {

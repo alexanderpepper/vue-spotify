@@ -13,7 +13,7 @@
           v-list-tile-content
             v-list-tile-title(v-text='item.title', :class='{"grey--text": !isActiveMenuItem(item), "text--darken-1": !isActiveMenuItem(item) }')
     v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
-      v-toolbar-side-icon(@click.stop='drawer = !drawer', v-if='user.isAdmin')
+      v-toolbar-side-icon.primary--text(@click.stop='drawer = !drawer', v-if='!showBackButton && user.isAdmin')
       v-btn(icon, v-if='showBackButton', @click='$router.go(-1)')
         v-icon.primary--text arrow_back
       v-toolbar-title.mr-3
@@ -85,15 +85,27 @@
         playerState: PlayerService.initialPlayerState()
       }
     },
+    watch: {
+      $route: {
+        handler () {
+          this.showBackButton = false
+        }
+      },
+      user: {
+        handler () {
+          if (!this.player && this.isSpotifyConnected()) {
+            WebPlaybackService.getPlayer(this.user).then(player => {
+              this.player = player
+            })
+          }
+        }
+      }
+    },
     async created () {
       this.isDarkTheme = window.localStorage['dark'] !== 'false'
       await this.getUserInfo()
-
       setInterval(() => {
         if (this.isSpotifyConnected()) {
-          this.player || WebPlaybackService.getPlayer(this.user).then(player => {
-            this.player = player
-          })
           PlayerService.getPlayerState().then(state => {
             this.playerState = PlayerService.parsePlayerState(this.playerState, state)
           })

@@ -27,6 +27,7 @@
   .playlist-artwork img {
     width: 100%;
   }
+
   .playlist-artwork {
     position: relative;
   }

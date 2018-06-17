@@ -107,7 +107,6 @@ exports.chain = isProd ? fs.readFileSync(path.join('/path/to/chain.pem')).toStri
 exports.fullchain = isProd ? fs.readFileSync(path.join('/path/to/fullchain.pem')).toString() : ''
 ```
 
-
 ## Deploying for Production
 
 When the server starts, `/server/boot/client.js` builds the client app by running `npm run build`  in the `client` folder.

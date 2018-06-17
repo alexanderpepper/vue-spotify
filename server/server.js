@@ -5,15 +5,17 @@ const express = require('express')
 const boot = require('loopback-boot')
 const https = require('https')
 const http = require('http')
-const sslConfig = require('./ssl-config')
 const app = module.exports = loopback()
 const isProd = process.env.NODE_ENV === 'production'
 const isStaging = process.env.NODE_ENV === 'staging'
-const protocol = isProd || isStaging ? 'https://' : 'http://'
+const moduleExists = require('./constants/module-exists')
+const sslConfig = moduleExists('./ssl-config') ? require('./ssl-config') : undefined
+const useSsl = (isProd || isStaging) && sslConfig
+const protocol = useSsl ? 'https://' : 'http://'
 
 app.start = function () {
   let server = null
-  if (isProd || isStaging) {
+  if (useSsl) {
     server = https.createServer({
       key: sslConfig.privateKey,
       cert: sslConfig.certificate,

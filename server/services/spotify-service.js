@@ -1,10 +1,18 @@
 const TokenService = require('./token-service')
 const SpotifyWebApi = require('spotify-web-api-node')
-const {clientId, clientSecret, redirectUri} = require('../constants/credentials')
+const moduleExists = require('../constants/module-exists')
 const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private', 'user-read-playback-state', 'user-modify-playback-state']
 const limit = 50
 const resolver = (promise) => promise.then(data => data.body).catch(console.log)
 
+const credentials = moduleExists('../constants/credentials') ? require('../constants/credentials') : undefined
+
+if (!credentials || !credentials.clientId || !credentials.clientSecret || !credentials.redirectUri) {
+  console.error('Aborting: Please create server/constants/credentials.js as specified in README.md')
+  process.abort()
+}
+
+const {clientId, clientSecret, redirectUri} = credentials
 module.exports = class SpotifyService {
   static getSpotifyApi (user) {
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})

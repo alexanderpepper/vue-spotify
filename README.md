@@ -7,7 +7,9 @@ The ability to shuffle all the tracks in a playlist folder was removed from the 
 Unfortunately the Spotify Web API does not currently expose any information about playlist folders, so until there's an API change to resolve [this issue](https://github.com/spotify/web-api/issues/38), we've decided to build a custom folder hierarchy stored in the application's database.
 
 ## Code style
-This project uses [JavaScript Standard Style](https://github.com/standard/standard), enforced (so far only in the front end) by [ESLint](https://eslint.org/)). Use of ES6+ features is encouraged.
+This project uses [JavaScript Standard Style](https://github.com/standard/standard), enforced (so far only in the front end) by [ESLint](https://eslint.org/). 
+
+Use of ES6+ features in this project is encouraged.
 
 ## Screenshots
 Coming soon.

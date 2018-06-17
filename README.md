@@ -1,75 +1,146 @@
-
 ## Spotify Utils
-A little info about your project and/ or overview that explains **what** the project is about.
-
-## Motivation
 A Spotify client web app with some features missing from the official Spotify apps on the roadmap.
 
+## Motivation
+The ability to shuffle all the tracks in a playlist folder was removed from the Spotify mobile apps, and that was a feature I used frequently. I started this project primarily to get that functionality back on my mobile phone.
+
+Unfortunately the Spotify Web API does not currently expose any information about playlist folders, so until there's an API change to resolve [this issue](https://github.com/spotify/web-api/issues/38), we've decided to build a custom folder hierarchy stored in the application's database.
+
 ## Code style
-This project uses the ES5
-[![js-standard-style](https://camo.githubusercontent.com/3c76c70b25e941a4b21554015aebe2913afb3611/68747470733a2f2f63646e2e7261776769742e636f6d2f7374616e646172642f7374616e646172642f6d61737465722f737469636b65722e737667)](https://github.com/standard/standard)
+This project uses [![JavaScript Standard Style](https://camo.githubusercontent.com/3c76c70b25e941a4b21554015aebe2913afb3611/68747470733a2f2f63646e2e7261776769742e636f6d2f7374616e646172642f7374616e646172642f6d61737465722f737469636b65722e737667)](https://github.com/standard/standard), enforced (so far only in the front end) by [ESLint](https://eslint.org/)). Use of ES6+ features is encouraged.
 
 ## Screenshots
-Include logo/demo screenshot etc.
+Coming soon.
 
 ## Tech/framework used
-Ex. -
 
-<b>Built with</b>
-- [Electron](https://electron.atom.io)
+- [MongoDB](https://www.mongodb.com/)
+- [Loopback](https://loopback.io/)
+- [PM2](http://pm2.keymetrics.io/)
+- [webpack](https://webpack.js.org/)
+- [ESLint](https://eslint.org/)
+- [SuperAgent](https://visionmedia.github.io/superagent/)
+- [VueJS](https://vuejs.org/)
+- [Vuetify](https://vuetifyjs.com/en/)
+- [spotify-web-api-node](https://electron.atom.io)
+- [Moment.js](https://momentjs.com/)
 
 ## Features
-What makes your project stand out?
+* Control Spotify from a web interface and play tracks in desktop browsers
+* Build folders shuffle all playlists in them
+* Export all your playlists to JSON
+* Quickly find official music videos on YouTube for playlists with Chromecast option
 
-## Code Example
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
+## Prequisites
+* MongoDB
+* NodeJS
+* PM2
 
 ## Installation
-Provide step by step series of examples and explanations about how to get a development env running.
 
-## API Reference
+Clone the repository
+```bash
+git clone https://github.com/alexanderpepper/spotify-utils.git;
+```
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
+Install NPM packages
+```bash
+cd spotify-utils
+npm install
+cd client
+npm install
+```
 
-## Tests
-Describe and show how to run the tests with code examples.
+Alternatively, there's a bash script
+```bash
+sh ./install.sh
+```
 
-## How to use?
-If people like your project they’ll want to learn how they can use it. To do so include step by step guide to use your project.
+## Configuration
+* [Create a new Spotify app](https://developer.spotify.com/dashboard/) and note your credentials
+* Create `/server/constants/credentials.js` with the following content:
+```javascript
+const isProd = process.env.NODE_ENV === 'production'
+module.exports = {
+  clientSecret: '<your_client_secret>',
+  clientId: '<your_client_id>',
+  redirectUri: isProd ? 'https://yoursite.com/callback' : 'http://localhost:8080/callback'
+}
+```
+* An admin account is created on the first run. Default credentials are
+  * Email: admin@admin.com
+  * Password: admin1234
+  * Default admin account credentials can be configured in `server/boot/admin.js`
 
-## Contribute
+## Development
+Running the server and client as separate processes gives the best development experience with hot reloading in the client app.
 
-Let people know how they can contribute into your project. A [contributing guideline](https://github.com/zulip/zulip-electron/blob/master/CONTRIBUTING.md) will be a big plus.
+The client app is 
+* Configured in `client/config/dev.env.js` to use `http://localhost:3000/api` as the base API path when running in development
+* Configured in `client/config/prod.env.js` to use `/api` as the base API path when built for production
 
-## Credits
-Give proper credits. This could be a link to any repo which inspired you to build this project, any blogposts or links to people who contrbuted in this project.
+## Running the Server in Development
+To run the Loopback server in devepment mode on `https://localhost:3000`:
+```bash
+node .
+```
+Loopback uses swagger to document the server's REST API. This can be viewed at `http://localhost:3000/explorer`
 
-#### Anything else that seems useful
+## Running the Client in Development
+To run the Vue client in development mode on `http://localhost:8080`
+```bash
+cd client
+npm run dev
+```
+
+## Preparing for Deployment
+Acquire a standalone certificate from [LetsEncrypt](https://letsencrypt.org/) and create `server/ssl-config.js` with the following content:
+
+```javascript
+const path = require('path')
+const fs = require('fs')
+const isProd = process.env.NODE_ENV === 'production'
+
+exports.privateKey = isProd ? fs.readFileSync(path.join('/path/to/privkey.pem')).toString() : ''
+exports.certificate = isProd ? fs.readFileSync(path.join('/path/to/cert.pem')).toString() : ''
+exports.chain = isProd ? fs.readFileSync(path.join('/path/to/chain.pem')).toString() : ''
+exports.fullchain = isProd ? fs.readFileSync(path.join('/path/to/fullchain.pem')).toString() : ''
+```
+
+
+## Deploying for Production
+
+When the server starts, `/server/boot/client.js` builds the client app by running `npm run build`  in the `client` folder.
+
+To start the server
+```bash
+node_modules/pm2/bin/pm2 start pm2.json --env production
+```
+or
+```bash
+sh ./deploy.sh production
+```
+
+To stop the server
+```bash
+node_modules/pm2/bin/pm2 kill
+```
+or
+```bash
+sh ./kill.sh
+```
+
+To monitor the server
+```bash
+node_modules/pm2/bin/pm2 monit
+```
+or
+```bash
+sh ./monitor.sh
+```
 
 ## License
-A short snippet describing the license (MIT, Apache etc)
-
-MIT © [Yourname]()
+MIT © 2018 [Alex Pepper](https://alexpepper.us)
 
 
-
-* Back-end is [LoopBack](http://loopback.io)
-* Front-end is [Vue](http://vuejs.org)/[Vuetify](http://vuetifyjs.com)
-* Uses [spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node)
-### Installation
-1. Run `npm install` from the base folder
-1. Run `npm install` from the `client` folder
-
-### Development
-* To run the Loopback server, run `node .` from the base folder
-  * This runs the server on http://localhost:3000
-  * View the Swagger documentation at http://localhost:3000/explorer
-  * Loopback will compile the front-end for production, but no front-end updates will register until the server is re-run
-* To run the Vue client in development, run `npm run dev` from the `client` folder
-  * This runs the client on http://localhost:3000
-
-### Configuration
-* Admin account is created on first run. Credentials are
-  * Username: admin@admin.com
-  * Password: admin1234
 

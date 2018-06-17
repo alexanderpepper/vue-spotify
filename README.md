@@ -51,11 +51,6 @@ cd client
 npm install
 ```
 
-Alternatively, there's a bash script
-```bash
-sh ./install.sh
-```
-
 ## Configuration
 * [Create a new Spotify app](https://developer.spotify.com/dashboard/) and note your credentials
 * Create `/server/constants/credentials.js` with the following content:
@@ -115,27 +110,15 @@ To start the server
 ```bash
 node_modules/pm2/bin/pm2 start pm2.json --env production
 ```
-or
-```bash
-sh ./deploy.sh production
-```
 
 To stop the server
 ```bash
 node_modules/pm2/bin/pm2 kill
 ```
-or
-```bash
-sh ./kill.sh
-```
 
 To monitor the server
 ```bash
 node_modules/pm2/bin/pm2 monit
-```
-or
-```bash
-sh ./monitor.sh
 ```
 
 ## License

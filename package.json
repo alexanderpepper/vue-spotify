@@ -1,6 +1,6 @@
 {
-  "name": "things",
-  "version": "1.0.0",
+  "name": "vue-spotify",
+  "version": "0.1.0",
   "main": "server/server.js",
   "engines": {
     "node": ">=4"
@@ -20,11 +20,11 @@
     "loopback": "^3.0.0",
     "loopback-boot": "^2.6.5",
     "loopback-component-explorer": "^5.0.0",
-    "loopback-component-storage": "^3.3.1",
+    "loopback-connector-mongodb": "^3.4.4",
     "moment": "^2.22.1",
     "pm2": "^2.10.1",
     "serve-favicon": "^2.0.1",
-    "spotify-web-api-node": "^3.1.1",
+    "spotify-web-api-node": "^2.5.0",
     "strong-error-handler": "^2.0.0"
   },
   "devDependencies": {

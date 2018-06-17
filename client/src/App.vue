@@ -1,7 +1,7 @@
 <template lang="pug">
   v-app(:dark='isDarkTheme', :light='!isDarkTheme')
     v-navigation-drawer(app, fixed, temporary, clipped, :mini-variant='miniVariant', v-model='drawer', v-show='user.isAdmin', :enable-resize-watcher='false', disable-route-watcher)
-      v-list
+      v-list.py-0
         v-list-tile(@click.stop='miniVariant = !miniVariant', ripple)
           v-list-tile-action
             v-icon(v-html="miniVariant ? 'chevron_right' : 'chevron_left'")
@@ -13,24 +13,26 @@
           v-list-tile-content
             v-list-tile-title(v-text='item.title', :class='{"grey--text": !isActiveMenuItem(item), "text--darken-1": !isActiveMenuItem(item) }')
     v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
-      v-toolbar-side-icon(@click.stop='drawer = !drawer', v-if='user.isAdmin')
+      v-toolbar-side-icon.primary--text(@click.stop='drawer = !drawer', v-if='!showBackButton && user.isAdmin')
+      v-btn(icon, v-if='showBackButton', @click='$router.go(-1)')
+        v-icon.primary--text arrow_back
       v-toolbar-title.mr-3
-        .headline.cursor-pointer(@click='$router.push("/")') Spotify
+        router-link.headline.cursor-pointer(:to='{name: "playlists"}') Spotify
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
-        .subheading {{ user.spotifyUser && user.spotifyUser.display_name }}
-      v-btn(flat, v-show='!user.id', @click='login') Sign Up / Sign In
+        .subheading {{ userFullName }}
+      v-btn(flat, v-show='!user.id', @click='showLogin = true') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
-          user-photo(size='medium', :user='user')
-        v-list
-          v-layout.px-3.pb-2.hidden-sm-and-up(column)
+          user-photo(size='medium', :user='user', :is-spotify-connected="isSpotifyConnected")
+        v-list.py-0
+          v-layout.px-3.pb-2.hidden-sm-and-up.pt-2(column)
             .caption Signed in as
-            .body-2 {{ user.spotifyUser && user.spotifyUser.display_name }}
+            .body-2 {{ userFullName }}
           v-divider.hidden-sm-and-up
-          v-list-tile(@click='$router.push({ name: "user", params: { id: user.id, editProfile: true } })', ripple)
+          v-list-tile(:to='{name: "user", params: {id: user.id, editProfile: true}}', ripple)
             v-list-tile-title Edit Profile
-          v-list-tile(@click='$router.push({ name: "password" })', ripple)
+          v-list-tile(@click='showChangePassword = true', ripple)
             v-list-tile-title Change Password
           v-list-tile(@click='toggleTheme', :ripple='true')
             v-list-tile-title Switch Theme
@@ -38,121 +40,105 @@
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
     v-content
-      router-view.router-view.mx-auto(:is-dark-theme='isDarkTheme', :show-snackbar='showSnackbar', :set-title='setTitle', :current-user='user', :set-active-menu-item='setActiveMenuItem', :login='login', :player='player')
-    play-controls(:is-dark-theme='isDarkTheme', :player='player', :player-state='playerState', :current-user='user')
-    v-snackbar( v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
+      router-view.router-view.mx-auto(:app='app')
+    play-controls(v-if='isSpotifyConnected()', :app='app')
+    v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
-      login(:create-account='createAccount', :login-success='loginSuccess', :show-snackbar='showSnackbar', :cancel='() => { showLogin = false }')
+      login(:app='app')
+    v-dialog(v-model='showRegister', peristent, width='300')
+      register(:app='app')
+    v-dialog(v-model='showChangePassword', persistent, width='300')
+      password(:app='app')
 </template>
 
 <script>
+  import Password from './components/Password'
   import Login from './components/Login'
+  import Register from './components/Register'
   import LoginService from './services/LoginService'
   import UserService from './services/UserService'
   import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
   import PlayControls from './components/PlayControls'
-  import DateService from './services/DateService'
-  import SpotifyService from './services/SpotifyService'
+  import PlayerService from './services/PlayerService'
+  import AuthorizationService from './services/AuthorizationService'
 
   export default {
-    components: {Login, UserPhoto, PlayControls},
+    components: {Register, Login, UserPhoto, PlayControls, Password},
     data () {
       return {
+        showBackButton: false,
+        showRegister: false,
         showLogin: false,
+        showChangePassword: false,
         isDarkTheme: true,
         drawer: false,
         items: [
           {icon: 'people', title: 'Manage Users', name: 'users'}
         ],
         miniVariant: false,
-        title: 'Crowd Source',
         user: {id: 0, spotifyUser: {}},
         snackbar: false,
         snackbarMessage: '',
         snackbarStyle: '',
         activeMenuItem: '',
+        devices: [],
         player: null,
-        playerState: {
-          paused: true,
-          repeat: false,
-          shuffle: false,
-          position: 0,
-          track: 'Track Name',
-          artist: 'Artist Name',
-          images: [{}],
-          elapsed: '00:00',
-          duration: '00:00',
-          durationMs: 0,
-          volume: 50
-        }
+        playerState: PlayerService.initialPlayerState(),
+        app: this
       }
     },
-    beforeCreate () {
-      setInterval(() => {
-        if (this.user && this.user.spotifyUser && this.user.spotifyUser.id) {
-          if (!this.player) {
-            WebPlaybackService.getPlayer().then(player => {
+    watch: {
+      $route: {
+        handler () {
+          this.showBackButton = false
+        }
+      },
+      user: {
+        handler () {
+          if (!this.player && this.isSpotifyConnected()) {
+            WebPlaybackService.getPlayer(this.user).then(player => {
               this.player = player
             })
           }
-          SpotifyService.getPlayerState().then(state => {
-            if (state) {
-              this.playerState = {
-                ...this.playerState,
-                paused: !state.is_playing,
-                shuffle: state.shuffle_state,
-                repeat: state.repeat_state !== 'off',
-                volume: state.device.volume,
-                device: state.device.name
-              }
-
-              if (state.item) {
-                this.playerState = {
-                  ...this.playerState,
-                  position: (state.progress_ms / state.item.duration_ms) * 100,
-                  track: state.item.name,
-                  artist: state.item.artists[0].name,
-                  images: state.item.album.images,
-                  elapsed: DateService.formattedDuration(state.progress_ms),
-                  duration: DateService.formattedDuration(state.item.duration_ms),
-                  durationMs: state.item.duration_ms
-                }
-              }
-
-              if (state.device) {
-                this.playerState = {
-                  ...this.playerState,
-                  volume: state.device.volume,
-                  device: state.device.name
-                }
-              }
-            }
+        }
+      }
+    },
+    async created () {
+      this.isDarkTheme = window.localStorage['dark'] !== 'false'
+      await this.getUserInfo()
+      setInterval(() => {
+        if (this.isSpotifyConnected()) {
+          PlayerService.getPlayerState().then(state => {
+            this.playerState = PlayerService.parsePlayerState(this.playerState, state)
+          })
+          PlayerService.getDevices().then(devices => {
+            this.devices = devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
           })
         }
       }, 1000)
     },
-    created () {
-      this.getUserInfo()
-      this.isDarkTheme = window.localStorage['dark'] === 'true'
+    computed: {
+      userFullName () {
+        return this.isSpotifyConnected() ? this.user.spotifyUser.display_name : ''
+      }
     },
     methods: {
-      login () {
-        this.showLogin = true
-      },
       toggleTheme () {
         this.isDarkTheme = !this.isDarkTheme
         window.localStorage['dark'] = this.isDarkTheme
       },
-      createAccount () {
-        this.showLogin = false
-        this.$router.push('/user')
-      },
-      loginSuccess (user) {
-        console.log(user)
+      async loginSuccess () {
+        const user = await UserService.me()
         this.setUser(user)
         this.showLogin = false
+        this.showRegister = false
+        if (!this.isSpotifyConnected()) {
+          window.location.href = await AuthorizationService.getAuthorizationUrl()
+        } else {
+          this.$router.push({name: 'playlists'})
+        }
       },
       async logout () {
         try {
@@ -164,19 +150,13 @@
       },
       getUserInfo () {
         if (UserService.hasToken()) {
-          UserService.me().then(this.setUser).catch(() => {
-            console.log('Token expired.')
-          })
+          return UserService.me().then(this.setUser).catch(() => console.log('Token expired.'))
         }
       },
       showSnackbar (message, style) {
         this.snackbarMessage = message
         this.snackbarStyle = style
         this.snackbar = true
-      },
-      setTitle (title) {
-        this.title = title
-        this.$forceUpdate()
       },
       setUser (user) {
         if (!user) return
@@ -195,60 +175,10 @@
       },
       isActiveMenuItem (item) {
         return this.activeMenuItem === item.name
+      },
+      isSpotifyConnected () {
+        return this.user && this.user.spotifyUser && this.user.spotifyUser.id
       }
     }
   }
 </script>
-
-<style>
-  body {
-    padding-bottom: 80px;
-  }
-
-  @media (max-width: 599px) {
-    body {
-      padding-bottom: 44px;
-    }
-  }
-
-  .truncate {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .vertical-center {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  .vertical-center-container {
-    display: table;
-  }
-
-  .theme--light input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px white inset !important;
-    -webkit-text-fill-color: rgba(0, 0, 0, 0.87) !important;
-  }
-
-  .theme--dark input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px #424242 inset !important;
-    -webkit-text-fill-color: white !important;
-  }
-
-  textarea {
-    resize: none;
-  }
-
-  .cursor-pointer {
-    cursor: pointer !important;
-  }
-
-  a {
-    text-decoration: none;
-  }
-
-  .display-none {
-    display: none;
-  }
-</style>

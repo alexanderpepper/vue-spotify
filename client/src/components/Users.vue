@@ -2,7 +2,7 @@
   v-container(fluid)
     v-card
       v-card-title
-        v-btn(:router='true', :to='{name: "user"}') Create New User
+        v-btn(outline, :router='true', :to='{name: "user"}') Create New User
         v-spacer
         v-text-field(append-icon='search', label='Search', single-line, hide-details, v-model='search')
       v-data-table.elevation-1(:headers='headers', :items='users', :search='search')
@@ -19,7 +19,7 @@
 
   export default {
     name: 'users',
-    props: ['showSnackbar', 'setTitle', 'setActiveMenuItem'],
+    props: {app: Object},
     data () {
       return {
         search: '',
@@ -37,8 +37,7 @@
     async created () {
       this.getUsers()
       this.getRoles()
-      this.setTitle('Users')
-      this.setActiveMenuItem('users')
+      this.app.setActiveMenuItem('users')
     },
     methods: {
       edit (user) {
@@ -84,14 +83,8 @@
         delete this.removeUser
         this.confirmRemoveDialog = false
         this.getUsers()
-        this.showSnackbar('Success!')
+        this.app.showSnackbar('Success!')
       }
     }
   }
 </script>
-
-<style scoped>
-    .list__tile.no-highlight:hover {
-        background-color: transparent;
-    }
-</style>

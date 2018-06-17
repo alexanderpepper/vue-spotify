@@ -1,12 +1,12 @@
 'use strict'
 module.exports = async function (app) {
   const AppUser = app.models.AppUser
-  const Role = app.models.Role
-  const RoleMapping = app.models.RoleMapping
+  const AppRole = app.models.AppRole
+  const AppRoleMapping = app.models.AppRoleMapping
 
-  RoleMapping.belongsTo(AppUser)
-  AppUser.hasMany(RoleMapping, {foreignKey: 'principalId'})
-  Role.hasMany(AppUser, {through: RoleMapping, foreignKey: 'roleId'})
+  AppRoleMapping.belongsTo(AppUser)
+  AppUser.hasMany(AppRoleMapping, {as: 'roleMappings', foreignKey: 'principalId'})
+  AppRole.hasMany(AppUser, {as: 'users', through: AppRoleMapping, foreignKey: 'roleId'})
 
   const user = await AppUser.findOne({where: {username: 'admin'}})
   if (!user) {
@@ -23,14 +23,14 @@ module.exports = async function (app) {
         console.log(err)
         return
       }
-      Role.create({
+      AppRole.create({
         name: 'admin'
       }, function (err, role) {
         if (err) return console.log(err)
         console.log(role)
 
         role.principals.create({
-          principalType: RoleMapping.USER,
+          principalType: AppRoleMapping.USER,
           principalId: users[0].id
         }, function (err, principal) {
           if (err) return console.log(err)

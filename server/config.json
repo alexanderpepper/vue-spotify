@@ -6,7 +6,7 @@
     "context": false,
     "rest": {
       "handleErrors": false,
-      "normalizeHttpPath": false,
+      "normalizeHttpPath": true,
       "xml": false
     },
     "json": {

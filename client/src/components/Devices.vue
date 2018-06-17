@@ -1,36 +1,23 @@
 <template lang="pug">
   v-card.devices
-    v-list(v-if='devices.length > 0')
-      v-list-tile(ripple, @click='selectDevice(device.id)', v-for='(device, index) in devices', :key='index')
+    v-list.py-0
+      v-list-tile(ripple, @click='selectDevice(device.id)', v-for='(device, index) in app.devices', :key='index')
         v-list-tile-content
-          v-list-tile-title {{ device.name }}
-    .empty(v-else) No devices found :(
+          v-list-tile-title(:class='{"primary--text": device.is_active}') {{ device.name }}
+      v-list-tile.grey--text(v-if='!app.devices.length')
+        v-list-tile-content
+          v-list-tile-title No devices found
 </template>
 
 <script>
-  import SpotifyService from '../services/SpotifyService'
+  import PlayerService from '../services/PlayerService'
 
   export default {
     name: 'devices',
-    props: ['currentUser'],
-    data () {
-      return {
-        devices: []
-      }
-    },
-    created () {
-      // this will update every 2 seconds so that the list updates when we active more players
-      // TODO move to websocket
-      setInterval(async () => {
-        if (this.currentUser && this.currentUser.spotifyUser && this.currentUser.spotifyUser.id) {
-          this.devices = (await SpotifyService.getDevices()).devices
-          this.devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-        }
-      }, 2000)
-    },
+    props: {app: Object},
     methods: {
       selectDevice: function (deviceID) {
-        SpotifyService.transferPlayback(deviceID, true)
+        PlayerService.transferPlayback(deviceID, true)
       }
     }
   }

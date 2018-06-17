@@ -1,0 +1,5 @@
+{
+  "name": "Playlist",
+  "plural": "playlist",
+  "base": "Model"
+}

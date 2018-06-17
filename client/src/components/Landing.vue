@@ -1,40 +1,19 @@
 <template lang="pug">
-  .landing.text-xs-center.pt-2
-    .emoji {{ currentUser.id ? '💿' : '🦑' }}
-    a(v-if='currentUser.id', :href='authorizationUrl') Login to Spotify
+  .landing.display-2.text-xs-center.mt-3 LANDING
 </template>
 
 <script>
-  import SpotifyService from '../services/SpotifyService'
   export default {
-    name: 'Landing',
-    props: ['currentUser'],
-    data () {
-      return {
-        authorizationUrl: ''
-      }
-    },
-    async created () {
-      this.authorizationUrl = await SpotifyService.authorizationUrl()
-    },
+    name: 'landing',
+    props: {app: Object},
     watch: {
-      currentUser: {
+      'app.user': {
         handler () {
-          if (this.currentUser && this.currentUser.spotifyUser) {
-            this.$router.push({name: 'home'})
+          if (this.app.isSpotifyConnected()) {
+            this.$router.push({name: 'playlists'})
           }
         }
       }
     }
   }
 </script>
-
-<style scoped>
-  .emoji {
-    font-size: 126px;
-  }
-
-  .emoji-text {
-    margin-top: -50px;
-  }
-</style>

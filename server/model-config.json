@@ -14,32 +14,52 @@
     ]
   },
   "User": {
-    "dataSource": "db"
+    "dataSource": "spotifyDB",
+    "public": false
   },
   "AccessToken": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": false
   },
   "ACL": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "db",
-    "public": true,
+    "dataSource": "spotifyDB",
+    "public": false,
     "options": {
       "strictObjectIDCoercion": true
     }
   },
   "Role": {
-    "dataSource": "db",
+    "dataSource": "spotifyDB",
+    "public": false
+  },
+  "AppRoleMapping": {
+    "dataSource": "spotifyDB",
+    "public": true,
+    "options": {
+      "strictObjectIDCoercion": true
+    }
+  },
+  "AppRole": {
+    "dataSource": "spotifyDB",
     "public": true
   },
   "AppUser": {
+    "dataSource": "spotifyDB",
+    "public": true
+  },
+  "Player": {
     "dataSource": "db",
     "public": true
   },
-  "Hook": {
+  "Playlist": {
+    "dataSource": "db",
+    "public": true
+  },
+  "Authorization": {
     "dataSource": "db",
     "public": true
   }

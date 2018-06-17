@@ -1,7 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-
 import {
   Vuetify,
   VApp,
@@ -22,14 +21,14 @@ import {
   VDataTable,
   VFooter,
   VSlider,
+  VProgressCircular,
   transitions
 } from 'vuetify'
 import '../node_modules/vuetify/src/stylus/app.styl'
-
 import App from './App'
 import router from './router'
-
 import { Ripple } from 'vuetify/es5/directives'
+import './common.css'
 
 Vue.use(Vuetify, {
   components: {
@@ -51,10 +50,14 @@ Vue.use(Vuetify, {
     VDataTable,
     VFooter,
     VSlider,
+    VProgressCircular,
     transitions
   },
   directives: {
     Ripple
+  },
+  theme: {
+    primary: '#1db954'
   }
 })
 

@@ -1,18 +1,15 @@
 <template lang="pug">
-  v-dialog(v-model='dialog', persistent, width='300')
-    v-card
-      v-toolbar
-        v-toolbar-title Password
+  v-card
+    v-card-text
+      v-layout.mb-3(row, align-center)
+        .headline Change Password
         v-spacer
-        v-btn(icon, light, @click='closeDialog')
-          v-icon close
-      v-card-text
-        form(novalidate, @submit.stop.prevent='changePassword', autocomplete='off')
-          v-text-field(label='Old Password', v-model='password.oldPassword', type='password')
-          v-text-field(label='New Password', v-model='password.newPassword', type='password')
-          v-text-field(label='Confirm Password', v-model='confirmPassword', type='password')
-      v-card-actions
-        v-btn.primary--text(flat, @click='changePassword', :disabled='!buttonEnabled') Change Password
+        v-icon.cursor-pointer(@click='app.showChangePassword = false') close
+      form.mb-5(novalidate, @submit.stop.prevent='changePassword', autocomplete='off')
+        v-text-field.mb-2(label='Old Password', v-model='password.oldPassword', :type="hideOldPassword ? 'password' : 'text'", :append-icon="hideOldPassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hideOldPassword = !hideOldPassword)", @keyup.enter='changePassword', required, hide-details)
+        v-text-field.mb-2(label='New Password', v-model='password.newPassword', :type="hideNewPassword ? 'password' : 'text'", :append-icon="hideNewPassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hideNewPassword = !hideNewPassword)", @keyup.enter='changePassword', required, hide-details)
+        v-text-field.mb-2(label='Confirm Password', v-model='confirmPassword', :type="hideConfirmPassword ? 'password' : 'text'", :append-icon="hideConfirmPassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hideConfirmPassword = !hideConfirmPassword)", @keyup.enter='changePassword', required, hide-details)
+      v-btn(outline, block, @click='changePassword', :disabled='!buttonEnabled') Change Password
 </template>
 
 <script>
@@ -20,21 +17,17 @@
 
   export default {
     name: 'password',
-    props: ['showSnackbar', 'setTitle'],
-    created () {
-      this.setTitle('Change Password')
-      setTimeout(() => {
-        this.dialog = true
-      })
-    },
+    props: {app: Object},
     data () {
       return {
-        dialog: false,
         password: {
           oldPassword: '',
           newPassword: ''
         },
-        confirmPassword: ''
+        confirmPassword: '',
+        hideOldPassword: true,
+        hideNewPassword: true,
+        hideConfirmPassword: true
       }
     },
     computed: {
@@ -46,19 +39,15 @@
     },
     methods: {
       async changePassword () {
-        try {
-          await UserService.changePassword(this.password)
-          this.showSnackbar('Success!')
-          this.closeDialog()
-        } catch (err) {
-          console.log(err)
+        if (this.buttonEnabled) {
+          try {
+            await UserService.changePassword(this.password)
+            this.app.showSnackbar('Success!')
+            this.app.showChangePassword = false
+          } catch (error) {
+            this.app.showSnackbar(error, 'error')
+          }
         }
-      },
-      closeDialog () {
-        this.dialog = false
-        setTimeout(() => {
-          this.$router.push({name: 'users'})
-        }, 400)
       }
     }
   }

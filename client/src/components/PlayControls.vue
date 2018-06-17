@@ -1,85 +1,103 @@
 <template lang="pug">
-  v-footer.elevation-4.play-controls(:height='$vuetify.breakpoint.smAndUp ? 80 : showPlayer ? 450 : 44', fixed)
+  v-footer.elevation-4.play-controls(:height='$vuetify.breakpoint.smAndUp ? 80 : showPlayer ? 450 : 44', fixed, app)
     v-layout(align-center, wrap)
       v-flex.hidden-sm-and-up(xs12)
         v-layout(align-center)
           v-btn(icon, small, @click='showPlayer = !showPlayer')
             v-icon {{ showPlayer ? 'expand_more' : 'expand_less' }}
           v-flex.text-xs-center(v-show='!showPlayer')
-                .body-2.truncate.compress(v-text='playerState.artist')
-                .body-1.truncate.compress(v-text='playerState.track')
+                .body-2.truncate.compress(v-text='app.playerState.artist')
+                .body-1.truncate.compress(v-text='app.playerState.track')
           v-btn(icon, small, outline, @click='togglePlay', v-show='!showPlayer')
-            v-icon {{ playerState.paused ? 'play_arrow' : 'pause' }}
+            v-icon {{ app.playerState.paused ? 'play_arrow' : 'pause' }}
       v-flex.px-3(sm3, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout
           .vertical-center-container.mx-xs-auto(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
             .vertical-center.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
               .artwork.elevation-5.mx-auto(:class='{"mobile-large": $vuetify.breakpoint.xsOnly, "desktop": $vuetify.breakpoint.smAndUp}')
-                img(:src='playerState.images[0].url')
+                img(:src='app.playerState.images[0].url')
             .vertical-center.text-xs-center.text-sm-left.pl-3.pa-xs-0.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-              .body-2.truncate.compress(v-text='playerState.artist')
-              .body-1.truncate.compress(v-text='playerState.track')
+              .body-2.truncate.compress(v-text='app.playerState.artist')
+              .body-1.truncate.compress(v-text='app.playerState.track')
       v-flex.text-xs-center(sm6, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout.mb-xs-3(row, align-center)
           v-spacer
-          v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp')
-            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18') shuffle
+          v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp', @click='setShuffle')
+            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"primary--text": app.playerState.shuffle}') shuffle
           v-btn.my-0(icon, @click='previousTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_previous
           v-btn.my-0(icon, outline, @click='togglePlay', :large='$vuetify.breakpoint.xsOnly')
-            v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46') {{ playerState.paused ? 'play_arrow' : 'pause' }}
+            v-icon(:size='$vuetify.breakpoint.smAndUp ? 26 : 32') {{ app.playerState.paused ? 'play_arrow' : 'pause' }}
           v-btn.my-0(icon, @click='nextTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_next
-          v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp')
-            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18') repeat
+          v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp', @click='setRepeat')
+            v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"primary--text": app.playerState.repeat !== repeatModes.off }') {{ app.playerState.repeat === repeatModes.track ? 'repeat_one' : 'repeat' }}
           v-spacer
         v-layout.mx-xs-5(row, align-center)
-          .caption(v-text='playerState.elapsed')
-          v-slider.pa-0.mx-3(:color='isDarkTheme ? "white" : "black"', :thumb-color='isDarkTheme ? "white" : "black"', v-model='playerState.position', @click='seek')
-          .caption(v-text='playerState.duration')
+          .caption(v-text='app.playerState.elapsed')
+          v-slider.pa-0.mx-3(:color='app.isDarkTheme ? "white" : "black"', :thumb-color='app.isDarkTheme ? "white" : "black"', v-model='app.playerState.position', @click='seek')
+          .caption(v-text='app.playerState.duration')
       v-flex.px-3.text-xs-right(sm3, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout(row, align-center)
           v-spacer
           v-menu(v-model='showDevices', top, left, offset-y, fixed)
             v-btn(icon, slot='activator')
               v-icon speaker
-            devices(:current-user='currentUser')
-          v-slider.pa-0.hidden-xs-only(:color='isDarkTheme ? "white" : "black"', :thumb-color='isDarkTheme ? "white" : "black"', v-model='playerState.volume', @click='setVolume')
+            devices(:app='app')
+          v-slider.pa-0.hidden-xs-only(:color='app.isDarkTheme ? "white" : "black"', :thumb-color='app.isDarkTheme ? "white" : "black"', v-model='app.playerState.volume', @click='setVolume')
           v-spacer.hidden-sm-and-up
 </template>
 
 <script>
   import Devices from './Devices'
-  import SpotifyService from '../services/SpotifyService'
+  import PlayerService from '../services/PlayerService'
+  import repeatModes from '../constants/repeat-modes'
 
   export default {
     components: {Devices},
-    props: ['player', 'playerState', 'isDarkTheme', 'currentUser'],
+    props: {app: Object},
     data () {
       return {
+        repeatModes,
         showPlayer: false,
         showDevices: false
       }
     },
     methods: {
+      setShuffle () {
+        PlayerService.setShuffle(!this.app.playerState.shuffle)
+      },
+      setRepeat () {
+        const repeatModeKeys = Object.keys(repeatModes)
+        const repeatModeIndex = (repeatModeKeys.indexOf(this.app.playerState.repeat) + 1) % 3
+        PlayerService.setRepeat(repeatModeKeys[repeatModeIndex])
+      },
       setVolume () {
-        SpotifyService.setVolume(Number(this.playerState.volume || 0))
+        if (this.app.player) {
+          this.app.player.setVolume(this.app.playerState.volume / 100)
+        }
+        // Available in spotify-web-api-node v3.1.1, which is currently broken
+        // PlayerService.setVolume(Number(this.app.playerState.volume || 0))
       },
       seek () {
-        const positionMs = Math.floor(this.playerState.durationMs * (this.playerState.position / 100))
-        SpotifyService.seek(positionMs)
+        if (this.app.player) {
+          const positionMs = Math.floor(this.app.playerState.durationMs * (this.app.playerState.position / 100))
+          this.app.player.seek(positionMs)
+        }
+        // Available in spotify-web-api-node v3.1.1, which is currently broken
+        // PlayerService.seek(positionMs)
       },
       nextTrack () {
-        SpotifyService.next()
+        PlayerService.next()
       },
       previousTrack () {
-        SpotifyService.previous()
+        PlayerService.previous()
       },
       togglePlay () {
-        if (this.playerState.paused) {
-          SpotifyService.play()
+        if (this.app.playerState.paused) {
+          PlayerService.play()
         } else {
-          SpotifyService.pause()
+          PlayerService.pause()
         }
       }
     }
@@ -113,25 +131,5 @@
   }
   .artwork img {
     width: 100%;
-  }
-
-  @media (max-width: 599px) {
-    .mb-xs-3 {
-      margin-bottom: 16px !important;
-    }
-
-    .mx-xs-5 {
-      margin-left: 32px !important;
-      margin-right: 32px !important;
-    }
-
-    .pa-xs-0 {
-      padding: 0 !important;
-    }
-
-    .mx-xs-auto {
-      margin-left: auto !important;
-      margin-right: auto !important;
-    }
   }
 </style>

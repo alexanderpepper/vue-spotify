@@ -3,11 +3,13 @@
     "name": "db",
     "connector": "memory"
   },
-  "amazonS3": {
-    "name": "amazonS3",
-    "connector": "loopback-component-storage",
-    "provider": "amazon",
-    "key": "",
-    "keyId": ""
+  "spotifyDB": {
+    "name": "spotifyDB",
+    "connector": "mongodb",
+    "host": "127.0.0.1",
+    "port": 27017,
+    "database": "spotifyDB",
+    "username": "",
+    "password": ""
   }
 }

@@ -1,38 +1,28 @@
 import request from 'superagent'
 
+const apiRequest = (request) => request
+  .set('Authorization', window.localStorage['token'])
+  .then(response => (response.body && response.body.results) || response.body)
+
 class BaseService {
   static GET (url, query) {
-    return request.get(url)
-      .query(query)
-      .set('Authorization', window.localStorage['token'])
-      .then(response => response.body)
+    return apiRequest(request.get(url).query(query))
   }
 
   static POST (url, data) {
-    return request.post(url)
-      .send(data)
-      .set('Authorization', window.localStorage['token'])
-      .then(response => response.body)
+    return apiRequest(request.post(url).send(data))
   }
 
   static DELETE (url) {
-    return request.delete(url)
-      .set('Authorization', window.localStorage['token'])
-      .then(response => response.body)
+    return apiRequest(request.delete(url))
   }
 
   static PUT (url, data) {
-    return request.put(url)
-      .send(data)
-      .set('Authorization', window.localStorage['token'])
-      .then(response => response.body)
+    return apiRequest(request.put(url).send(data))
   }
 
   static PATCH (url, data) {
-    return request.patch(url)
-      .send(data)
-      .set('Authorization', window.localStorage['token'])
-      .then(response => response.body)
+    return apiRequest(request.patch(url).send(data))
   }
 }
 

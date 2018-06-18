@@ -2,8 +2,7 @@
 module.exports = (name) => {
   try {
     return require(name)
-  }
-  catch (e) {
+  } catch (e) {
     return false
   }
 }

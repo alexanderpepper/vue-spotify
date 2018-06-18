@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Landing from '@/components/Landing'
-import Playlists from '@/components/Playlists'
 import Playlist from '@/components/Playlist'
 import User from '../components/User'
 import Users from '../components/Users'
 import Callback from '../components/Callback'
+import Home from '../components/Home'
 
 Vue.use(Router)
 
@@ -29,11 +29,6 @@ export default new Router({
       component: Users
     },
     {
-      path: '/playlists',
-      name: 'playlists',
-      component: Playlists
-    },
-    {
       path: '/callback',
       name: 'callback',
       component: Callback
@@ -43,6 +38,12 @@ export default new Router({
       name: 'playlist',
       props: true,
       component: Playlist
+    },
+    {
+      path: '/home',
+      name: 'home',
+      props: true,
+      component: Home
     }
   ]
 })

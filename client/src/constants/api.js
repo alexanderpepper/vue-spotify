@@ -25,5 +25,7 @@ export default {
   setVolume: `${host}/player/volume`,
   setShuffle: `${host}/player/shuffle`,
   setRepeat: `${host}/player/repeat`,
-  seek: `${host}/player/seek`
+  seek: `${host}/player/seek`,
+  folder: (id) => `${host}/folder/${id}`,
+  folders: (id) => `${host}/folder/${id}`
 }

@@ -17,7 +17,7 @@
       v-btn(icon, v-if='showBackButton', @click='$router.go(-1)')
         v-icon.primary--text arrow_back
       v-toolbar-title.mr-3
-        router-link.headline.cursor-pointer(:to='{name: "playlists"}') Spotify
+        router-link.headline.cursor-pointer(:to='{name: "home"}') Spotify
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
         .subheading {{ userFullName }}
@@ -68,6 +68,7 @@
     components: {Register, Login, UserPhoto, PlayControls, Password},
     data () {
       return {
+        playlists: [],
         showBackButton: false,
         showRegister: false,
         showLogin: false,
@@ -137,7 +138,7 @@
         if (!this.isSpotifyConnected()) {
           window.location.href = await AuthorizationService.getAuthorizationUrl()
         } else {
-          this.$router.push({name: 'playlists'})
+          this.$router.push({name: 'home'})
         }
       },
       async logout () {

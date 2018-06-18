@@ -1,0 +1,9 @@
+{
+  "name": "Folder",
+  "plural": "folder",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  }
+}

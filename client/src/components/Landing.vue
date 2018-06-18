@@ -10,7 +10,7 @@
       'app.user': {
         handler () {
           if (this.app.isSpotifyConnected()) {
-            this.$router.push({name: 'playlists'})
+            this.$router.push({name: 'home'})
           }
         }
       }

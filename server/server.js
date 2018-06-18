@@ -9,7 +9,7 @@ const app = module.exports = loopback()
 const isProd = process.env.NODE_ENV === 'production'
 const isStaging = process.env.NODE_ENV === 'staging'
 const moduleExists = require('./constants/module-exists')
-const sslConfig = moduleExists('./ssl-config') ? require('./ssl-config') : undefined
+const sslConfig = moduleExists(`${__dirname}/ssl-config.js`) ? require('./ssl-config') : undefined
 const useSsl = (isProd || isStaging) && sslConfig
 const protocol = useSsl ? 'https://' : 'http://'
 

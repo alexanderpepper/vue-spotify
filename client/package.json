@@ -18,7 +18,6 @@
     "superagent": "^3.8.2",
     "vue": "^2.5.3",
     "vue-router": "^3.0.1",
-    "vuedraggable": "^2.16.0",
     "vuetify": "^1.0.18"
   },
   "devDependencies": {

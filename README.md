@@ -15,9 +15,6 @@ Use of ES6+ features in this project is encouraged.
 <img src="https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-1.png"/>
 <img src="https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-2.png"/>
 <img src="https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-3.png" width="45%"/>
-<img src="" width="45%"/>
-Solarized dark                                                        |  Solarized Ocean
-:--------------------------------------------------------------------:|:--------------------------------------------------------------------:
 ![](https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-3.png)  |  ![](https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-4.png)
 
 ## Tech/framework used

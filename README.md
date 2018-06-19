@@ -7,12 +7,17 @@ The ability to shuffle all the tracks in a playlist folder was removed from the 
 Unfortunately the Spotify Web API does not currently expose any information about playlist folders, so until there's an API change to resolve [this issue](https://github.com/spotify/web-api/issues/38), we've decided to build a custom folder hierarchy stored in the application's database.
 
 ## Code style
-This project uses [JavaScript Standard Style](https://github.com/standard/standard), enforced (so far only in the front end) by [ESLint](https://eslint.org/). 
+This project uses [JavaScript Standard Style](https://github.com/standard/standard), enforced (so far only in the front end) by [ESLint](https://eslint.org/).
 
 Use of ES6+ features in this project is encouraged.
 
 ## Screenshots
-Coming soon.
+<img src="https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-1.png"/>
+<img src="https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-2.png"/>
+
+Screenshot | Screenshot
+---- | ---
+![screenshot](https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-3.png)  |  ![screenshot](https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-4.png)
 
 ## Tech/framework used
 
@@ -72,7 +77,7 @@ module.exports = {
 ## Development
 Running the server and client as separate processes gives the best development experience with hot reloading in the client app.
 
-The client app is 
+The client app is
 * Configured in `client/config/dev.env.js` to use `http://localhost:3000/api` as the base API path when running in development
 * Configured in `client/config/prod.env.js` to use `/api` as the base API path when built for production
 

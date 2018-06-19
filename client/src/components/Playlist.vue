@@ -13,8 +13,8 @@
       v-list-tile(ripple, v-for='(track, index) in tracks', :key='index', @click='playSong(index)',)
         v-list-tile-content
           v-list-tile-title
-            v-icon.playing-indicator.mr-1(v-if='isPlayingTrack(track)', size='17') volume_up
-            span(:class='{bold: isPlayingTrack(track)}') {{ track.title }}
+            v-icon.playing-indicator.mr-1(v-if='isPlayingTrack(track)', :class='{"primary--text": isPlayingTrack(track)}', size='17') volume_up
+            span(:class='{"primary--text": isPlayingTrack(track)}') {{ track.title }}
           v-list-tile-sub-title(:class='{"primary--text": isPlayingTrack(track)}') {{ track.artist }} • {{ track.album }}
     v-data-table.px-4.hidden-xs-only(:headers='headers', :items='tracks', :loading='loading', :search='search', no-data-text='Loading playlist...', hide-actions, disable-initial-sort)
       template(slot='items', slot-scope='props')

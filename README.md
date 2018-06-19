@@ -15,6 +15,7 @@ Use of ES6+ features in this project is encouraged.
 <img src="https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-1.png"/>
 <img src="https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-2.png"/>
 
+Screenshot | Screenshot
 ---- | ---
 ![screenshot](https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-3.png)  |  ![screenshot](https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-4.png)
 

@@ -46,6 +46,11 @@ a {
 .full-width {
   width: 100%;
 }
+
+.hide-overflow-x {
+  overflow-x: hidden;
+}
+
 @media (max-width: 599px) {
   .mb-xs-3 {
     margin-bottom: 16px !important;

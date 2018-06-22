@@ -12,6 +12,7 @@
   import Playlists from './Playlists'
   import Folders from './Folders'
   import ModalSpinner from './ModalSpinner'
+  import FolderService from '../services/FolderService'
   import PlaylistService from '../services/PlaylistService'
 
   export default {
@@ -20,6 +21,10 @@
     components: {Playlists, Folders, ModalSpinner},
     async created () {
       this.app.playlists = await PlaylistService.getPlaylists()
+      this.app.folders = [
+        {title: 'A Folder'},
+        ...FolderService.fromPlaylists(this.app.playlists)
+      ]
     }
   }
 </script>
@@ -27,15 +32,15 @@
 <style scoped>
 
   .position-relative {
-    position: relative;
+    /*position: relative;*/
   }
 
   .overflow-scroll {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow-y: scroll;
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
+    /*overflow-y: scroll;*/
   }
 </style>

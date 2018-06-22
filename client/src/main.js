@@ -29,6 +29,7 @@ import App from './App'
 import router from './router'
 import { Ripple } from 'vuetify/es5/directives'
 import './common.css'
+import './sl-vue-tree.css'
 
 Vue.use(Vuetify, {
   components: {

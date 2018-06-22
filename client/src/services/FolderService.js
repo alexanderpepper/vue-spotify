@@ -2,7 +2,7 @@ import BaseService from './BaseService'
 import api from '../constants/api.js'
 
 class FolderService extends BaseService {
-  static all() {
+  static all () {
     return this.GET(api.folders)
   }
 
@@ -20,6 +20,16 @@ class FolderService extends BaseService {
 
   static remove (folder) {
     return this.DELETE(api.folder(folder.id))
+  }
+
+  static fromPlaylists (playlists) {
+    return playlists.map(playlist => {
+      return {
+        title: playlist.name,
+        isLeaf: true,
+        data: playlist.id
+      }
+    })
   }
 }
 

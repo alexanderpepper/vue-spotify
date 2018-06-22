@@ -1,4 +1,4 @@
-## Spotify Utils
+## Vue Spotify Client
 A Spotify client web app with some features missing from the official Spotify apps on the roadmap.
 
 ## Motivation

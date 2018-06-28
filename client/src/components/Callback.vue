@@ -14,7 +14,7 @@
     async mounted () {
       await AuthorizationService.setAuthorizationCode(this.$route.query.code)
       this.app.setUser(await UserService.me())
-      this.$router.push({name: 'home'})
+      this.$router.push({name: 'playlists'})
     }
   }
 </script>

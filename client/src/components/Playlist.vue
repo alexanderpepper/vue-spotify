@@ -53,26 +53,36 @@
         audio: undefined
       }
     },
-    async created () {
-      this.playlist = await PlaylistService.getPlaylist(this.id)
-      this.tracks = this.playlist.tracks.items.map(item => {
-        return {
-          id: item.track.id,
-          title: item.track.name,
-          artist: item.track.artists.map(a => a.name).join(', '),
-          album: item.track.album.name,
-          uri: item.track.uri,
-          duration: DateService.formattedDuration(item.track.duration_ms),
-          durationMs: item.track.duration_ms
+    watch: {
+      id: {
+        handler () {
+          this.id && this.initialize()
         }
-      })
-      const totalMs = this.tracks.reduce((accumulator, current) => accumulator + Number(current.durationMs), 0)
-      this.totalDuration = DateService.englishFormattedDuration(totalMs)
-      this.loading = false
-      this.audio = new Audio()
-      this.app.showBackButton = true
+      }
+    },
+    created () {
+      this.initialize()
     },
     methods: {
+      async initialize () {
+        this.playlist = await PlaylistService.getPlaylist(this.id)
+        this.tracks = this.playlist.tracks.items.map(item => {
+          return {
+            id: item.track.id,
+            title: item.track.name,
+            artist: item.track.artists.map(a => a.name).join(', '),
+            album: item.track.album.name,
+            uri: item.track.uri,
+            duration: DateService.formattedDuration(item.track.duration_ms),
+            durationMs: item.track.duration_ms
+          }
+        })
+        const totalMs = this.tracks.reduce((accumulator, current) => accumulator + Number(current.durationMs), 0)
+        this.totalDuration = DateService.englishFormattedDuration(totalMs)
+        this.loading = false
+        this.audio = new Audio()
+        this.app.showBackButton = true
+      },
       async playSong (index) {
         PlayerService.play(this.tracks.map(t => t.uri), index)
       },

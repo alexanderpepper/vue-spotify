@@ -41,7 +41,6 @@
             v-list-tile-title Sign Out
     v-content
       router-view.router-view.mx-auto(:app='app')
-    play-controls(v-if='isSpotifyConnected()', :app='app')
     v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
       v-btn(dark, flat, @click='snackbar = false') Close
     v-dialog(v-model='showLogin', persistent, width='300')
@@ -60,12 +59,11 @@
   import UserService from './services/UserService'
   import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
-  import PlayControls from './components/PlayControls'
   import PlayerService from './services/PlayerService'
   import AuthorizationService from './services/AuthorizationService'
 
   export default {
-    components: {Register, Login, UserPhoto, PlayControls, Password},
+    components: {Register, Login, UserPhoto, Password},
     data () {
       return {
         playlists: [],
@@ -139,7 +137,7 @@
         if (!this.isSpotifyConnected()) {
           window.location.href = await AuthorizationService.getAuthorizationUrl()
         } else {
-          this.$router.push({name: 'home'})
+          this.$router.push({name: 'playlists'})
         }
       },
       async logout () {

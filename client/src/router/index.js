@@ -2,10 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Landing from '@/components/Landing'
 import Playlist from '@/components/Playlist'
+import Playlists from '@/components/Playlists'
 import User from '../components/User'
 import Users from '../components/Users'
 import Callback from '../components/Callback'
-import Home from '../components/Home'
+import Spotify from '../components/Spotify'
 
 Vue.use(Router)
 
@@ -16,6 +17,23 @@ export default new Router({
       path: '/',
       name: 'landing',
       component: Landing
+    },
+    {
+      path: '/spotify',
+      component: Spotify,
+      children: [
+        {
+          path: '/playlists',
+          name: 'playlists',
+          component: Playlists
+        },
+        {
+          path: '/playlist/:id',
+          name: 'playlist',
+          component: Playlist,
+          props: true
+        }
+      ]
     },
     {
       path: '/user/:id?',
@@ -34,16 +52,10 @@ export default new Router({
       component: Callback
     },
     {
-      path: '/playlist/:id',
-      name: 'playlist',
-      props: true,
-      component: Playlist
-    },
-    {
       path: '/home',
       name: 'home',
       props: true,
-      component: Home
+      component: Spotify
     }
   ]
 })

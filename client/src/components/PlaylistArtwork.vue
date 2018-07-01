@@ -1,5 +1,5 @@
 <template lang="pug">
-  .playlist-artwork.mx-auto(v-ripple='{ class: "white--text" }', :class='[`elevation-${elevation || 5}`]', :style='{width: size, height: size, "line-height": 0.5}')
+  .playlist-artwork.mx-auto(v-ripple='{ class: "white--text" }', :class='[`elevation-${elevation || 5}`]', :style='{width: size, height: size}')
     img(v-if='artworkUrl', :src='artworkUrl')
     img(v-if='!artworkUrl', src='/static/transparent-square.png')
     .no-image.grey.darken-3.text-xs-center(v-if='!artworkUrl', :style='{width: size, height: size, "line-height": size}')
@@ -30,6 +30,7 @@
 
   .playlist-artwork {
     position: relative;
+    line-height: 0;
   }
 
   .no-image {

@@ -1,4 +1,4 @@
-## Spotify Utils
+## Vue Spotify Client
 A Spotify client web app with some features missing from the official Spotify apps on the roadmap.
 
 ## Motivation
@@ -34,9 +34,9 @@ Screenshot | Screenshot
 
 ## Features
 * Control Spotify from a web interface and play tracks in desktop browsers
-* Build folders shuffle all playlists in them
-* Export all your playlists to JSON
-* Quickly find official music videos on YouTube for playlists with Chromecast option
+* Build folders shuffle all playlists in them (in development on `folders` branch)
+* Export all your playlists to JSON (in roadmap)
+* Quickly find official music videos on YouTube for playlists with Chromecast option (in roadmap)
 
 ## Prequisites
 * MongoDB

@@ -32,14 +32,18 @@ class ImageCacheService extends BaseService {
           var imgFile = event.target.result
           console.log('Got image!' + imgFile)
 
-          // Get window.URL object
-          var URL = window.URL || window.webkitURL
+          if (imgFile) {
+            // Get window.URL object
+            var URL = window.URL || window.webkitURL
 
-          // Create and revoke ObjectURL
-          var imgURL = URL.createObjectURL(imgFile)
+            // Create and revoke ObjectURL
+            var imgURL = URL.createObjectURL(imgFile)
 
-          console.log('loaded from db successfully')
-          success(imgURL)
+            console.log('loaded from db successfully')
+            success(imgURL)
+          } else {
+            failure()
+          }
         }
 
         request.onerror = failure

@@ -17,7 +17,7 @@
       v-btn(icon, v-if='showBackButton', @click='$router.go(-1)')
         v-icon.primary--text arrow_back
       v-toolbar-title.mr-3
-        router-link.headline.cursor-pointer(:to='{name: "home"}') Spotify
+        router-link.headline.cursor-pointer(:to='{name: "playlists"}') Spotify
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
         .subheading {{ userFullName }}

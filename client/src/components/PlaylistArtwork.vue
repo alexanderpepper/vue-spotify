@@ -8,6 +8,8 @@
 </template>
 
 <script>
+  import ImageCacheService from '../services/ImageCacheService'
+
   export default {
     name: 'playlistArtwork',
     props: {
@@ -15,9 +17,29 @@
       playlist: Object,
       size: String
     },
-    computed: {
-      artworkUrl () {
-        return this.playlist && this.playlist.images && this.playlist.images.length && this.playlist.images[0].url
+    data () {
+      return {
+        artworkUrl: false
+      }
+    },
+    created () {
+      const key = this.playlist && this.playlist.images && this.playlist.images.length && this.playlist.images[0].url
+
+      if (key) {
+        ImageCacheService.getObjectURL(key).then(objectURL => {
+          if (objectURL) {
+            // We were able to store stuff in the db, use the object URL
+            console.log('Got objectURL from ImageCacheService:', objectURL)
+            this.artworkUrl = objectURL
+          } else {
+            // in this case, it's better to use the existing URL and fall back on normal image loading
+            console.log('Didn\'t get anything back from ImageCacheService')
+            this.artworkUrl = key
+          }
+        })
+      } else {
+        console.log('The playlist we had didn\'t have an image.')
+        this.artworkUrl = false
       }
     }
   }

@@ -30,6 +30,7 @@
 
   .playlist-artwork {
     position: relative;
+    line-height: 0;
   }
 
   .no-image {

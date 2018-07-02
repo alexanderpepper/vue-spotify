@@ -21,11 +21,16 @@
     props: {app: Object},
     components: {Playlists, Folders, ModalSpinner, PlayControls},
     async created () {
-      this.app.playlists = await PlaylistService.getPlaylists()
-      this.app.folders = [
-        {title: 'A Folder'},
-        ...FolderService.fromPlaylists(this.app.playlists)
-      ]
+      const results = await Promise.all([
+        PlaylistService.getPlaylists(),
+        FolderService.get()
+      ])
+      this.app.playlists = results[0]
+      this.app.folders = results[1]
+      if (!this.app.folders.folders || !this.app.folders.folders.length) {
+        this.app.folders = FolderService.fromPlaylists(this.app.playlists, this.app.user)
+        FolderService.save(this.app.folders)
+      }
     }
   }
 </script>

@@ -16,12 +16,13 @@
     props: {app: Object, folder: Object},
     computed: {
       playlists () {
-        console.log('calcing')
         if (this.folder) {
-          console.log(1)
-          return this.folder.children.map(child => this.app.playlists.find(playlist => playlist.id === child.data))
+          if (this.folder.children) {
+            return this.folder.children.map(child => this.app.playlists.find(playlist => playlist.id === child.data))
+          } else {
+            return []
+          }
         } else {
-          console.log(2)
           return this.app.playlists
         }
       }

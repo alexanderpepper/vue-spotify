@@ -1,10 +1,13 @@
 <template lang="pug">
   .playlist-artwork.mx-auto(v-ripple='{ class: "white--text" }', :class='[`elevation-${elevation || 5}`]', :style='{width: size, height: size}')
-    img(v-if='artworkUrl', :src='artworkUrl')
-    img(v-if='!artworkUrl', src='/static/transparent-square.png')
-    .no-image.grey.darken-3.text-xs-center(v-if='!artworkUrl', :style='{width: size, height: size, "line-height": size}')
+    img(v-if='artwork', :src='artwork')
+    img(v-else, src='/static/transparent-square.png')
+    .no-image.grey.darken-3.text-xs-center(v-if='!isFolder && !artwork', :style='{width: size, height: size, "line-height": size}')
       .no-image-icon-container
         v-icon.no-image-icon.grey--text.text--darken-1(size='100') queue_music
+    .no-image.grey.darken-3.text-xs-center(v-if='isFolder', :style='{width: size, height: size, "line-height": size}')
+      .no-image-icon-container
+        v-icon.no-image-icon.grey--text.text--darken-1(size='100') folder
 </template>
 
 <script>
@@ -16,8 +19,11 @@
       size: String
     },
     computed: {
-      artworkUrl () {
-        return this.playlist && this.playlist.images && this.playlist.images.length && this.playlist.images[0].url
+      isFolder () {
+        return this.playlist && !this.playlist.isLeaf
+      },
+      artwork () {
+        return this.playlist && this.playlist.data && this.playlist.data.artworkUrl
       }
     }
   }

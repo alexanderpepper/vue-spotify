@@ -1,6 +1,6 @@
 {
-  "name": "Folder",
-  "plural": "folder",
+  "name": "Library",
+  "plural": "library",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {

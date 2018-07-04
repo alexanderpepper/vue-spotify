@@ -26,7 +26,5 @@ export default {
   setShuffle: `${host}/player/shuffle`,
   setRepeat: `${host}/player/repeat`,
   seek: `${host}/player/seek`,
-  myFolders: `${host}/folder/my`,
-  folders: `${host}/folder/`,
-  folder: (id) => `${host}/folder/${id}`
+  library: `${host}/library/mine`
 }

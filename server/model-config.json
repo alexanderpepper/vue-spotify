@@ -51,7 +51,7 @@
     "dataSource": "spotifyDB",
     "public": true
   },
-  "Folder": {
+  "Library": {
     "dataSource": "spotifyDB",
     "public": true
   },

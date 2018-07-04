@@ -67,7 +67,7 @@
     data () {
       return {
         playlists: [],
-        folders: [],
+        library: {},
         showBackButton: false,
         showRegister: false,
         showLogin: false,

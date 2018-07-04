@@ -1,10 +1,10 @@
 <template lang="pug">
   v-layout.playlists.pa-2(fill-height)
-    v-layout(row, wrap, v-if='app && app.playlists.length')
-      v-flex.my-1.pa-2(v-for='(playlist, index) in playlists', :key='index')
-        router-link(:to='{name: "playlist", params: {id: playlist.id}}')
-          playlist-artwork(:playlist='playlist', size='200px')
-        .playlist-name.truncate.body-2.text-xs-center.mt-2.mx-auto {{ playlist.name }}
+    v-layout(row, wrap, v-if='app && app.library && app.library.children')
+      v-flex.my-1.pa-2(v-for='(item, index) in items', :key='index', draggable, v-on:dragstart='dragStart(item)')
+        router-link(:to='item.isLeaf ? {name: "playlist", params: {id: item.data.id}} : {name: "playlists", params: {folder: item}}')
+          playlist-artwork(:playlist='item', size='200px')
+        .playlist-name.truncate.body-2.text-xs-center.mt-2.mx-auto {{ item.title }}
 </template>
 
 <script>
@@ -15,16 +15,17 @@
     components: {PlaylistArtwork},
     props: {app: Object, folder: Object},
     computed: {
-      playlists () {
+      items () {
         if (this.folder) {
-          if (this.folder.children) {
-            return this.folder.children.map(child => this.app.playlists.find(playlist => playlist.id === child.data))
-          } else {
-            return []
-          }
+          return this.folder.children
         } else {
-          return this.app.playlists
+          return this.app.library.children
         }
+      }
+    },
+    methods: {
+      dragStart (item) {
+        this.app.draggingItem = item
       }
     }
   }

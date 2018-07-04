@@ -62,7 +62,7 @@
         if (rows.length === 1) {
           const row = rows[0]
           if (row.isLeaf) {
-            this.$router.push({name: 'playlist', params: {id: row.data}})
+            this.$router.push({name: 'playlist', params: {id: row.data.id}})
           } else {
             const folder = this.app.library.children.find(item => item.isSelected)
             this.$router.push({name: 'playlists', params: {folder}})

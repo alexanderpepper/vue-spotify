@@ -1,8 +1,8 @@
 <template lang="pug">
   .playlist-artwork.mx-auto(v-ripple='{ class: "white--text" }', :class='[`elevation-${elevation || 5}`]', :style='{width: size, height: size}')
-    img(v-if='artwork', :src='artwork')
+    img(v-if='artworkUrl', :src='artworkUrl')
     img(v-else, src='/static/transparent-square.png')
-    .no-image.grey.darken-3.text-xs-center(v-if='!isFolder && !artwork', :style='{width: size, height: size, "line-height": size}')
+    .no-image.grey.darken-3.text-xs-center(v-if='!isFolder && !artworkUrl', :style='{width: size, height: size, "line-height": size}')
       .no-image-icon-container
         v-icon.no-image-icon.grey--text.text--darken-1(size='100') queue_music
     .no-image.grey.darken-3.text-xs-center(v-if='isFolder', :style='{width: size, height: size, "line-height": size}')
@@ -15,15 +15,12 @@
     name: 'playlistArtwork',
     props: {
       elevation: String,
-      playlist: Object,
+      artworkUrl: String,
       size: String
     },
     computed: {
       isFolder () {
         return this.playlist && !this.playlist.isLeaf
-      },
-      artwork () {
-        return this.playlist && this.playlist.data && this.playlist.data.artworkUrl
       }
     }
   }

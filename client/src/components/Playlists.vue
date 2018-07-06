@@ -3,7 +3,7 @@
     v-layout(row, wrap, v-if='app && app.library && app.library.children')
       v-flex.my-1.pa-2(v-for='(item, index) in items', :key='index', draggable, v-on:dragstart='dragStart(item)')
         router-link(:to='item.isLeaf ? {name: "playlist", params: {id: item.data.id}} : {name: "playlists", params: {folder: item}}')
-          playlist-artwork(:artwork-url='item.data.artworkUrl', size='200px')
+          playlist-artwork(:artwork-url='item.isLeaf && item.data.artworkUrl || ""', size='200px')
         .playlist-name.truncate.body-2.text-xs-center.mt-2.mx-auto {{ item.title }}
 </template>
 

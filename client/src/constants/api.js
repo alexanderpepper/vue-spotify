@@ -26,5 +26,7 @@ export default {
   setShuffle: `${host}/player/shuffle`,
   setRepeat: `${host}/player/repeat`,
   seek: `${host}/player/seek`,
-  library: `${host}/library/mine`
+  library: (id) => `${host}/library/${id || ''}`,
+  myLibrary: `${host}/library/mine`
+
 }

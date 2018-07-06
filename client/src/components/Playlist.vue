@@ -2,7 +2,7 @@
   .playlist.pb-4.pa-xs-0
     v-layout.px-4.pt-4.mb-4(row, wrap, align-center)
       v-flex.text-xs-center(xs12, sm3)
-        playlist-artwork.mb-xs-3(:artwork-url='playlist.images && playlist.images.length && playlist.images[0].url', elevation='10', size='100%')
+        playlist-artwork.mb-xs-3(:artwork-url='artworkUrl', elevation='10', size='100%')
       v-flex.px-4.text-sm-left.text-xs-center(xs12, sm9)
         .caption PLAYLIST
         .display-1.mb-2.bold {{ playlist.name }}
@@ -63,6 +63,13 @@
     created () {
       this.initialize()
     },
+    computed: {
+      artworkUrl () {
+        if (this.playlist && this.playlist.images && this.playlist.images.length) {
+          return this.playlist.images[0].url
+        }
+      }
+    },
     methods: {
       async initialize () {
         this.playlist = await PlaylistService.getPlaylist(this.id)
@@ -81,7 +88,6 @@
         this.totalDuration = DateService.englishFormattedDuration(totalMs)
         this.loading = false
         this.audio = new Audio()
-        this.app.showBackButton = true
       },
       async playSong (index) {
         PlayerService.play(this.tracks.map(t => t.uri), index)

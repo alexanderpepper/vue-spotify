@@ -25,9 +25,10 @@
       }
     },
     watch: {
-      'app.library': {
+      'app.library.children': {
         handler () {
           if (this.app.library) {
+            console.log('hit the handler')
             LibraryService.save(this.app.library)
           }
         }

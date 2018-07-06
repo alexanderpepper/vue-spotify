@@ -5,5 +5,12 @@
   "idInjection": true,
   "options": {
     "validateUpsert": true
+  },
+  "relations": {
+    "user": {
+      "type": "belongsTo",
+      "model": "AppUser",
+      "foreignKey": "userId"
+    }
   }
 }

@@ -13,11 +13,13 @@
           v-list-tile-content
             v-list-tile-title(v-text='item.title', :class='{"grey--text": !isActiveMenuItem(item), "text--darken-1": !isActiveMenuItem(item) }')
     v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
-      v-toolbar-side-icon.primary--text(@click.stop='drawer = !drawer', v-if='!showBackButton && user.isAdmin')
-      v-btn(icon, v-if='showBackButton', @click='$router.go(-1)')
-        v-icon.primary--text arrow_back
+      v-toolbar-side-icon.primary--text(@click.stop='drawer = !drawer', v-if='user.isAdmin')
       v-toolbar-title.mr-3
         router-link.headline.cursor-pointer(:to='{name: "playlists"}') Spotify
+      v-btn.mx-0(icon, small, @click='$router.go(-1)')
+        v-icon.primary--text(size='12') arrow_back_ios
+      v-btn.mx-0(icon, small, @click='$router.go(1)')
+        v-icon.primary--text(size='12') arrow_forward_ios
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
         .subheading {{ userFullName }}
@@ -68,7 +70,6 @@
       return {
         playlists: [],
         library: {},
-        showBackButton: false,
         showRegister: false,
         showLogin: false,
         showChangePassword: false,
@@ -90,11 +91,6 @@
       }
     },
     watch: {
-      $route: {
-        handler () {
-          this.showBackButton = false
-        }
-      },
       user: {
         handler () {
           if (!this.player && this.isSpotifyConnected()) {

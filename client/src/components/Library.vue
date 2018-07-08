@@ -1,5 +1,5 @@
 <template lang="pug">
-  .library(:class='{"grey darken-4": app.isDarkTheme, "grey lighten-4": !app.isDarkTheme}')
+  .library(:class='')
     v-layout(align-center)
       v-flex(xs6)
         .caption.mt-2.pl-2.ml-1(style='letter-spacing: 2px;') PLAYLISTS
@@ -60,6 +60,16 @@
     name: 'library',
     components: {SlVueTree},
     props: {app: Object},
+    computed: {
+      libraryClass () {
+        return {
+          'grey darken-4': this.app.isDarkTheme && this.$vuetify.breakpoint.smAndUp,
+          'grey lighten-4': !this.app.isDarkTheme && this.$vuetify.breakpoint.smAndUp,
+          'grey darken-3': this.app.isDarkTheme && this.$vuetify.breakpoint.xsOnly,
+          'grey lighten-3': !this.app.isDarkTheme && this.$vuetify.breakpoint.xsOnly
+        }
+      }
+    },
     data () {
       return {
         selectedNode: {},

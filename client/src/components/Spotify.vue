@@ -1,9 +1,9 @@
 <template lang="pug">
   v-layout.home(fill-height)
     v-layout(v-if='app.library.children')
-      v-flex.position-relative(xs12, sm4, md3, lg2)
+      v-flex.position-relative(v-if='$vuetify.breakpoint.smAndUp || $route.name === "playlists"' xs12, sm4, md3, lg2)
         library.overflow-scroll(:app='app')
-      v-flex.position-relative(v-if='$vuetify.breakpoint.smAndUp', sm8, md9, lg10)
+      v-flex.position-relative(v-if='$vuetify.breakpoint.smAndUp || $route.name === "playlist"', xs12, sm8, md9, lg10)
         router-view.overflow-scroll(:app='app')
     modal-spinner(v-else)
     play-controls(:app='app')

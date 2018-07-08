@@ -8,11 +8,6 @@ class LibraryService extends BaseService {
 
   static save (library) {
     return this.POST(api.myLibrary, library)
-    // if (library.id) {
-    //   return this.PATCH(api.library(library.id), library)
-    // } else {
-    //   return this.POST(api.library(), library)
-    // }
   }
 }
 

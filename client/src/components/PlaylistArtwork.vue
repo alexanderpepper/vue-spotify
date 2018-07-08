@@ -16,12 +16,8 @@
     props: {
       elevation: String,
       artworkUrl: String,
+      isFolder: Boolean,
       size: String
-    },
-    computed: {
-      isFolder () {
-        return this.playlist && !this.playlist.isLeaf
-      }
     }
   }
 </script>

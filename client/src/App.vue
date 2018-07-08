@@ -14,12 +14,12 @@
             v-list-tile-title(v-text='item.title', :class='{"grey--text": !isActiveMenuItem(item), "text--darken-1": !isActiveMenuItem(item) }')
     v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
       v-toolbar-side-icon.primary--text(@click.stop='drawer = !drawer', v-if='user.isAdmin')
-      v-toolbar-title.mr-3
-        router-link.headline.cursor-pointer(:to='{name: "playlists"}') Spotify
       v-btn.mx-0(icon, small, @click='$router.go(-1)')
         v-icon.primary--text(size='12') arrow_back_ios
       v-btn.mx-0(icon, small, @click='$router.go(1)')
         v-icon.primary--text(size='12') arrow_forward_ios
+      v-toolbar-title.mr-3
+        router-link.headline.cursor-pointer(:to='{name: "playlists"}') Spotify
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
         .subheading {{ userFullName }}
@@ -43,8 +43,9 @@
             v-list-tile-title Sign Out
     v-content
       router-view.router-view.mx-auto(:app='app')
-    v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
-      v-btn(dark, flat, @click='snackbar = false') Close
+    v-snackbar.subheading(v-model='snackbar', :timeout='3000', top, :color='snackbarStyle') {{ snackbarMessage }}
+      v-btn.primary--text(dark, icon, @click='snackbar = false')
+        v-icon close
     v-dialog(v-model='showLogin', persistent, width='300')
       login(:app='app')
     v-dialog(v-model='showRegister', peristent, width='300')

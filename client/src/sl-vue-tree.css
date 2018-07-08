@@ -16,12 +16,12 @@
 }
 
 .application.theme--dark .sl-vue-tree-selected > .sl-vue-tree-node-item {
-  background-color: black;
+  background-color: #151515;
   color: white;
 }
 
 .application.theme--light .sl-vue-tree-selected > .sl-vue-tree-node-item {
-  background-color: #ccc;
+  background-color: #dfdfdf;
   color: black;
 }
 
@@ -84,4 +84,15 @@
   opacity: 0.5;
   margin-left: 20px;
   padding: 5px 10px;
+}
+
+@media screen and (max-width: 600px){
+  .sl-vue-tree-node-item {
+    height: 44px;
+    padding-top: 5px;
+  }
+
+  .sl-vue-tree-title span {
+    font-size: 17px !important;
+  }
 }

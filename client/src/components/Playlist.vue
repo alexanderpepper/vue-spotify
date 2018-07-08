@@ -3,7 +3,7 @@
     v-layout.px-4.pt-4.mb-4(row, wrap, align-center)
       v-flex.text-xs-center(xs12, sm3)
         playlist-artwork.mb-xs-3(:artwork-url='artworkUrl', elevation='10', size='100%')
-      v-flex.px-4.text-sm-left.text-xs-center(xs12, sm9)
+      v-flex.px-4.px-xs-0.text-sm-left.text-xs-center(xs12, sm9)
         .caption PLAYLIST
         .display-1.mb-2.bold {{ playlist.name }}
         .body-1.grey--text {{ tracks.length }} songs, {{ totalDuration }}

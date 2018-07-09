@@ -86,13 +86,30 @@
   padding: 5px 10px;
 }
 
+.sl-vue-tree {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  width: 100%;
+}
+
+.sl-vue-tree-title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  width: 100%;
+}
+
 @media screen and (max-width: 600px){
   .sl-vue-tree-node-item {
     height: 44px;
-    padding-top: 5px;
   }
 
   .sl-vue-tree-title span {
+    line-height:44px;
+    height: 44px;
     font-size: 17px !important;
   }
 }

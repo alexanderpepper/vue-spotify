@@ -1,5 +1,5 @@
 <template lang="pug">
-  .library(:class='')
+  .library(:class='libraryClass')
     v-layout(align-center)
       v-flex(xs6)
         .caption.mt-2.pl-2.ml-1(style='letter-spacing: 2px;') PLAYLISTS
@@ -12,7 +12,7 @@
           v-icon(dark, v-if="node.isExpanded", :class='{"grey--text": app.isDarkTheme, "grey--text text--darken-2": !app.isDarkTheme}') arrow_drop_down
           v-icon(dark, v-if="!node.isExpanded", :class='{"grey--text": app.isDarkTheme, "grey--text text--darken-2": !app.isDarkTheme}') arrow_right
         template(slot="title", slot-scope="{ node }")
-          span.body-1.truncate(style="line-height:1.9;") {{ node.title }}
+          span.body-1.truncate() {{ node.title }}
     v-menu(v-model='menu.show', :position-x='menu.x', :position-y='menu.y', absolute, offset-y)
       v-list.py-0
         v-list-tile(@click='showCreateDialog', ripple)
@@ -55,10 +55,11 @@
 <script>
   import SlVueTree from 'sl-vue-tree'
   import LibraryService from '../services/LibraryService'
+  import PlaylistArtwork from './PlaylistArtwork'
 
   export default {
     name: 'library',
-    components: {SlVueTree},
+    components: {SlVueTree, PlaylistArtwork},
     props: {app: Object},
     computed: {
       libraryClass () {
@@ -66,7 +67,7 @@
           'grey darken-4': this.app.isDarkTheme && this.$vuetify.breakpoint.smAndUp,
           'grey lighten-4': !this.app.isDarkTheme && this.$vuetify.breakpoint.smAndUp,
           'grey darken-3': this.app.isDarkTheme && this.$vuetify.breakpoint.xsOnly,
-          'grey lighten-3': !this.app.isDarkTheme && this.$vuetify.breakpoint.xsOnly
+          'grey lighten-5': !this.app.isDarkTheme && this.$vuetify.breakpoint.xsOnly
         }
       }
     },

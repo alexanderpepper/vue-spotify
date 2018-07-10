@@ -12,7 +12,7 @@
           v-icon(dark, v-if="node.isExpanded", :class='{"grey--text": app.isDarkTheme, "grey--text text--darken-2": !app.isDarkTheme}') arrow_drop_down
           v-icon(dark, v-if="!node.isExpanded", :class='{"grey--text": app.isDarkTheme, "grey--text text--darken-2": !app.isDarkTheme}') arrow_right
         template(slot="title", slot-scope="{ node }")
-          span.body-1.truncate() {{ node.title }}
+          span.body-1.truncate {{ node.title }}
     v-menu(v-model='menu.show', :position-x='menu.x', :position-y='menu.y', absolute, offset-y)
       v-list.py-0
         v-list-tile(@click='showCreateDialog', ripple)
@@ -166,7 +166,7 @@
           if (row.isLeaf) {
             this.$router.push({name: 'playlist', params: {id: row.data.id}})
           } else {
-            this.$router.push({name: 'playlists', params: {folder: row}})
+            this.$router.push({name: 'playlists', query: {path: row.path.join(',')}})
           }
         }
       },

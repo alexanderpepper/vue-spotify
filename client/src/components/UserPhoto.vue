@@ -1,23 +1,15 @@
-<template lang="pug">
+<template functional lang="pug">
   .user-photo-container.text-xs-center(row, align-center)
-    v-icon(v-if='!userImage', size='36') account_circle
-    img.user-photo(:src='userImage' v-if='userImage', :class='[size]')
+    v-icon(v-if='!props.app.isSpotifyConnected() || !props.app.user.spotifyUser.images.length', size='36') account_circle
+    img.user-photo(:src='props.app.user.spotifyUser.images[0].url' v-if='props.app.isSpotifyConnected() && props.app.user.spotifyUser.images.length', :class='[props.size]', v-once)
 </template>
 
 <script>
   export default {
     name: 'userPhoto',
     props: {
-      user: Object,
-      size: String,
-      isSpotifyConnected: Function
-    },
-    computed: {
-      userImage () {
-        if (this.isSpotifyConnected() && this.user.spotifyUser.images.length) {
-          return this.user.spotifyUser.images[0].url
-        }
-      }
+      app: Object,
+      size: String
     }
   }
 </script>

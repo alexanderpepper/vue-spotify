@@ -26,7 +26,7 @@
       v-btn(flat, v-show='!user.id', @click='showLogin = true') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
-          user-photo(size='medium', :user='user', :is-spotify-connected="isSpotifyConnected")
+          user-photo(size='medium', :app='app')
         v-list.py-0
           v-layout.px-3.pb-2.hidden-sm-and-up.pt-2(column)
             .caption Signed in as
@@ -122,6 +122,9 @@
       }
     },
     methods: {
+      selectDevice: function (deviceID) {
+        PlayerService.transferPlayback(deviceID, true)
+      },
       toggleTheme () {
         this.isDarkTheme = !this.isDarkTheme
         window.localStorage['dark'] = this.isDarkTheme

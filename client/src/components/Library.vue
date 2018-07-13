@@ -68,7 +68,7 @@
         return {
           'grey darken-4': this.app.isDarkTheme && this.$vuetify.breakpoint.smAndUp,
           'grey lighten-4': !this.app.isDarkTheme && this.$vuetify.breakpoint.smAndUp,
-          'grey darken-3': this.app.isDarkTheme && this.$vuetify.breakpoint.xsOnly,
+          '': this.app.isDarkTheme && this.$vuetify.breakpoint.xsOnly,
           'grey lighten-5': !this.app.isDarkTheme && this.$vuetify.breakpoint.xsOnly
         }
       }

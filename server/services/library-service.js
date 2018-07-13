@@ -17,6 +17,12 @@ module.exports = class LibraryService {
     })
   }
 
+  static getExisting ({user, Library}) {
+    return new Promise(resolve => {
+      Library.find({where: {userId: user.id}}).then(results => results && results[0]).then(resolve)
+    })
+  }
+
   static save ({user, Library, library}) {
     return new Promise(resolve => {
       if (user.id.toString() === library.userId) {

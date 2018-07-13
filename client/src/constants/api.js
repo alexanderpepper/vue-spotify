@@ -16,6 +16,7 @@ export default {
   playlists: `${host}/playlist`,
   playlist: (id) => `${host}/playlist/${id}`,
   transferPlayback: (id, play) => `${host}/player/transfer/${id}/${play}`,
+  shuffleFolder: `${host}/player/shuffle-folder`,
   play: `${host}/player/play`,
   pause: `${host}/player/pause`,
   next: `${host}/player/next`,

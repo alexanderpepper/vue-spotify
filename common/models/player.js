@@ -79,6 +79,16 @@ module.exports = (Player) => {
     http: {path: '/play', verb: 'post'}
   })
 
+  Player.shuffleFolder = (data, options) => SpotifyService.shuffleFolder(options.user, data.path, Player.app.models.Library)
+  Player.remoteMethod('shuffleFolder', {
+    ...remoteDefaults.method,
+    accepts: [
+      {arg: 'data', type: 'object', http: {source: 'body'}},
+      remoteDefaults.options
+    ],
+    http: {path: '/shuffle-folder', verb: 'post'}
+  })
+
   Player.pause = (options) => SpotifyService.pause(options.user)
   Player.remoteMethod('pause', {
     ...remoteDefaults.method,

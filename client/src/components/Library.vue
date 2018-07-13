@@ -13,6 +13,7 @@
           v-icon(dark, v-if="!node.isExpanded", :class='{"grey--text": app.isDarkTheme, "grey--text text--darken-2": !app.isDarkTheme}') arrow_right
         template(slot="title", slot-scope="{ node }")
           span.body-1.truncate {{ node.title }}
+          v-icon.primary--text.ml-1(small, @click='shuffleFolder(node)', v-if='!node.isLeaf') shuffle
     v-menu(v-model='menu.show', :position-x='menu.x', :position-y='menu.y', absolute, offset-y)
       v-list.py-0
         v-list-tile(@click='showCreateDialog', ripple)
@@ -56,6 +57,7 @@
   import SlVueTree from 'sl-vue-tree'
   import LibraryService from '../services/LibraryService'
   import PlaylistArtwork from './PlaylistArtwork'
+  import PlayerService from '../services/PlayerService'
 
   export default {
     name: 'library',
@@ -102,6 +104,11 @@
       }
     },
     methods: {
+      shuffleFolder (node) {
+        PlayerService.shuffleFolder(node.path).then(() => {
+          console.log('shuffling')
+        })
+      },
       saveLibrary () {
         LibraryService.save(this.app.library).then(() => {
           this.app.showSnackbar('Library Saved')

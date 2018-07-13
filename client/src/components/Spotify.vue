@@ -26,7 +26,6 @@
 </script>
 
 <style scoped>
-
   .position-relative {
     position: relative;
   }

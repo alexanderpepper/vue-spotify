@@ -4,7 +4,6 @@ const moduleExists = require('../constants/module-exists')
 const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private', 'user-read-playback-state', 'user-modify-playback-state']
 const limit = 50
 const resolver = (promise) => promise.then(data => data.body).catch(console.log)
-const LibraryService = require('./library-service')
 
 const credentials = moduleExists('../constants/credentials') ? require('../constants/credentials') : undefined
 
@@ -64,12 +63,18 @@ module.exports = class SpotifyService {
   }
 
   static async shuffleFolder (user, path, Library) {
-    const library = await LibraryService.getExisting({user, Library});
+    const library = await this.getLibrary(user, Library);
     const folder = path.reduce((node, index) => node.children[index], library)
     const playlists = await Promise.all(this.flatten(folder.children).map(item => this.getPlaylist(user, item.data.id)))
     const uris = playlists.map(playlist => playlist.tracks.items.map(item => item.track.uri)).reduce((acc, cur) => acc.concat(cur), [])
     await this.setShuffle(user, true)
     return this.play(user, {uris})
+  }
+
+  static getLibrary (user, Library) {
+    return new Promise(resolve => {
+      Library.find({where: {userId: user.id}}).then(results => results && results[0]).then(resolve)
+    })
   }
 
   static flatten (children) {

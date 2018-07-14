@@ -13,9 +13,11 @@
           v-list-tile-content
             v-list-tile-title(v-text='item.title', :class='{"grey--text": !isActiveMenuItem(item), "text--darken-1": !isActiveMenuItem(item) }')
     v-toolbar.app-toolbar(app, dense, fixed, clipped-left)
-      v-toolbar-side-icon.primary--text(@click.stop='drawer = !drawer', v-if='!showBackButton && user.isAdmin')
-      v-btn(icon, v-if='showBackButton', @click='$router.go(-1)')
-        v-icon.primary--text arrow_back
+      v-toolbar-side-icon.primary--text(@click.stop='drawer = !drawer', v-if='user.isAdmin')
+      v-btn.mx-0(icon, small, @click='$router.go(-1)')
+        v-icon.primary--text(size='12') arrow_back_ios
+      v-btn.mx-0(icon, small, @click='$router.go(1)')
+        v-icon.primary--text(size='12') arrow_forward_ios
       v-toolbar-title.mr-3
         router-link.headline.cursor-pointer(:to='{name: "playlists"}') Spotify
       v-spacer
@@ -24,7 +26,7 @@
       v-btn(flat, v-show='!user.id', @click='showLogin = true') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
-          user-photo(size='medium', :user='user', :is-spotify-connected="isSpotifyConnected")
+          user-photo(size='medium', :app='app')
         v-list.py-0
           v-layout.px-3.pb-2.hidden-sm-and-up.pt-2(column)
             .caption Signed in as
@@ -41,9 +43,9 @@
             v-list-tile-title Sign Out
     v-content
       router-view.router-view.mx-auto(:app='app')
-    play-controls(v-if='isSpotifyConnected()', :app='app')
-    v-snackbar(v-model='snackbar', :timeout='3000', :bottom='true', :color='snackbarStyle') {{ snackbarMessage }}
-      v-btn(dark, flat, @click='snackbar = false') Close
+    v-snackbar.subheading(v-model='snackbar', :timeout='3000', top, :color='snackbarStyle') {{ snackbarMessage }}
+      v-btn.primary--text(dark, icon, @click='snackbar = false')
+        v-icon close
     v-dialog(v-model='showLogin', persistent, width='300')
       login(:app='app')
     v-dialog(v-model='showRegister', peristent, width='300')
@@ -60,15 +62,15 @@
   import UserService from './services/UserService'
   import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
-  import PlayControls from './components/PlayControls'
   import PlayerService from './services/PlayerService'
   import AuthorizationService from './services/AuthorizationService'
 
   export default {
-    components: {Register, Login, UserPhoto, PlayControls, Password},
+    components: {Register, Login, UserPhoto, Password},
     data () {
       return {
-        showBackButton: false,
+        playlists: [],
+        library: {},
         showRegister: false,
         showLogin: false,
         showChangePassword: false,
@@ -90,11 +92,6 @@
       }
     },
     watch: {
-      $route: {
-        handler () {
-          this.showBackButton = false
-        }
-      },
       user: {
         handler () {
           if (!this.player && this.isSpotifyConnected()) {
@@ -125,6 +122,9 @@
       }
     },
     methods: {
+      selectDevice: function (deviceID) {
+        PlayerService.transferPlayback(deviceID, true)
+      },
       toggleTheme () {
         this.isDarkTheme = !this.isDarkTheme
         window.localStorage['dark'] = this.isDarkTheme

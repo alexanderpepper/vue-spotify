@@ -2,8 +2,8 @@
   .playlist.pb-4.pa-xs-0
     v-layout.px-4.pt-4.mb-4(row, wrap, align-center)
       v-flex.text-xs-center(xs12, sm3)
-        playlist-artwork.mb-xs-3(:playlist='playlist', elevation='10', size='100%')
-      v-flex.px-4.text-sm-left.text-xs-center(xs12, sm9)
+        playlist-artwork.mb-xs-3(:artwork-url='artworkUrl', elevation='10', size='100%')
+      v-flex.px-4.px-xs-0.text-sm-left.text-xs-center(xs12, sm9)
         .caption PLAYLIST
         .display-1.mb-2.bold {{ playlist.name }}
         .body-1.grey--text {{ tracks.length }} songs, {{ totalDuration }}
@@ -53,26 +53,42 @@
         audio: undefined
       }
     },
-    async created () {
-      this.playlist = await PlaylistService.getPlaylist(this.id)
-      this.tracks = this.playlist.tracks.items.map(item => {
-        return {
-          id: item.track.id,
-          title: item.track.name,
-          artist: item.track.artists.map(a => a.name).join(', '),
-          album: item.track.album.name,
-          uri: item.track.uri,
-          duration: DateService.formattedDuration(item.track.duration_ms),
-          durationMs: item.track.duration_ms
+    watch: {
+      id: {
+        handler () {
+          this.id && this.initialize()
         }
-      })
-      const totalMs = this.tracks.reduce((accumulator, current) => accumulator + Number(current.durationMs), 0)
-      this.totalDuration = DateService.englishFormattedDuration(totalMs)
-      this.loading = false
-      this.audio = new Audio()
-      this.app.showBackButton = true
+      }
+    },
+    created () {
+      this.initialize()
+    },
+    computed: {
+      artworkUrl () {
+        if (this.playlist && this.playlist.images && this.playlist.images.length) {
+          return this.playlist.images[0].url
+        }
+      }
     },
     methods: {
+      async initialize () {
+        this.playlist = await PlaylistService.getPlaylist(this.id)
+        this.tracks = this.playlist.tracks.items.map(item => {
+          return {
+            id: item.track.id,
+            title: item.track.name,
+            artist: item.track.artists.map(a => a.name).join(', '),
+            album: item.track.album.name,
+            uri: item.track.uri,
+            duration: DateService.formattedDuration(item.track.duration_ms),
+            durationMs: item.track.duration_ms
+          }
+        })
+        const totalMs = this.tracks.reduce((accumulator, current) => accumulator + Number(current.durationMs), 0)
+        this.totalDuration = DateService.englishFormattedDuration(totalMs)
+        this.loading = false
+        this.audio = new Audio()
+      },
       async playSong (index) {
         PlayerService.play(this.tracks.map(t => t.uri), index)
       },

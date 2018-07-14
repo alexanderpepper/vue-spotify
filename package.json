@@ -24,6 +24,7 @@
     "moment": "^2.22.1",
     "pm2": "^2.10.1",
     "serve-favicon": "^2.0.1",
+    "sl-vue-tree": "^1.6.0",
     "spotify-web-api-node": "^2.5.0",
     "strong-error-handler": "^2.0.0"
   },

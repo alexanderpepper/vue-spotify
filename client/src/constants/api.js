@@ -25,5 +25,8 @@ export default {
   setVolume: `${host}/player/volume`,
   setShuffle: `${host}/player/shuffle`,
   setRepeat: `${host}/player/repeat`,
-  seek: `${host}/player/seek`
+  seek: `${host}/player/seek`,
+  library: (id) => `${host}/library/${id || ''}`,
+  myLibrary: `${host}/library/mine`
+
 }

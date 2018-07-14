@@ -1,0 +1,115 @@
+.sl-vue-tree {
+  position: relative;
+  cursor: default;
+  user-select: none;
+}
+
+.sl-vue-tree.sl-vue-tree-root {
+  color: rgba(255, 255, 255, 0.5);
+  border-radius: 3px;
+}
+
+.sl-vue-tree-root > .sl-vue-tree-nodes-list {
+  overflow: hidden;
+  position: relative;
+  padding-bottom: 4px;
+}
+
+.application.theme--dark .sl-vue-tree-selected > .sl-vue-tree-node-item {
+  background-color: #151515;
+  color: white;
+}
+
+.application.theme--light .sl-vue-tree-selected > .sl-vue-tree-node-item {
+  background-color: #dfdfdf;
+  color: black;
+}
+
+.application.theme--light .sl-vue-tree-node-item:hover,
+.application.theme--light .sl-vue-tree-node-item.sl-vue-tree-cursor-hover {
+  color: black;
+}
+
+.application.theme--dark .sl-vue-tree-node-item:hover,
+.application.theme--dark .sl-vue-tree-node-item.sl-vue-tree-cursor-hover {
+  color: white;
+}
+
+.sl-vue-tree-node-item {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+
+  padding-left: 10px;
+  padding-right: 10px;
+  line-height: 28px;
+  border: 1px solid transparent;
+}
+
+
+.sl-vue-tree-node-item.sl-vue-tree-cursor-inside {
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.sl-vue-tree-gap {
+  width: 16px;
+  min-height: 1px;
+
+}
+
+.sl-vue-tree-toggle {
+  display: inline-block;
+  text-align: left;
+  width: 12px;
+}
+
+.sl-vue-tree-toggle .icon {
+  width: 12px;
+}
+
+.sl-vue-tree-sidebar {
+  margin-left: auto;
+}
+
+.sl-vue-tree-cursor {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  height: 1px;
+  width: 100%;
+}
+
+.sl-vue-tree-drag-info {
+  position: absolute;
+  background-color: rgba(0,0,0,0.5);
+  opacity: 0.5;
+  margin-left: 20px;
+  padding: 5px 10px;
+}
+
+.sl-vue-tree {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  width: 100%;
+}
+
+.sl-vue-tree-title {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  width: 100%;
+}
+
+@media screen and (max-width: 600px){
+  .sl-vue-tree-node-item {
+    height: 44px;
+  }
+
+  .sl-vue-tree-title span {
+    line-height:44px;
+    height: 44px;
+    font-size: 17px !important;
+  }
+}

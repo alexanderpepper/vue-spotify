@@ -88,7 +88,6 @@ class ImageCacheService extends BaseService {
         // Retrieve the file that was just stored
         transaction.objectStore('images').get(key).onsuccess = function (event) {
           var imgFile = event.target.result
-          console.log('Got elephant!' + imgFile)
 
           // Get window.URL object
           var URL = window.URL || window.webkitURL

@@ -1,29 +1,32 @@
 <template lang="pug">
   v-layout.playlists.pa-2(fill-height)
-    modal-spinner(v-if='!playlists.length')
-    v-layout(row, wrap, v-if='playlists.length')
-      v-flex.my-1.pa-2(v-for='(playlist, index) in playlists', :key='index')
-        router-link(:to='{name: "playlist", params: {id: playlist.id}}')
-          playlist-artwork(:playlist='playlist', size='200px')
-        .playlist-name.truncate.body-2.text-xs-center.mt-2.mx-auto {{ playlist.name }}
+    v-layout(row, wrap, v-if='app && app.library && app.library.children')
+      v-flex.my-1.pa-2(v-for='(item, index) in items', :key='index')
+        router-link(:to='item.isLeaf ? {name: "playlist", params: {id: item.data.id}} : {name: "playlists", params: {folder: item}}')
+          playlist-artwork(:library-playlist='item', :is-folder='!item.isLeaf', size='200px')
+        .playlist-name.truncate.body-2.text-xs-center.mt-2.mx-auto {{ item.title }}
 </template>
 
 <script>
-  import PlaylistService from '../services/PlaylistService'
-  import ModalSpinner from './ModalSpinner'
   import PlaylistArtwork from './PlaylistArtwork'
 
   export default {
     name: 'playlists',
-    components: {ModalSpinner, PlaylistArtwork},
+    components: {PlaylistArtwork},
     props: {app: Object},
-    data () {
-      return {
-        playlists: []
+    computed: {
+      items () {
+        if (this.$route.query.path) {
+          return this.folder().children
+        } else {
+          return this.app.library.children
+        }
       }
     },
-    async created () {
-      this.playlists = await PlaylistService.getPlaylists()
+    methods: {
+      folder () {
+        return this.$route.query.path.split(',').reduce((node, index) => node.children[index], this.app.library)
+      }
     }
   }
 </script>

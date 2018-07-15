@@ -1,6 +1,6 @@
 const SpotifyService = require('./spotify-service')
 const moment = require('moment')
-const syncAfterSeconds = 10
+const syncAfterSeconds = 60
 
 module.exports = class LibraryService {
   static get ({user, Library}) {
@@ -71,13 +71,7 @@ module.exports = class LibraryService {
   }
 
   static searchTree (folder, playlist) {
-    let index = folder.children.indexOf(playlist)
-    // folder.children.forEach(child => {
-    //   if (!child.isLeaf) {
-    //     child.path = null
-    //     child.pathStr = null
-    //   }
-    // })
+    const index = folder.children.indexOf(playlist)
     if (index > -1) {
       return { folder, index }
     } else if (folder.children != null) {

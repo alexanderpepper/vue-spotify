@@ -1,5 +1,6 @@
 const SpotifyService = require('./spotify-service')
 const moment = require('moment')
+const syncAfterSeconds = 60
 
 module.exports = class LibraryService {
   static get ({user, Library}) {
@@ -46,14 +47,14 @@ module.exports = class LibraryService {
         folder.children.splice(index, 1)
       }
     })
-    library.syncAfter = moment().add(10, 'seconds').toDate()
+    library.syncAfter = moment().add(syncAfterSeconds, 'seconds').toDate()
     return this.save({user, Library, library})
   }
 
   static newLibrary (playlists, user) {
     return {
       userId: user.id,
-      syncAfter: moment().add(10, 'seconds').toDate(),
+      syncAfter: moment().add(syncAfterSeconds, 'seconds').toDate(),
       children: playlists.map(this.newLibraryPlaylist)
     }
   }

@@ -2,10 +2,10 @@
   .playlist.pb-4.pa-xs-0
     v-layout.px-4.pt-4.mb-4(row, wrap, align-center)
       v-flex.text-xs-center(xs12, sm3)
-        playlist-artwork.mb-xs-3(:artwork-url='artworkUrl', elevation='10', size='100%')
+        playlist-artwork.mb-xs-3(:spotify-playlist='playlist', elevation='10', size='100%')
       v-flex.px-4.px-xs-0.text-sm-left.text-xs-center(xs12, sm9)
         .caption PLAYLIST
-        .display-1.mb-2.bold {{ playlist.name }}
+        .display-1.mb-2.bold {{ playlistName }}
         .body-1.grey--text {{ tracks.length }} songs, {{ totalDuration }}
       v-flex.hidden-xs-only(md3, offset-md9, sm6, offset-sm6, xs12)
         v-text-field.filter-field.pt-0(v-model='search', placeholder='Filter', append-icon='search', hide-details)
@@ -45,7 +45,8 @@
           {text: 'ALBUM', value: 'album', align: 'left', sortable: false},
           {text: 'TIME', value: 'duration', align: 'right', sortable: false}
         ],
-        playlist: {images: []},
+        playlist: undefined,
+        playlistName: '',
         tracks: [],
         totalDuration: 0,
         loading: true,
@@ -87,6 +88,7 @@
         const totalMs = this.tracks.reduce((accumulator, current) => accumulator + Number(current.durationMs), 0)
         this.totalDuration = DateService.englishFormattedDuration(totalMs)
         this.loading = false
+        this.playlistName = this.playlist.name
         this.audio = new Audio()
       },
       async playSong (index) {

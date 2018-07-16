@@ -1,6 +1,6 @@
 const SpotifyService = require('./spotify-service')
 const moment = require('moment')
-const syncAfterSeconds = 60
+const syncAfterSeconds = 10
 
 module.exports = class LibraryService {
   static get ({user, Library}) {
@@ -40,13 +40,7 @@ module.exports = class LibraryService {
     const playlistsAdded = newPlaylists.filter(newPlaylist => !oldPlaylistIds.includes(newPlaylist.id))
     const playlistsRemoved = oldPlaylists.filter(oldPlaylist => !newPlaylistIds.includes(oldPlaylist.data.id))
     playlistsAdded.forEach(playlist => library.children.unshift(this.newLibraryPlaylist(playlist)))
-    playlistsRemoved.forEach(playlist => {
-      const searchResults = this.searchTree(library, playlist)
-      if (searchResults) {
-        const {folder, index} = searchResults
-        folder.children.splice(index, 1)
-      }
-    })
+    playlistsRemoved.forEach(playlist => this.removePlaylistFromLibrary(library, playlist))
     library.syncAfter = moment().add(syncAfterSeconds, 'seconds').toDate()
     return this.save({user, Library, library})
   }
@@ -70,7 +64,15 @@ module.exports = class LibraryService {
     }
   }
 
-  static searchTree (folder, playlist) {
+  static removePlaylistFromLibrary (library, playlist) {
+    const searchResults = this.findPlaylistFolder(library, playlist)
+    if (searchResults) {
+      const {folder, index} = searchResults
+      folder.children.splice(index, 1)
+    }
+  }
+
+  static findPlaylistFolder (folder, playlist) {
     const index = folder.children.indexOf(playlist)
     if (index > -1) {
       return { folder, index }
@@ -78,7 +80,7 @@ module.exports = class LibraryService {
       let result = null
       for (let i = 0; result == null && i < folder.children.length; i++) {
         if (!folder.children[i].isLeaf) {
-          result = this.searchTree(folder.children[i], playlist)
+          result = this.findPlaylistFolder(folder.children[i], playlist)
         }
       }
       return result

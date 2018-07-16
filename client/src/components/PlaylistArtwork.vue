@@ -1,23 +1,54 @@
-<template functional lang="pug">
-  .playlist-artwork.mx-auto(v-ripple='{ class: "white--text" }', :class='[`elevation-${props.elevation || 5}`]', :style='{width: props.size, height: props.size}', v-once)
-    img(v-if='props.artworkUrl', :src='props.artworkUrl')
-    img(v-else, src='/static/transparent-square.png')
-    .no-image.grey.darken-3.text-xs-center(v-if='!props.isFolder && !props.artworkUrl', :style='{width: props.size, height: props.size, "line-height": props.size}')
+<template lang="pug">
+  .playlist-artwork.mx-auto(v-ripple='{ class: "white--text" }', :class='[`elevation-${elevation || 5}`]', :style='{width: size, height: size}')
+    lazy-component(@show='init')
+      img(v-if='artworkUrl', :src='artworkUrl')
+    img(v-if='!artworkUrl', src='/static/transparent-square.png')
+    .no-image.grey.darken-3.text-xs-center(v-if='!isFolder && !artworkUrl', :style='{width: size, height: size, "line-height": size}')
       .no-image-icon-container
         v-icon.no-image-icon.grey--text.text--darken-1(size='100') queue_music
-    .no-image.grey.darken-3.text-xs-center(v-if='props.isFolder', :style='{width: props.size, height: props.size, "line-height": props.size}')
+    .no-image.grey.darken-3.text-xs-center(v-if='isFolder', :style='{width: size, height: size, "line-height": size}')
       .no-image-icon-container
         v-icon.no-image-icon.grey--text.text--darken-1(size='100') folder
 </template>
 
 <script>
+  import ImageCacheService from '../services/ImageCacheService'
   export default {
     name: 'playlistArtwork',
     props: {
       elevation: String,
-      artworkUrl: String,
-      isFolder: Boolean,
-      size: String
+      spotifyPlaylist: Object,
+      libraryPlaylist: Object,
+      size: String,
+      isFolder: Boolean
+    },
+    data () {
+      return {
+        artworkUrl: false
+      }
+    },
+    watch: {
+      spotifyPlaylist () {
+        this.init()
+      }
+    },
+    methods: {
+      init () {
+        const key = (this.libraryPlaylist && this.libraryPlaylist.data && this.libraryPlaylist.data.artworkUrl) ||
+          (this.spotifyPlaylist && this.spotifyPlaylist.images && this.spotifyPlaylist.images.length && this.spotifyPlaylist.images[0].url)
+
+        if (key) {
+          ImageCacheService.getObjectURL(key).then(objectURL => {
+            if (objectURL) {
+              this.artworkUrl = objectURL
+            } else {
+              this.artworkUrl = key
+            }
+          })
+        } else {
+          this.artworkUrl = false
+        }
+      }
     }
   }
 </script>

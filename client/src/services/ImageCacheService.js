@@ -4,16 +4,12 @@ const indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexe
 const dbVersion = 1.0
 
 class ImageCacheService extends BaseService {
-  // returns promise for now
   static getObjectURL (key) {
-    // giving it a name so we can recur
     const promiseFunction = async resolve => {
-      var request = indexedDB.open('imageFiles', dbVersion)
-      var db
+      const request = indexedDB.open('imageFiles', dbVersion)
+      let db
 
       const createObjectStore = function (dataBase) {
-        // Create an objectStore
-        console.log('Creating objectStore')
         dataBase.createObjectStore('images')
       }
 
@@ -22,79 +18,42 @@ class ImageCacheService extends BaseService {
       }
 
       const attemptLoadFromDatabase = (success, failure) => {
-        // Open a transaction to the database
         const transaction = db.transaction(['images'], 'readonly')
-        console.log('attempting to load from database')
-
-        // Retrieve the file that was just stored
         const request = transaction.objectStore('images').get(key)
         request.onsuccess = function (event) {
-          var imgFile = event.target.result
-          console.log('Got image!' + imgFile)
-
+          const imgFile = event.target.result
           if (imgFile) {
-            // Get window.URL object
-            var URL = window.URL || window.webkitURL
-
-            // Create and revoke ObjectURL
-            var imgURL = URL.createObjectURL(imgFile)
-
-            console.log('loaded from db successfully')
+            const URL = window.URL || window.webkitURL
+            const imgURL = URL.createObjectURL(imgFile)
             success(imgURL)
           } else {
             failure()
           }
         }
-
         request.onerror = failure
       }
 
       const getImageFileFromServer = function () {
-        console.log('unable to load from db. trying server load')
-
-        // Create XHR
-        var xhr = new XMLHttpRequest()
-        var blob
-
+        const xhr = new XMLHttpRequest()
+        let blob
         xhr.open('GET', key, true)
-        // Set the responseType to blob
         xhr.responseType = 'blob'
-
         xhr.addEventListener('load', function () {
           if (xhr.status === 200) {
-            console.log('Image retrieved')
-
-            // Blob as response
             blob = xhr.response
-            console.log('Blob:' + blob)
-
-            // Put the received blob into IndexedDB
             putImageInDatabase(blob)
           }
         }, false)
-        // Send XHR
         xhr.send()
       }
 
       const putImageInDatabase = function (blob) {
-        console.log('Putting images in IndexedDB')
-
-        // Open a transaction to the database
-        var transaction = db.transaction(['images'], 'readwrite')
-
-        // Put the blob into the dabase
+        const transaction = db.transaction(['images'], 'readwrite')
         transaction.objectStore('images').put(blob, key)
-
-        // Retrieve the file that was just stored
         transaction.objectStore('images').get(key).onsuccess = function (event) {
-          var imgFile = event.target.result
-
-          // Get window.URL object
-          var URL = window.URL || window.webkitURL
-
-          // Create and revoke ObjectURL
-          var imgURL = URL.createObjectURL(imgFile)
-
+          const imgFile = event.target.result
+          const URL = window.URL || window.webkitURL
+          const imgURL = URL.createObjectURL(imgFile)
           resolve(imgURL)
         }
       }
@@ -104,7 +63,6 @@ class ImageCacheService extends BaseService {
       }
 
       request.onsuccess = function (event) {
-        console.log('Success creating/accessing IndexedDB database', event)
         db = request.result
 
         db.onerror = function (event) {
@@ -115,7 +73,7 @@ class ImageCacheService extends BaseService {
         // Interim solution for Google Chrome to create an objectStore. Will be deprecated
         if (db.setVersion) {
           if (db.version !== dbVersion) {
-            var setVersion = db.setVersion(dbVersion)
+            const setVersion = db.setVersion(dbVersion)
             setVersion.onsuccess = function () {
               createObjectStore(db)
               getImageFile()
@@ -133,7 +91,6 @@ class ImageCacheService extends BaseService {
         createObjectStore(event.target.result)
       }
     }
-    // This promise lets us pretend to return in the 'ready' event.
     return new Promise(promiseFunction)
   }
 }

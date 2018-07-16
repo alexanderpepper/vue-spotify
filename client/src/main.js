@@ -30,6 +30,7 @@ import router from './router'
 import {Ripple} from 'vuetify/es5/directives'
 import './common.css'
 import './sl-vue-tree.css'
+import VueLazyload from 'vue-lazyload'
 
 Vue.use(Vuetify, {
   components: {
@@ -60,6 +61,11 @@ Vue.use(Vuetify, {
   theme: {
     primary: '#1db954'
   }
+})
+
+Vue.use(VueLazyload, {
+  preLoad: 2.0,
+  lazyComponent: true
 })
 
 Vue.config.productionTip = false

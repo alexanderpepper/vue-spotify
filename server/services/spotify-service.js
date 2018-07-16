@@ -62,6 +62,33 @@ module.exports = class SpotifyService {
     return resolver(this.getSpotifyApi(user).play(songs))
   }
 
+  static async shuffleFolder (user, path, Library) {
+    const library = await this.getLibrary(user, Library);
+    const folder = path.reduce((node, index) => node.children[index], library)
+    const playlists = await Promise.all(this.flatten(folder.children).map(item => this.getPlaylist(user, item.data.id)))
+    const uris = playlists.map(playlist => playlist.tracks.items.map(item => item.track.uri)).reduce((acc, cur) => acc.concat(cur), [])
+    await this.setShuffle(user, true)
+    return this.play(user, {uris})
+  }
+
+  static getLibrary (user, Library) {
+    return new Promise(resolve => {
+      Library.find({where: {userId: user.id}}).then(results => results && results[0]).then(resolve)
+    })
+  }
+
+  static flatten (children) {
+    let result = []
+    children.forEach(a => {
+      if (a.isLeaf) {
+        result.push(a)
+      } else if (Array.isArray(a.children)) {
+        result = result.concat(this.flatten(a.children))
+      }
+    })
+    return result
+  }
+
   static pause (user) {
     return resolver(this.getSpotifyApi(user).pause())
   }

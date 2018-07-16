@@ -12,6 +12,10 @@ class PlayerService extends BaseService {
     }
   }
 
+  static shuffleFolder (path) {
+    return this.POST(api.shuffleFolder, {path})
+  }
+
   static pause () {
     return this.POST(api.pause)
   }

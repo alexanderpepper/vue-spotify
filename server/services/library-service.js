@@ -36,12 +36,39 @@ module.exports = class LibraryService {
     const oldPlaylists = SpotifyService.flatten(library.children)
     const oldPlaylistIds = oldPlaylists.map(playlist => playlist.data.id)
     const newPlaylists = await SpotifyService.getPlaylists(user)
-    const newPlaylistIds = newPlaylists.map(playlist => playlist.id)
+    const { newPlaylistIds, newPlaylistNames, newPlaylistArtworkUrls } = newPlaylists.reduce((acc, cur) => {
+      return {
+        newPlaylistIds: acc.newPlaylistIds.concat(cur.id),
+        newPlaylistNames: acc.newPlaylistNames.concat(cur.name),
+        newPlaylistArtworkUrls: acc.newPlaylistArtworkUrls.concat(cur.images && cur.images.length && cur.images[0].url)
+      }
+    }, {newPlaylistIds: [], newPlaylistNames: [], newPlaylistArtworkUrls: []})
     const playlistsAdded = newPlaylists.filter(newPlaylist => !oldPlaylistIds.includes(newPlaylist.id))
     const playlistsRemoved = oldPlaylists.filter(oldPlaylist => !newPlaylistIds.includes(oldPlaylist.data.id))
+
     playlistsAdded.forEach(playlist => library.children.unshift(this.newLibraryPlaylist(playlist)))
     playlistsRemoved.forEach(playlist => this.removePlaylistFromLibrary(library, playlist))
+
+    oldPlaylists
+      .filter(playlist => !newPlaylistNames.includes(playlist.title))
+      .forEach(playlist => {
+        const newPlaylist = newPlaylists.find(p => p.id === playlist.data.id)
+        if (newPlaylist) {
+          playlist.title = newPlaylist.name
+        }
+      })
+
+    oldPlaylists
+      .filter(playlist => !newPlaylistArtworkUrls.includes(playlist.data.artworkUrl))
+      .forEach(playlist => {
+        const newPlaylist = newPlaylists.find(p => p.id === playlist.data.id)
+        if (newPlaylist) {
+          playlist.data.artworkUrl = newPlaylist.images && newPlaylist.images.length && newPlaylist.images[0].url
+        }
+      })
+
     library.syncAfter = moment().add(syncAfterSeconds, 'seconds').toDate()
+
     return this.save({user, Library, library})
   }
 

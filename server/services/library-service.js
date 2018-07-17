@@ -95,20 +95,6 @@ module.exports = class LibraryService {
     }
   }
 
-  static findPlaylist (folder, playlist) {
-    const index = folder.children.indexOf(playlist)
-    if (index > -1) {
-      return folder.children[index]
-    } else if (folder.children != null) {
-      let result = null
-      for (let i = 0; result == null && i < folder.children.length; i++) {
-        if (!folder.children[i].isLeaf) {
-          result = this.findPlaylist(folder.children[i], playlist)
-        }
-      }
-      return result
-    }
-  }
   static findPlaylistFolder (folder, playlist) {
     const index = folder.children.indexOf(playlist)
     if (index > -1) {

@@ -53,14 +53,18 @@ module.exports = class LibraryService {
       .filter(playlist => !newPlaylistNames.includes(playlist.title))
       .forEach(playlist => {
         const newPlaylist = newPlaylists.find(p => p.id === playlist.data.id)
-        playlist.title = newPlaylist.name
+        if (newPlaylist) {
+          playlist.title = newPlaylist.name
+        }
       })
 
     oldPlaylists
       .filter(playlist => !newPlaylistArtworkUrls.includes(playlist.data.artworkUrl))
       .forEach(playlist => {
         const newPlaylist = newPlaylists.find(p => p.id === playlist.data.id)
-        playlist.data.artworkUrl = newPlaylist.images && newPlaylist.images.length && newPlaylist.images[0].url
+        if (newPlaylist) {
+          playlist.data.artworkUrl = newPlaylist.images && newPlaylist.images.length && newPlaylist.images[0].url
+        }
       })
 
     library.syncAfter = moment().add(syncAfterSeconds, 'seconds').toDate()

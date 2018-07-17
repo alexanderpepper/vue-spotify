@@ -1,6 +1,6 @@
 const SpotifyService = require('./spotify-service')
 const moment = require('moment')
-const syncAfterSeconds = 10
+const syncAfterSeconds = 60
 
 module.exports = class LibraryService {
   static get ({user, Library}) {

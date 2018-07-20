@@ -1,11 +1,11 @@
 <template lang="pug">
   v-layout.home(fill-height)
-    v-layout(v-if='app.library.children')
+    v-layout(v-if='app.library.children && !app.isLoadingShuffle')
       v-flex.position-relative(v-if='$vuetify.breakpoint.smAndUp || $route.name === "playlists"' xs12, sm4, md3, lg2)
         library.overflow-scroll(:app='app')
       v-flex.position-relative(v-if='$vuetify.breakpoint.smAndUp || $route.name === "playlist"', xs12, sm8, md9, lg10)
         router-view.overflow-scroll(:app='app')
-    modal-spinner(v-else)
+    modal-spinner(v-else, :loading-text='app.loadingText')
     play-controls(:app='app')
 </template>
 <script>
@@ -37,5 +37,6 @@
     right: 0;
     bottom: 0;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
   }
 </style>

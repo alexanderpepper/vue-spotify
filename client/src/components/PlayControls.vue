@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-footer.elevation-4.play-controls(:height='$vuetify.breakpoint.smAndUp ? 80 : showPlayer ? 450 : 44', fixed, app)
+  v-footer.elevation-4.play-controls(:height='$vuetify.breakpoint.smAndUp ? 80 : showPlayer ? 520 : 44', fixed, app)
     v-layout(align-center, wrap)
       v-flex.hidden-sm-and-up(xs12)
         v-layout(align-center)
@@ -122,8 +122,8 @@
   }
 
   .artwork.mobile-large {
-    width: 200px;
-    height: 200px;
+    width: 280px;
+    height: 280px;
   }
   .artwork.mobile-small {
     max-width: 32px;

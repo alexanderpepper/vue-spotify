@@ -104,8 +104,13 @@
       }
     },
     methods: {
-      shuffleFolder (node) {
-        PlayerService.shuffleFolder(node.path)
+      async shuffleFolder (node) {
+        this.app.isLoadingShuffle = true
+        await PlayerService.shuffleFolder(this.folderAtPath(node.path), (loadedPlaylist) => {
+          this.app.loadingText = loadedPlaylist.name
+        })
+        this.app.loadingText = 'Loading'
+        this.app.isLoadingShuffle = false
       },
       saveLibrary () {
         LibraryService.save(this.app.library)

@@ -4,7 +4,7 @@ const moduleExists = require('../constants/module-exists')
 const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private', 'user-read-playback-state', 'user-modify-playback-state']
 const limit = 50
 const logging = false
-const resolver = (promise) => promise.then(data => data.body).catch(this.log)
+const resolver = (promise) => promise.then(data => data.body).catch(console.log)
 
 const credentials = moduleExists('../constants/credentials') ? require('../constants/credentials') : undefined
 
@@ -15,7 +15,6 @@ if (!credentials || !credentials.clientId || !credentials.clientSecret || !crede
 
 const {clientId, clientSecret, redirectUri} = credentials
 module.exports = class SpotifyService {
-
   static log (...str) {
     if (logging) {
       console.log(str)
@@ -72,34 +71,6 @@ module.exports = class SpotifyService {
   static play (user, songs) {
     this.log('play')
     return resolver(this.getSpotifyApi(user).play(songs))
-  }
-
-  static async shuffleFolder (user, path, Library) {
-    this.log('shuffleFolder')
-    const library = await this.getLibrary(user, Library);
-    const folder = path.reduce((node, index) => node.children[index], library)
-    const playlists = await Promise.all(this.flatten(folder.children).map(item => this.getPlaylist(user, item.data.id)))
-    const uris = playlists.map(playlist => playlist.tracks.items.map(item => item.track.uri)).reduce((acc, cur) => acc.concat(cur), [])
-    await this.setShuffle(user, true)
-    return this.play(user, {uris})
-  }
-
-  static getLibrary (user, Library) {
-    return new Promise(resolve => {
-      Library.find({where: {userId: user.id}}).then(results => results && results[0]).then(resolve)
-    })
-  }
-
-  static flatten (children) {
-    let result = []
-    children.forEach(a => {
-      if (a.isLeaf) {
-        result.push(a)
-      } else if (Array.isArray(a.children)) {
-        result = result.concat(this.flatten(a.children))
-      }
-    })
-    return result
   }
 
   static pause (user) {
@@ -168,6 +139,6 @@ module.exports = class SpotifyService {
     const pageCount = Math.ceil(sampling.total / limit)
     const pages = Array.from(Array(pageCount).keys())
     const promises = pages.map(p => spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit, offset: p * limit}).then(data => data.body.items))
-    return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val))).catch(this.log)
+    return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val))).catch(console.log)
   }
 }

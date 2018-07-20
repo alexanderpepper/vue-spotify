@@ -13,12 +13,12 @@
       v-flex.px-3.hide-overflow-x(sm3, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout
           .vertical-center-container.mx-xs-auto(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-              .vertical-center.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-                .artwork.elevation-5.mx-auto(:class='{"mobile-large": $vuetify.breakpoint.xsOnly, "desktop": $vuetify.breakpoint.smAndUp}')
-                  img(:src='app.playerState.images[0].url')
-              .vertical-center.text-xs-center.text-sm-left.pl-3.pa-xs-0.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-                .body-2.truncate.compress(v-text='app.playerState.artist')
-                .body-1.truncate.compress(v-text='app.playerState.track')
+            .vertical-center.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
+              .artwork.elevation-5.mx-auto(:class='{"mobile-large": $vuetify.breakpoint.xsOnly, "desktop": $vuetify.breakpoint.smAndUp}')
+                img(:src='app.playerState.images[0].url')
+            .vertical-center.text-xs-center.text-sm-left.pl-3.pa-xs-0.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
+              .body-2.truncate.compress(v-text='app.playerState.artist')
+              .body-1.truncate.compress(v-text='app.playerState.track')
       v-flex.text-xs-center(sm6, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout.mb-xs-3(row, align-center)
           v-spacer

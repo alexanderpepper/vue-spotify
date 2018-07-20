@@ -13,15 +13,36 @@ class PlayerService extends BaseService {
     }
   }
 
-  static async shuffleFolder (folder, playlistLoadedFn) {
-    const children = this.flatten(folder.children)
-    const playlists = await Promise.all(children.map(item => PlaylistService.getPlaylistThrottled(item.data.id).then(playlist => {
-      playlistLoadedFn(playlist)
-      return playlist
-    })))
-    let uris = playlists.map(playlist => playlist.tracks.items.map(item => item.track.uri)).reduce((acc, cur) => acc.concat(cur), []).slice(0, 740) // 740 is about the limit
+  static async shuffleFolder (folder, playlistLoadedCallback) {
+    const playlists = await Promise.all(this.flatten(folder.children).map(item => {
+      return PlaylistService.getPlaylistThrottled(item.data.id).then(playlist => {
+        playlistLoadedCallback(playlist)
+        return playlist
+      })
+    }))
+    let uris = playlists.map(playlist => playlist.tracks.items
+      .filter(item => !item.is_local)
+      .map(item => item.track.uri))
+      .reduce((acc, cur) => acc.concat(cur), [])
+    uris = this.randomize(uris).slice(0, 740) // 740 is about the limit
     await this.setShuffle(true)
     return this.play(uris, 0)
+  }
+
+  static randomize (array) {
+    let temporaryValue
+    let randomIndex
+    let currentIndex = array.length
+
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex)
+      currentIndex -= 1
+      temporaryValue = array[currentIndex]
+      array[currentIndex] = array[randomIndex]
+      array[randomIndex] = temporaryValue
+    }
+
+    return array
   }
 
   static flatten (children) {

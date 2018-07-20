@@ -65,10 +65,10 @@ npm install
 
 ## Configuration
 
-### Create Spotify App
-0. [Create a new Spotify app](https://developer.spotify.com/dashboard/)
-0. Note your Client ID and Client Secret
-0. Click "Edit Settings" and add `http://localhost:8080/callback` to the Redirect URIs
+### Configure Spotify App
+1. [Create a new Spotify app in the Spotify Developer Dashboard](https://developer.spotify.com/dashboard/)
+1. Note your Client ID and Client Secret
+1. Click "Edit Settings" and add `http://localhost:8080/callback` to the Redirect URIs
 
 ### Configure Application
 * Create `/server/constants/credentials.js` with the following content:

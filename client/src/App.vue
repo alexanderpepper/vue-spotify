@@ -108,7 +108,7 @@
       this.isDarkTheme = window.localStorage['dark'] !== 'false'
       await this.getUserInfo()
       setInterval(() => {
-        if (this.isSpotifyConnected()) {
+        if (this.isSpotifyConnected() && !this.isLoadingShuffle) {
           PlayerService.getPlayerState().then(state => {
             this.playerState = PlayerService.parsePlayerState(this.playerState, state)
           })

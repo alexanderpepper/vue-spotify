@@ -71,7 +71,6 @@ module.exports = class SpotifyService {
 
   static play (user, songs) {
     this.log('play')
-    console.log(songs)
     return resolver(this.getSpotifyApi(user).play(songs))
   }
 

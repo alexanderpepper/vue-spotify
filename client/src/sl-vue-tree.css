@@ -16,12 +16,12 @@
 }
 
 .application.theme--dark .sl-vue-tree-selected > .sl-vue-tree-node-item {
-  background-color: #151515;
+  background-color: #1a1a1a;
   color: white;
 }
 
 .application.theme--light .sl-vue-tree-selected > .sl-vue-tree-node-item {
-  background-color: #dfdfdf;
+  background-color: #ededed;
   color: black;
 }
 
@@ -90,7 +90,6 @@
   overflow: hidden;
   width: 100%;
   max-width: 100%;
-  width: 100%;
 }
 
 .sl-vue-tree-title {
@@ -98,10 +97,15 @@
   overflow: hidden;
   width: 100%;
   max-width: 100%;
-  width: 100%;
 }
 
 @media screen and (max-width: 600px){
+
+  .application.theme--dark .sl-vue-tree-selected > .sl-vue-tree-node-item {
+    background-color: #262626;
+    color: white;
+  }
+
   .sl-vue-tree-node-item {
     height: 44px;
   }

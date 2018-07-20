@@ -107,10 +107,10 @@
       async shuffleFolder (node) {
         this.app.isLoadingShuffle = true
         const folder = this.folderAtPath(node.path)
-        await PlayerService.shuffleFolder(folder, (playlist) => {
-          this.app.loadingText = playlist.name
-          console.log(this.app.loadingText)
+        await PlayerService.shuffleFolder(folder, (loadedPlaylist) => {
+          this.app.loadingText = loadedPlaylist.name
         })
+        this.app.loadingText = 'Loading'
         this.app.isLoadingShuffle = false
       },
       saveLibrary () {

@@ -1,5 +1,5 @@
 ## Vue Spotify Client
-A Spotify client web app with some features missing from the official Spotify apps on the roadmap.
+A Spotify client web app with some features missing from the official Spotify apps on the roadmap. [Demo](https://spotify.alexpepper.us)
 
 ## Motivation
 The ability to shuffle all the tracks in a playlist folder was removed from the Spotify mobile apps, and that was a feature I used frequently. I started this project primarily to get that functionality back on my mobile phone.
@@ -29,19 +29,24 @@ Screenshot | Screenshot
 - [SuperAgent](https://visionmedia.github.io/superagent/)
 - [VueJS](https://vuejs.org/)
 - [Vuetify](https://vuetifyjs.com/en/)
-- [spotify-web-api-node](https://electron.atom.io)
+- [sl-vue-tree](https://github.com/holiber/sl-vue-tree)
+- [spotify-web-api-node](https://github.com/thelinmichael/spotify-web-api-node)
 - [Moment.js](https://momentjs.com/)
 
 ## Features
 * Control Spotify from a web interface and play tracks in desktop browsers
-* Build folders shuffle all playlists in them (in development on `folders` branch)
-* Export all your playlists to JSON (in roadmap)
-* Quickly find official music videos on YouTube for playlists with Chromecast option (in roadmap)
+* Build folders shuffle all playlists in them
+
+## Roadmap
+* Remove requirement to create application account before linking spotify
+* Export all your playlists to JSON
+* Find official music videos on YouTube for playlists 
+* Integrate Chromecast for YouTube videos
 
 ## Prequisites
 * MongoDB
 * NodeJS
-* PM2
+* PM2 (for production deployment)
 
 ## Installation
 
@@ -59,7 +64,13 @@ npm install
 ```
 
 ## Configuration
-* [Create a new Spotify app](https://developer.spotify.com/dashboard/) and note your credentials
+
+### Create Spotify App
+0. [Create a new Spotify app](https://developer.spotify.com/dashboard/)
+0. Note your Client ID and Client Secret
+0. Click "Edit Settings" and add `http://localhost:8080/callback` to the Redirect URIs
+
+### Configure Application
 * Create `/server/constants/credentials.js` with the following content:
 ```javascript
 const isProd = process.env.NODE_ENV === 'production'

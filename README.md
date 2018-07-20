@@ -52,7 +52,7 @@ Screenshot | Screenshot
 
 Clone the repository
 ```bash
-git clone https://github.com/alexanderpepper/spotify-utils.git;
+git clone https://github.com/alexanderpepper/vue-spotify.git;
 ```
 
 Install NPM packages

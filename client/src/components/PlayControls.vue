@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-footer.elevation-4.play-controls(:height='$vuetify.breakpoint.smAndUp ? 80 : showPlayer ? 450 : 44', fixed, app)
+  v-footer.elevation-4.play-controls(:height='$vuetify.breakpoint.smAndUp ? 80 : showPlayer ? 520 : 44', fixed, app)
     v-layout(align-center, wrap)
       v-flex.hidden-sm-and-up(xs12)
         v-layout(align-center)
@@ -13,12 +13,14 @@
       v-flex.px-3.hide-overflow-x(sm3, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout
           .vertical-center-container.mx-xs-auto(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-            .vertical-center.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-              .artwork.elevation-5.mx-auto(:class='{"mobile-large": $vuetify.breakpoint.xsOnly, "desktop": $vuetify.breakpoint.smAndUp}')
-                img(:src='app.playerState.images[0].url')
-            .vertical-center.text-xs-center.text-sm-left.pl-3.pa-xs-0.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-              .body-2.truncate.compress(v-text='app.playerState.artist')
-              .body-1.truncate.compress(v-text='app.playerState.track')
+            .d-table-row
+              .vertical-center.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
+                .artwork.elevation-5.mx-auto(:class='{"mobile-large": $vuetify.breakpoint.xsOnly, "desktop": $vuetify.breakpoint.smAndUp}')
+                  img(:src='app.playerState.images[0].url')
+            .d-table-row
+              .vertical-center.text-xs-center.text-sm-left.pl-3.pa-xs-0.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
+                .body-2.truncate.compress(v-text='app.playerState.artist')
+                .body-1.truncate.compress(v-text='app.playerState.track')
       v-flex.text-xs-center(sm6, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout.mb-xs-3(row, align-center)
           v-spacer
@@ -122,8 +124,8 @@
   }
 
   .artwork.mobile-large {
-    width: 200px;
-    height: 200px;
+    width: 280px;
+    height: 280px;
   }
   .artwork.mobile-small {
     max-width: 32px;

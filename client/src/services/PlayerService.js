@@ -2,6 +2,9 @@ import BaseService from './BaseService'
 import api from '../constants/api.js'
 import repeatModes from '../constants/repeat-modes'
 import DateService from './DateService'
+import PlaylistService from './PlaylistService'
+
+let pauseStateUpdates = false
 
 class PlayerService extends BaseService {
   static play (uris, position) {
@@ -12,8 +15,29 @@ class PlayerService extends BaseService {
     }
   }
 
-  static shuffleFolder (path) {
-    return this.POST(api.shuffleFolder, {path})
+  static async shuffleFolder (folder, playlistLoadedFn) {
+    pauseStateUpdates = true
+    const children = this.flatten(folder.children)
+    const playlists = await Promise.all(children.map(item => PlaylistService.getPlaylistThrottled(item.data.id).then(playlist => {
+      playlistLoadedFn(playlist)
+      return playlist
+    })))
+    let uris = playlists.map(playlist => playlist.tracks.items.map(item => item.track.uri)).reduce((acc, cur) => acc.concat(cur), []).slice(0, 740) // 740 is about the limit
+    await this.setShuffle(true)
+    pauseStateUpdates = false
+    return this.play(uris, 0)
+  }
+
+  static flatten (children) {
+    let result = []
+    children.forEach(child => {
+      if (child.isLeaf) {
+        result.push(child)
+      } else if (Array.isArray(child.children)) {
+        result = result.concat(this.flatten(child.children))
+      }
+    })
+    return result
   }
 
   static pause () {
@@ -50,10 +74,12 @@ class PlayerService extends BaseService {
   }
 
   static getDevices () {
+    if (pauseStateUpdates) return
     return this.GET(api.devices).then(results => results.devices)
   }
 
   static getPlayerState () {
+    if (pauseStateUpdates) return
     return this.GET(api.playerState)
   }
 

@@ -58,9 +58,8 @@
 }
 
 .sl-vue-tree-toggle {
-  display: inline-block;
-  text-align: left;
-  width: 12px;
+  position: absolute;
+  right: 16px;
 }
 
 .sl-vue-tree-toggle .icon {

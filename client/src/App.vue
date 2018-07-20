@@ -88,7 +88,9 @@
         devices: [],
         player: null,
         playerState: PlayerService.initialPlayerState(),
-        app: this
+        app: this,
+        isLoadingShuffle: false,
+        loadingText: 'Loading'
       }
     },
     watch: {

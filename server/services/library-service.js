@@ -33,7 +33,7 @@ module.exports = class LibraryService {
   }
 
   static async sync ({user, Library, library}) {
-    const oldPlaylists = SpotifyService.flatten(library.children)
+    const oldPlaylists = this.flatten(library.children)
     const oldPlaylistIds = oldPlaylists.map(playlist => playlist.data.id)
     const newPlaylists = await SpotifyService.getPlaylists(user)
     const { newPlaylistIds, newPlaylistNames, newPlaylistArtworkUrls } = newPlaylists.reduce((acc, cur) => {
@@ -70,6 +70,18 @@ module.exports = class LibraryService {
     library.syncAfter = moment().add(syncAfterSeconds, 'seconds').toDate()
 
     return this.save({user, Library, library})
+  }
+
+  static flatten (children) {
+    let result = []
+    children.forEach(a => {
+      if (a.isLeaf) {
+        result.push(a)
+      } else if (Array.isArray(a.children)) {
+        result = result.concat(this.flatten(a.children))
+      }
+    })
+    return result
   }
 
   static newLibrary (playlists, user) {

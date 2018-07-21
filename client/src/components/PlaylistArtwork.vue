@@ -28,8 +28,15 @@
       }
     },
     watch: {
-      spotifyPlaylist () {
-        this.init()
+      spotifyPlaylist: {
+        handler () {
+          this.init()
+        }
+      },
+      libraryPlaylist: {
+        handler () {
+          this.init()
+        }
       }
     },
     methods: {

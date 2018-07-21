@@ -1,6 +1,6 @@
 <template lang="pug">
-  v-layout.playlists.pa-2(row, wrap, v-if='app && app.library && app.library.children')
-    .pa-3(v-for='(item, index) in items', :key='index')
+  v-layout.playlists.pa-3(row, wrap, v-if='app && app.library && app.library.children')
+    .px-3.pt-3(v-for='(item, index) in items', :key='index')
       router-link(:to='routeForItem(item, index)')
         playlist-artwork(:library-playlist='item', :is-folder='!item.isLeaf', size='200px')
       .playlist-name.truncate.body-2.text-xs-center.mt-2.mx-auto {{ item.title }}

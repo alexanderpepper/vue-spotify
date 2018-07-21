@@ -3,7 +3,7 @@
     v-layout(row, wrap, v-if='app && app.library && app.library.children')
       v-flex.my-1.pa-2(v-for='(item, index) in items', :key='index')
         router-link(:to='routeForItem(item, index)')
-          playlist-artwork(:library-playlist='item', :is-folder='!item.isLeaf', size='200px', @click='itemClicked(item, index)')
+          playlist-artwork(:library-playlist='item', :is-folder='!item.isLeaf', size='200px')
         .playlist-name.truncate.body-2.text-xs-center.mt-2.mx-auto {{ item.title }}
 </template>
 

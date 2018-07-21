@@ -90,7 +90,8 @@
         playerState: PlayerService.initialPlayerState(),
         app: this,
         isLoadingShuffle: false,
-        loadingText: 'Loading'
+        loadingText: 'Loading',
+        stateRefreshInterval: null
       }
     },
     watch: {
@@ -107,16 +108,7 @@
     async created () {
       this.isDarkTheme = window.localStorage['dark'] !== 'false'
       await this.getUserInfo()
-      setInterval(() => {
-        if (this.isSpotifyConnected() && !this.isLoadingShuffle) {
-          PlayerService.getPlayerState().then(state => {
-            this.playerState = PlayerService.parsePlayerState(this.playerState, state)
-          })
-          PlayerService.getDevices().then(devices => {
-            this.devices = devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-          })
-        }
-      }, 1000)
+      this.startStateRefresh()
     },
     computed: {
       userFullName () {
@@ -124,6 +116,27 @@
       }
     },
     methods: {
+      startStateRefresh () {
+        setTimeout(() => {
+          this.stateRefreshInterval = setInterval(() => {
+            if (this.isSpotifyConnected()) {
+              PlayerService.getPlayerState().then(state => {
+                if (state) {
+                  this.playerState = PlayerService.parsePlayerState(this.playerState, state)
+                }
+              })
+              PlayerService.getDevices().then(devices => {
+                if (devices) {
+                  this.devices = devices.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+                }
+              })
+            }
+          }, 1500)
+        }, 1500)
+      },
+      stopStateRefresh () {
+        clearInterval(this.stateRefreshInterval)
+      },
       selectDevice: function (deviceID) {
         PlayerService.transferPlayback(deviceID, true)
       },

@@ -4,8 +4,8 @@ const moduleExists = require('../constants/module-exists')
 const scopes = ['streaming', 'user-read-birthdate', 'user-read-email', 'user-read-private', 'playlist-read-private', 'user-read-playback-state', 'user-modify-playback-state']
 const limit = 50
 const logging = false
+const log = (str) => logging && console.log(str)
 const resolver = (promise) => promise.then(data => data.body).catch(console.log)
-
 const credentials = moduleExists('../constants/credentials') ? require('../constants/credentials') : undefined
 
 if (!credentials || !credentials.clientId || !credentials.clientSecret || !credentials.redirectUri) {
@@ -14,12 +14,8 @@ if (!credentials || !credentials.clientId || !credentials.clientSecret || !crede
 }
 
 const {clientId, clientSecret, redirectUri} = credentials
+
 module.exports = class SpotifyService {
-  static log (...str) {
-    if (logging) {
-      console.log(str)
-    }
-  }
 
   static getSpotifyApi (user) {
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
@@ -32,12 +28,12 @@ module.exports = class SpotifyService {
   }
 
   static getAuthorizationUrl () {
-    this.log('getAuthorizationUrl')
+    log('getAuthorizationUrl')
     return new SpotifyWebApi({clientId, redirectUri}).createAuthorizeURL(scopes, 'new-spotify-utils-user')
   }
 
   static async setAuthorizationCode (user, code) {
-    this.log('setAuthorizationCode')
+    log('setAuthorizationCode')
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
     const tokenResponse = await spotifyApi.authorizationCodeGrant(code)
     const token = TokenService.create(tokenResponse.body)
@@ -51,7 +47,7 @@ module.exports = class SpotifyService {
   }
 
   static async refreshToken (user) {
-    this.log('refreshToken')
+    log('refreshToken')
     const data = await resolver(this.getSpotifyApi(user).refreshAccessToken())
 
     if (!data) return user
@@ -69,52 +65,52 @@ module.exports = class SpotifyService {
   }
 
   static play (user, songs) {
-    this.log('play')
+    log('play')
     return resolver(this.getSpotifyApi(user).play(songs))
   }
 
   static pause (user) {
-    this.log('pause')
+    log('pause')
     return resolver(this.getSpotifyApi(user).pause())
   }
 
   static skipToNext (user) {
-    this.log('skipToNext')
+    log('skipToNext')
     return resolver(this.getSpotifyApi(user).skipToNext())
   }
 
   static skipToPrevious (user) {
-    this.log('skipToPrevious')
+    log('skipToPrevious')
     return resolver(this.getSpotifyApi(user).skipToPrevious())
   }
 
   static getPlaybackState (user) {
-    this.log('getPlaybackState')
+    log('getPlaybackState')
     return resolver(this.getSpotifyApi(user).getMyCurrentPlaybackState())
   }
 
   static seek (user, position) {
-    this.log('seek')
+    log('seek')
     return resolver(this.getSpotifyApi(user).seek(position))
   }
 
   static setVolume (user, volume) {
-    this.log('setVolume')
+    log('setVolume')
     return resolver(this.getSpotifyApi(user).setVolume(volume))
   }
 
   static setShuffle (user, shuffle) {
-    this.log('setShuffle')
+    log('setShuffle')
     return resolver(this.getSpotifyApi(user).setShuffle({state: shuffle}))
   }
 
   static setRepeat (user, repeat) {
-    this.log('setRepeat')
+    log('setRepeat')
     return resolver(this.getSpotifyApi(user).setRepeat({state: repeat}))
   }
 
   static transferPlayback (user, deviceID, play) {
-    this.log('transferPlayback')
+    log('transferPlayback')
     const argsObject = {
       device_ids: [deviceID],
       play: typeof play === 'boolean' ? play : false
@@ -123,17 +119,17 @@ module.exports = class SpotifyService {
   }
 
   static getPlaylist (user, playlistID) {
-    this.log('getPlaylist: ' + playlistID)
+    log('getPlaylist: ' + playlistID)
     return resolver(this.getSpotifyApi(user).getPlaylist(user.spotifyUser.id, playlistID))
   }
 
   static getDevices (user) {
-    this.log('getDevices')
+    log('getDevices')
     return resolver(this.getSpotifyApi(user).getMyDevices())
   }
 
   static async getPlaylists (user) {
-    this.log('getPlaylists')
+    log('getPlaylists')
     const spotifyApi = this.getSpotifyApi(user)
     const sampling = await spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit: 1}).then(data => data.body)
     const pageCount = Math.ceil(sampling.total / limit)

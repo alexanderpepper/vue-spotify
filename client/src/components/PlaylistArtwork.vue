@@ -28,12 +28,20 @@
       }
     },
     watch: {
-      spotifyPlaylist () {
-        this.init()
+      'spotifyPlaylist': {
+        handler () {
+          this.init()
+        }
+      },
+      'libraryPlaylist': {
+        handler () {
+          this.init()
+        }
       }
     },
     methods: {
       init () {
+        console.log('init')
         const key = (this.libraryPlaylist && this.libraryPlaylist.data && this.libraryPlaylist.data.artworkUrl) ||
           (this.spotifyPlaylist && this.spotifyPlaylist.images && this.spotifyPlaylist.images.length && this.spotifyPlaylist.images[0].url)
 

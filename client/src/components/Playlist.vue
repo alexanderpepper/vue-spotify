@@ -102,8 +102,8 @@
 </script>
 
 <style>
-  .playlist table.datatable.table,
-  .playlist .list {
+  .playlist table.v-datatable.v-table,
+  .playlist .v-list {
     background-color: transparent;
   }
 </style>
@@ -111,10 +111,6 @@
 <style scoped>
   .filter-field {
     margin-top: -32px;
-  }
-
-  .playing-indicator {
-    margin-bottom: 2px;
   }
 
   .data-table.playing-indicator {

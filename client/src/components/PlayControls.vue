@@ -105,9 +105,10 @@
 </script>
 
 <style>
-  .play-controls .input-group--slider,
-  .play-controls .slider {
+  .play-controls .v-input-group--slider,
+  .play-controls .v-slider {
     height: 24px !important;
+    margin-bottom: -22px;
   }
 </style>
 

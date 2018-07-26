@@ -17,8 +17,9 @@
     "superagent": "^3.8.2",
     "superagent-throttle": "^0.2.5",
     "vue": "^2.5.3",
+    "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.1",
-    "vuetify": "^1.0.18"
+    "vuetify": "^1.1.8"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

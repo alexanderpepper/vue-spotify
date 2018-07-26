@@ -15,10 +15,3 @@
     props: {app: Object}
   }
 </script>
-
-<style>
-  .playlist table.datatable.table,
-  .playlist .list {
-    background-color: transparent;
-  }
-</style>

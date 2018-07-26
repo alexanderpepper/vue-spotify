@@ -9,7 +9,7 @@
         input.display-none(type='email', name='fakeUsername')
         input.display-none(type='password', name='fakePassword')
         v-text-field.mb-2(label='Email', v-model='credentials.email', required, hide-details)
-        v-text-field(label='Password', v-model='credentials.password', :type="hidePassword ? 'password' : 'text'", :append-icon="hidePassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hidePassword = !hidePassword)", @keyup.enter='login', required, hide-details)
+        v-text-field(label='Password', v-model='credentials.password', :type="hidePassword ? 'password' : 'text'", :append-icon="hidePassword ? 'visibility' : 'visibility_off'", @click:append="() => (hidePassword = !hidePassword)", @keyup.enter='login', required, hide-details)
       v-btn.mb-3(outline, block, @click='login', :disabled='!isValid()') Sign In
       v-btn(small, flat, block, @click='showRegister') Create New Account
 </template>

@@ -141,9 +141,3 @@
     }
   }
 </script>
-
-<style scoped>
-  .avatar img {
-    width: 100%;
-  }
-</style>

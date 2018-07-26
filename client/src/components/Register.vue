@@ -7,8 +7,8 @@
         v-icon.cursor-pointer(@click='app.showRegister = false') close
       form.mb-5(@submit.prevent='register')
         v-text-field.mb-2(label='Email', v-model='credentials.email', required, hide-details)
-        v-text-field.mb-2(label='Password', v-model='credentials.password', :type="hidePassword ? 'password' : 'text'", :append-icon="hidePassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hidePassword = !hidePassword)", @keyup.enter='register', required, hide-details)
-        v-text-field.mb-2(label='Confirm Password', v-model='confirmPassword', :type="hideConfirmPassword ? 'password' : 'text'", :append-icon="hideConfirmPassword ? 'visibility' : 'visibility_off'", :append-icon-cb="() => (hideConfirmPassword = !hideConfirmPassword)", @keyup.enter='register', required, hide-details)
+        v-text-field.mb-2(label='Password', v-model='credentials.password', :type="hidePassword ? 'password' : 'text'", :append-icon="hidePassword ? 'visibility' : 'visibility_off'", @click:append="() => (hidePassword = !hidePassword)", @keyup.enter='register', required, hide-details)
+        v-text-field.mb-2(label='Confirm Password', v-model='confirmPassword', :type="hideConfirmPassword ? 'password' : 'text'", :append-icon="hideConfirmPassword ? 'visibility' : 'visibility_off'", @click:append="() => (hideConfirmPassword = !hideConfirmPassword)", @keyup.enter='register', required, hide-details)
       v-btn.mb-3(outline, block, @click='register', :disabled='!isValid()') Register
       v-btn(small, flat, block, @click='showLogin') Back to Sign In
 </template>

@@ -26,8 +26,7 @@
     "serve-favicon": "^2.0.1",
     "sl-vue-tree": "^1.7.0",
     "spotify-web-api-node": "^2.5.0",
-    "strong-error-handler": "^2.0.0",
-    "vue-lazyload": "^1.2.6"
+    "strong-error-handler": "^2.0.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

@@ -9,7 +9,7 @@
     watch: {
       'app.user': {
         handler () {
-          if (this.app.isSpotifyConnected()) {
+          if (this.app.user.id) {
             this.$router.push({name: 'playlists'})
           }
         }

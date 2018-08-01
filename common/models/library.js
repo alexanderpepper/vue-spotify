@@ -3,7 +3,7 @@ const remoteDefaults = require('../../server/constants/remote-defaults')
 const LibraryService = require('../../server/services/library-service')
 
 module.exports = (Library) => {
-  Library.beforeRemote('*', (ctx, unused, next) => Library.app.models.AppUser.getUserWithFreshToken(ctx, next))
+  Library.beforeRemote('*', (ctx, unused, next) => Library.app.models.SpotifyUser.getUserWithFreshToken(ctx, next))
 
   Library.get = (options) => LibraryService.get({user: options.user, Library})
   Library.remoteMethod('get', {

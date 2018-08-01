@@ -4,7 +4,7 @@ const SpotifyService = require('../../server/services/spotify-service')
 const remoteDefaults = require('../../server/constants/remote-defaults')
 
 module.exports = (Player) => {
-  Player.beforeRemote('*', (ctx, unused, next) => Player.app.models.AppUser.getUserWithFreshToken(ctx, next))
+  Player.beforeRemote('*', (ctx, unused, next) => Player.app.models.SpotifyUser.getUserWithFreshToken(ctx, next))
 
   Player.seek = (position, options) => SpotifyService.seek(options.user, position)
   Player.remoteMethod('seek', {

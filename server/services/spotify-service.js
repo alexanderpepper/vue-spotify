@@ -16,10 +16,9 @@ if (!credentials || !credentials.clientId || !credentials.clientSecret || !crede
 const {clientId, clientSecret, redirectUri} = credentials
 
 module.exports = class SpotifyService {
-
   static getSpotifyApi (user) {
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
-    const token = user && user.spotifyUser && user.spotifyUser.token
+    const token = user && user.token
     if (token) {
       spotifyApi.setAccessToken(token.accessToken)
       spotifyApi.setRefreshToken(token.refreshToken)
@@ -41,6 +40,7 @@ module.exports = class SpotifyService {
     spotifyApi.setRefreshToken(token.refreshToken)
 
     const spotifyUser = await spotifyApi.getMe().then(data => data.body)
+
     user.spotifyUser = {...spotifyUser, token}
 
     return new Promise(resolve => user.save().then(resolve))
@@ -53,10 +53,10 @@ module.exports = class SpotifyService {
     if (!data) return user
 
     const token = TokenService.create(data)
-    user.spotifyUser.token.accessToken = token.accessToken
-    user.spotifyUser.token.expirationDate = token.expirationDate
+    user.token.accessToken = token.accessToken
+    user.token.expirationDate = token.expirationDate
     if (token.refreshToken) {
-      user.spotifyUser.token.refreshToken = token.refreshToken
+      user.token.refreshToken = token.refreshToken
     }
 
     return new Promise(resolve => {
@@ -120,7 +120,7 @@ module.exports = class SpotifyService {
 
   static getPlaylist (user, playlistID) {
     log('getPlaylist: ' + playlistID)
-    return resolver(this.getSpotifyApi(user).getPlaylist(user.spotifyUser.id, playlistID))
+    return resolver(this.getSpotifyApi(user).getPlaylist(user.id, playlistID))
   }
 
   static getDevices (user) {
@@ -131,10 +131,10 @@ module.exports = class SpotifyService {
   static async getPlaylists (user) {
     log('getPlaylists')
     const spotifyApi = this.getSpotifyApi(user)
-    const sampling = await spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit: 1}).then(data => data.body)
+    const sampling = await spotifyApi.getUserPlaylists(user.id, {limit: 1}).then(data => data.body)
     const pageCount = Math.ceil(sampling.total / limit)
     const pages = Array.from(Array(pageCount).keys())
-    const promises = pages.map(p => spotifyApi.getUserPlaylists(user.spotifyUser.id, {limit, offset: p * limit}).then(data => data.body.items))
+    const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
     return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val))).catch(console.log)
   }
 }

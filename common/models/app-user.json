@@ -1,9 +1,0 @@
-{
-  "name": "AppUser",
-  "plural": "appUser",
-  "base": "User",
-  "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  }
-}

@@ -4,7 +4,7 @@ const SpotifyService = require('../../server/services/spotify-service')
 const remoteDefaults = require('../../server/constants/remote-defaults')
 
 module.exports = (Authorization) => {
-  Authorization.beforeRemote('*', (ctx, unused, next) => Authorization.app.models.AppUser.getUserWithFreshToken(ctx, next))
+  Authorization.beforeRemote('*', (ctx, unused, next) => Authorization.app.models.SpotifyUser.getUserWithFreshToken(ctx, next))
 
   Authorization.getAuthorizationUrl = (cb) => { cb(null, {url: SpotifyService.getAuthorizationUrl()}) }
   Authorization.remoteMethod('getAuthorizationUrl', {
@@ -21,4 +21,12 @@ module.exports = (Authorization) => {
     ],
     http: {path: '/code', verb: 'post'}
   })
+
+  Authorization.getMe = (cb) => { cb(null, SpotifyService.getMe()) }
+  Authorization.remoteMethod('setAuthorizationCode', {
+    ...remoteDefaults.method,
+    accepts: [remoteDefaults.options],
+    http: {path: '/me', verb: 'get'}
+  })
+
 }

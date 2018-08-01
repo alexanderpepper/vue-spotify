@@ -1,0 +1,9 @@
+{
+  "name": "SpotifyUser",
+  "plural": "spotifyUser",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  }
+}

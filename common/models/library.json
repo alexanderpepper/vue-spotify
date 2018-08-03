@@ -9,7 +9,7 @@
   "relations": {
     "user": {
       "type": "belongsTo",
-      "model": "AppUser",
+      "model": "SpotifyUser",
       "foreignKey": "userId"
     }
   }

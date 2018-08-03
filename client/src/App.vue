@@ -10,7 +10,6 @@
       v-spacer
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
         .subheading {{ userFullName }}
-      v-btn(flat, v-show='!user.id', @click='showLogin = true') Sign Up / Sign In
       v-menu(offset-y, left, v-show='user.id')
         v-btn(icon, slot='activator')
           user-photo(size='medium', :app='app')
@@ -32,7 +31,6 @@
   import WebPlaybackService from './services/WebPlaybackService'
   import UserPhoto from './components/UserPhoto'
   import PlayerService from './services/PlayerService'
-  import UserService from './services/UserService'
   import AuthorizationService from './services/AuthorizationService'
 
   export default {
@@ -69,7 +67,7 @@
       if (this.user.id) {
         this.$router.push({name: 'playlists'})
         this.startStateRefresh()
-      } else {
+      } else if (this.$route.name !== 'callback') {
         window.location.href = await AuthorizationService.getAuthorizationUrl()
       }
     },
@@ -80,8 +78,8 @@
     },
     methods: {
       getUserInfo () {
-        if (UserService.hasToken()) {
-          return UserService.me().then(this.setUser).catch(() => console.log('Token expired.'))
+        if (AuthorizationService.hasToken()) {
+          return AuthorizationService.getMe().then(this.setUser).catch((err) => console.log(err))
         }
       },
       startStateRefresh () {

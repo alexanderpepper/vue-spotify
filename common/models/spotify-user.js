@@ -4,12 +4,15 @@ const SpotifyService = require('../../server/services/spotify-service')
 
 module.exports = (SpotifyUser) => {
   SpotifyUser.getUserWithFreshToken = (ctx, next) => {
-    if (!ctx.args.options || !ctx.args.options.accessToken) {
+    if (!ctx.args.options || !ctx.req.headers.authorization) {
       return next()
     }
-    SpotifyUser.findById(ctx.args.options.accessToken.userId, (err, user) => {
+    SpotifyUser.find({where: {'token.accessToken': ctx.req.headers.authorization}}, (err, user) => {
       if (err) {
         return next(err)
+      }
+      if (user.length) {
+        user = user[0]
       }
       ctx.args.options.user = user
       if (user.token && moment().isSameOrAfter(user.token.expirationDate)) {

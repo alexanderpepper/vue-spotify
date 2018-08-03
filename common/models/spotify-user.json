@@ -2,7 +2,8 @@
   "name": "SpotifyUser",
   "plural": "spotifyUser",
   "base": "PersistedModel",
-  "idInjection": true,
+  "idInjection": false,
+  "forceId": false,
   "options": {
     "validateUpsert": true
   }

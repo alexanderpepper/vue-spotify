@@ -7,7 +7,15 @@ class AuthorizationService extends BaseService {
   }
 
   static setAuthorizationCode (code) {
-    return this.POST(api.setAuthorizationCode, {code})
+    return this.POST(api.setAuthorizationCode, {code}).then(user => {
+      window.localStorage['token'] = user.token.accessToken
+      window.localStorage['user'] = user.id
+      return user
+    })
+  }
+
+  static getMe () {
+    return this.GET(api.me)
   }
 
   static logout () {

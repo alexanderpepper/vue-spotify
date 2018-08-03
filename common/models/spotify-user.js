@@ -7,13 +7,14 @@ module.exports = (SpotifyUser) => {
     if (!ctx.args.options || !ctx.req.headers.authorization) {
       return next()
     }
-    SpotifyUser.find({where: {'token.accessToken': ctx.req.headers.authorization}}, (err, user) => {
+    SpotifyUser.find({where: {'token.accessToken': ctx.req.headers.authorization}}, (err, users) => {
       if (err) {
         return next(err)
       }
-      if (user.length) {
-        user = user[0]
+      if (!users.length) {
+        return next()
       }
+      const user = users[0]
       ctx.args.options.user = user
       if (user.token && moment().isSameOrAfter(user.token.expirationDate)) {
         SpotifyService.refreshToken(user).then(refreshedTokenUser => {

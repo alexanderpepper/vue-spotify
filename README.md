@@ -79,11 +79,6 @@ module.exports = {
   redirectUri: isProd ? 'https://yoursite.com/callback' : 'http://localhost:8080/callback'
 }
 ```
-* An admin account is created on the first run. Default credentials are
-  * Email: admin@admin.com
-  * Password: admin1234
-  * Default admin account credentials can be configured in `server/boot/admin.js`
-
 ## Development
 Running the server and client as separate processes gives the best development experience with hot reloading in the client app.
 

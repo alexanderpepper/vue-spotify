@@ -4,7 +4,6 @@
 
 <script>
   import AuthorizationService from '../services/AuthorizationService'
-  import UserService from '../services/UserService'
   import ModalSpinner from './ModalSpinner'
 
   export default {
@@ -12,8 +11,8 @@
     components: {ModalSpinner},
     props: {app: Object},
     async mounted () {
-      await AuthorizationService.setAuthorizationCode(this.$route.query.code)
-      this.app.setUser(await UserService.me())
+      const user = await AuthorizationService.setAuthorizationCode(this.$route.query.code)
+      this.app.setUser(user)
       this.$router.push({name: 'playlists'})
     }
   }

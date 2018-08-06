@@ -1,16 +1,7 @@
 const host = process.env.API_URL
 
 export default {
-  login: `${host}/app-user/login`,
-  logout: `${host}/app-user/logout`,
-  users: `${host}/app-user`,
-  password: `${host}/app-user/change-password`,
-  roles: `${host}/app-role`,
-  me: (id) => `${host}/app-user/${id}`,
-  roleMappings: `${host}/app-role-mapping`,
-  roleMapping: (id) => `${host}/app-role-mapping/${id}`,
-  usersPaginated: `${host}/app-user/paginated`,
-  user: (id) => `${host}/app-user/${id}`,
+  me: `${host}/authorization/me`,
   getAuthorizationUrl: `${host}/authorization/url`,
   setAuthorizationCode: `${host}/authorization/code`,
   playlists: `${host}/playlist`,
@@ -29,5 +20,4 @@ export default {
   seek: `${host}/player/seek`,
   library: (id) => `${host}/library/${id || ''}`,
   myLibrary: `${host}/library/mine`
-
 }

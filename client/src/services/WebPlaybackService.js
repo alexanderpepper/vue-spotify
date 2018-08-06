@@ -26,7 +26,7 @@ class WebPlaybackService extends BaseService {
 
       const player = new window.Spotify.Player({
         name: 'VueSpotify Player',
-        getOAuthToken: cb => { cb(user.spotifyUser.token.accessToken) }
+        getOAuthToken: cb => { cb(user.token.accessToken) }
       })
 
       player.addListener('initialization_error', ({ message }) => { console.error(message) })

@@ -13,43 +13,13 @@
       "./mixins"
     ]
   },
-  "User": {
-    "dataSource": "spotifyDB",
-    "public": false
-  },
-  "AccessToken": {
-    "dataSource": "spotifyDB",
-    "public": false
-  },
   "ACL": {
     "dataSource": "spotifyDB",
     "public": false
   },
-  "RoleMapping": {
-    "dataSource": "spotifyDB",
-    "public": false,
-    "options": {
-      "strictObjectIDCoercion": true
-    }
-  },
-  "Role": {
+  "SpotifyUser": {
     "dataSource": "spotifyDB",
     "public": false
-  },
-  "AppRoleMapping": {
-    "dataSource": "spotifyDB",
-    "public": true,
-    "options": {
-      "strictObjectIDCoercion": true
-    }
-  },
-  "AppRole": {
-    "dataSource": "spotifyDB",
-    "public": true
-  },
-  "AppUser": {
-    "dataSource": "spotifyDB",
-    "public": true
   },
   "Library": {
     "dataSource": "spotifyDB",

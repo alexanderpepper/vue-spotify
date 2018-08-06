@@ -38,7 +38,6 @@ Screenshot | Screenshot
 * Build folders shuffle all playlists in them
 
 ## Roadmap
-* Remove requirement to create application account before linking spotify
 * Export all your playlists to JSON
 * Find official music videos on YouTube for playlists 
 * Integrate Chromecast for YouTube videos

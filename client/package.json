@@ -19,7 +19,8 @@
     "vue": "^2.5.3",
     "vue-lazyload": "^1.2.6",
     "vue-router": "^3.0.1",
-    "vuetify": "^1.1.8"
+    "vuetify": "^1.1.8",
+    "sl-vue-tree": "^1.7.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

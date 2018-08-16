@@ -7,14 +7,11 @@ module.exports = (SpotifyUser) => {
     if (!ctx.args.options || !ctx.req.headers.authorization) {
       return next()
     }
-    SpotifyUser.find({where: {'token.accessToken': ctx.req.headers.authorization}}, (err, users) => {
-      if (err) {
-        return next(err)
-      }
-      if (!users.length) {
+
+    getSpotifyUser(ctx.req.headers.authorization, SpotifyUser.app.models.SpotifyAccessToken).then(user => {
+      if (!user) {
         return next()
       }
-      const user = users[0]
       ctx.args.options.user = user
       if (user.token && moment().isSameOrAfter(user.token.expirationDate)) {
         SpotifyService.refreshToken(user).then(refreshedTokenUser => {
@@ -24,6 +21,21 @@ module.exports = (SpotifyUser) => {
       } else {
         next()
       }
+    })
+    .catch(err => {
+      return next(err)
+    })
+  }
+
+  async function getSpotifyUser (accessToken, SpotifyAccessToken) {
+    return new Promise((resolve, reject) => {
+      SpotifyAccessToken.find({where: {accessToken}, include: 'user'}, (err, tokens) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(tokens.length && tokens[0].toJSON().user)
+        }
+      })
     })
   }
 }

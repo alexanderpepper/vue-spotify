@@ -13,7 +13,7 @@ module.exports = (Authorization) => {
     http: {path: '/url', verb: 'get'}
   })
 
-  Authorization.setAuthorizationCode = (code) => SpotifyService.setAuthorizationCode(code, Authorization.app.models.SpotifyUser)
+  Authorization.setAuthorizationCode = (code) => SpotifyService.setAuthorizationCode(code, Authorization.app.models.SpotifyUser, Authorization.app.models.SpotifyAccessToken)
   Authorization.remoteMethod('setAuthorizationCode', {
     ...remoteDefaults.method,
     accepts: [{arg: 'code', type: 'string'}],

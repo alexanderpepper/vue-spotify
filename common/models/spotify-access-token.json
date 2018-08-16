@@ -1,0 +1,16 @@
+{
+  "name": "SpotifyAccessToken",
+  "plural": "spotifyAccessToken",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "relations": {
+    "user": {
+      "type": "belongsTo",
+      "model": "SpotifyUser",
+      "foreignKey": "userId"
+    }
+  }
+}

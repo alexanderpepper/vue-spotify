@@ -21,6 +21,10 @@
     "dataSource": "spotifyDB",
     "public": false
   },
+  "SpotifyAccessToken": {
+    "dataSource": "spotifyDB",
+    "public": false
+  },
   "Library": {
     "dataSource": "spotifyDB",
     "public": true

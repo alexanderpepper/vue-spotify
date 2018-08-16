@@ -97,8 +97,8 @@
                 }
               })
             }
-          }, 1500)
-        }, 1500)
+          }, 1000)
+        }, 1000)
       },
       stopStateRefresh () {
         clearInterval(this.stateRefreshInterval)

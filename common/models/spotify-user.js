@@ -14,7 +14,11 @@ module.exports = (SpotifyUser) => {
       }
       ctx.args.options.user = user
       if (user.token && moment().isSameOrAfter(user.token.expirationDate)) {
-        SpotifyService.refreshToken(user).then(refreshedTokenUser => {
+        SpotifyService.refreshToken({
+          user,
+          SpotifyUser: SpotifyUser.app.models.SpotifyUser,
+          SpotifyAccessToken: SpotifyUser.app.models.SpotifyAccessToken
+        }).then(refreshedTokenUser => {
           ctx.args.options.user = refreshedTokenUser
           next()
         }).catch(err => console.log(err))

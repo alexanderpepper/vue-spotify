@@ -31,7 +31,7 @@ module.exports = class SpotifyService {
     return new SpotifyWebApi({clientId, redirectUri}).createAuthorizeURL(scopes, 'new-spotify-utils-user')
   }
 
-  static async setAuthorizationCode (code, SpotifyUser, SpotifyAccessToken) {
+  static async setAuthorizationCode ({ code, SpotifyUser, SpotifyAccessToken }) {
     log('setAuthorizationCode')
 
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
@@ -55,8 +55,7 @@ module.exports = class SpotifyService {
     })
   }
 
-  static async refreshToken (user) {
-    console.log('refreshToken')
+  static async refreshToken ({user, SpotifyUser, SpotifyAccessToken}) {
     const data = await resolver(this.getSpotifyApi(user).refreshAccessToken())
 
     if (!data) return user
@@ -68,8 +67,10 @@ module.exports = class SpotifyService {
       user.token.refreshToken = token.refreshToken
     }
 
+    await this.createSpotifyAccessToken(user.id, token.accessToken, SpotifyAccessToken)
+
     return new Promise(resolve => {
-      user.save().then(savedUser => resolve(savedUser))
+      SpotifyUser.upsert(user).then(savedUser => resolve(savedUser))
     })
   }
 

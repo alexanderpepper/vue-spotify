@@ -12,12 +12,12 @@ This project uses [JavaScript Standard Style](https://github.com/standard/standa
 Use of ES6+ features in this project is encouraged.
 
 ## Screenshots
-<img src="https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-1.png"/>
-<img src="https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-2.png"/>
+<img src="https://s3.amazonaws.com/vue-spotify/vue-spotify-1.png"/>
+<img src="https://s3.amazonaws.com/vue-spotify/vue-spotify-2.png"/>
 
 Screenshot | Screenshot
 ---- | ---
-![screenshot](https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-3.png)  |  ![screenshot](https://s3.amazonaws.com/alexpepper.us/images/vue-spotify-4.png)
+![screenshot](https://s3.amazonaws.com/vue-spotify/vue-spotify-3.png)  |  ![screenshot](https://s3.amazonaws.com/vue-spotify/vue-spotify-4.png)
 
 ## Tech/framework used
 

@@ -56,11 +56,11 @@ a {
 }
 
 @media (max-width: 599px) {
-  .mb-xs-3 {
+  .mx-xs-4 {
     margin-bottom: 16px !important;
   }
 
-  .mx-xs-5 {
+  .mx-xs-8 {
     margin-left: 32px !important;
     margin-right: 32px !important;
   }

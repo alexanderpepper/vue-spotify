@@ -13,14 +13,14 @@
       v-flex.px-3.hide-overflow-x(sm3, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout
           .vertical-center-container.mx-xs-auto(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
-            .vertical-center.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
+            .vertical-center.mx-xs-4(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
               .artwork.elevation-5.mx-auto(:class='{"mobile-large": $vuetify.breakpoint.xsOnly, "desktop": $vuetify.breakpoint.smAndUp}')
                 img(:src='app.playerState.images[0].url')
-            .vertical-center.text-xs-center.text-sm-left.pl-3.pa-xs-0.mb-xs-3(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
+            .vertical-center.text-xs-center.text-sm-left.pl-3.pa-xs-0.mx-xs-4(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
               .body-2.truncate.compress(v-text='app.playerState.artist')
               .body-1.truncate.compress(v-text='app.playerState.track')
       v-flex.text-xs-center(sm6, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
-        v-layout.mb-xs-3(row, align-center)
+        v-layout.mx-xs-4(row, align-center)
           v-spacer
           v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp', @click='setShuffle')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"primary--text": app.playerState.shuffle}') shuffle
@@ -33,7 +33,7 @@
           v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp', @click='setRepeat')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"primary--text": app.playerState.repeat !== repeatModes.off }') {{ app.playerState.repeat === repeatModes.track ? 'repeat_one' : 'repeat' }}
           v-spacer
-        v-layout.mx-xs-5(row, align-center)
+        v-layout.mx-xs-8(row, align-center)
           .caption(v-text='app.playerState.elapsed')
           v-slider.pa-0.mx-3(:color='app.isDarkTheme ? "white" : "black"', :thumb-color='app.isDarkTheme ? "white" : "black"', v-model='app.playerState.position', @click='seek')
           .caption(v-text='app.playerState.duration')

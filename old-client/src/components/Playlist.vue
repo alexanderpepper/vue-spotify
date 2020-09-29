@@ -2,7 +2,7 @@
   .playlist.pb-4.pa-xs-0
     v-layout.px-4.pt-4.mb-4(row, wrap, align-center)
       v-flex.text-xs-center(xs12, sm3)
-        playlist-artwork.mb-xs-3(:spotify-playlist='playlist', elevation='10', size='100%')
+        playlist-artwork.mx-xs-4(:spotify-playlist='playlist', elevation='10', size='100%')
       v-flex.px-4.px-xs-0.text-sm-left.text-xs-center(xs12, sm9)
         .caption PLAYLIST
         .display-1.mb-2.bold {{ playlistName }}

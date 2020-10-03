@@ -14,19 +14,19 @@
     ]
   },
   "ACL": {
-    "dataSource": "spotifyDB",
+    "dataSource": "db",
     "public": false
   },
   "SpotifyUser": {
-    "dataSource": "spotifyDB",
+    "dataSource": "db",
     "public": false
   },
   "SpotifyAccessToken": {
-    "dataSource": "spotifyDB",
+    "dataSource": "db",
     "public": false
   },
   "Library": {
-    "dataSource": "spotifyDB",
+    "dataSource": "db",
     "public": true
   },
   "Player": {

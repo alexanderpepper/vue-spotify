@@ -12,7 +12,14 @@
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "gravatar": "^1.6.0",
+    "moment": "^2.21.0",
+    "pug": "^3.0.0",
+    "superagent": "^3.8.2",
+    "superagent-throttle": "^0.2.5",
+    "vue-lazyload": "^1.2.6",
+    "sl-vue-tree": "^1.7.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -29,6 +36,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
+    "pug-plain-loader": "^1.0.0",
     "vue-template-compiler": "^2.6.11"
   }
 }

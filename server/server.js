@@ -29,8 +29,10 @@ app.start = function () {
   } else {
     server = http.createServer(app)
   }
-  server.listen(app.get('port'), function () {
-    var baseUrl = `${protocol}${app.get('host')}:${app.get('port')}`
+  let port = app.get('port')
+  port = port === 443 && !useSsl ? 80 : port
+  server.listen(port, function () {
+    const baseUrl = `${protocol}${app.get('host')}:${app.get('port')}`
     app.emit('started', baseUrl)
     console.log('LoopBack server listening at %s%s', baseUrl, '/')
     if (!isProd && app.get('loopback-component-explorer')) {

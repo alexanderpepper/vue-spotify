@@ -41,8 +41,9 @@
         v-layout(row, align-center)
           v-spacer
           v-menu(v-model='showDevices', top, left, offset-y, fixed)
-            v-btn(icon, slot='activator')
-              v-icon speaker
+            template(v-slot:activator='{ on, attrs }')
+              v-btn(icon v-bind='attrs' v-on='on')
+                v-icon speaker
             devices(:app='app')
           v-slider.pa-0.hidden-xs-only(:color='app.isDarkTheme ? "white" : "black"', :thumb-color='app.isDarkTheme ? "white" : "black"', v-model='app.playerState.volume', @click='setVolume')
           v-spacer.hidden-sm-and-up

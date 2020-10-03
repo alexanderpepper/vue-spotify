@@ -11,8 +11,9 @@
       v-toolbar-title.text-xs-right.px-0.hidden-xs-only(v-show='user.id')
         .subheading {{ userFullName }}
       v-menu(offset-y, left, v-show='user.id')
-        v-btn(icon, slot='activator')
-          user-photo(size='medium', :app='app')
+        template(v-slot:activator='{ on, attrs }')
+          v-btn(icon v-bind='attrs' v-on='on')
+            user-photo(size='medium', :app='app')
         v-list.py-0
           v-layout.px-3.pb-2.hidden-sm-and-up.pt-2(column)
             .caption Signed in as
@@ -23,7 +24,7 @@
           v-divider
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
-    v-content
+    v-main
       transition(name='fade-transition', mode='out-in')
         router-view.router-view.mx-auto(:app='app')
 </template>

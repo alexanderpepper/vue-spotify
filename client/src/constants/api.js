@@ -1,4 +1,4 @@
-const host = process.env.API_URL
+const host = process.env.VUE_APP_API_URL
 
 export default {
   me: `${host}/authorization/me`,

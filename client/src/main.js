@@ -6,6 +6,7 @@ import store from './store'
 import './common.css'
 import './sl-vue-tree.css'
 import VueLazyload from 'vue-lazyload'
+import vuetify from './plugins/vuetify'
 
 Vue.config.productionTip = false
 
@@ -59,5 +60,6 @@ if (!Array.prototype.find) {
 new Vue({
   router,
   store,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')

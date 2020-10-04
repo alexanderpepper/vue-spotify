@@ -19,11 +19,11 @@
             .caption Signed in as
             .body-2 {{ userFullName }}
           v-divider.hidden-sm-and-up
-          v-list-tile(@click='toggleTheme', :ripple='true')
-            v-list-tile-title Switch Theme
+          v-list-item(@click='toggleTheme', :ripple='true')
+            v-list-item-title Switch Theme
           v-divider
-          v-list-tile(@click='logout', ripple)
-            v-list-tile-title Sign Out
+          v-list-item(@click='logout', ripple)
+            v-list-item-title Sign Out
     v-main
       transition(name='fade-transition', mode='out-in')
         router-view.router-view.mx-auto(:app='app')
@@ -39,10 +39,10 @@ export default {
   components: { UserPhoto },
   data () {
     return {
+      isDarkTheme: true,
       app: this,
       playlists: [],
       library: {},
-      isDarkTheme: true,
       user: {},
       devices: [],
       player: null,
@@ -64,7 +64,8 @@ export default {
     }
   },
   async created () {
-    this.isDarkTheme = window.localStorage.dark !== 'false'
+    this.$vuetify.theme.dark = window.localStorage.dark === 'true'
+    this.isDarkTheme = this.$vuetify.theme.dark
     await this.getUserInfo()
     if (this.user.id) {
       this.$router.push({ name: 'playlists' })
@@ -109,8 +110,9 @@ export default {
       PlayerService.transferPlayback(deviceID, true)
     },
     toggleTheme () {
-      this.isDarkTheme = !this.isDarkTheme
-      window.localStorage.dark = this.isDarkTheme
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark
+      this.isDarkTheme = this.$vuetify.theme.dark
+      window.localStorage.dark = this.$vuetify.theme.dark
     },
     logout () {
       this.user = {}

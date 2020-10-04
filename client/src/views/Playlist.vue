@@ -10,13 +10,13 @@
       v-flex.hidden-xs-only(md3, offset-md9, sm6, offset-sm6, xs12)
         v-text-field.filter-field.pt-0(v-model='search', placeholder='Filter', append-icon='search', hide-details)
     v-list.hidden-sm-and-up.py-0(two-line)
-      v-list-tile(ripple, v-for='(track, index) in tracks', :key='index', @click='playSong(index)',)
-        v-list-tile-content
-          v-list-tile-title
+      v-list-item(ripple, v-for='(track, index) in tracks', :key='index', @click='playSong(index)',)
+        v-list-item-content
+          v-list-item-title
             v-icon.playing-indicator.mr-1(v-if='isPlayingTrack(track)', :class='{"primary--text": isPlayingTrack(track)}', size='17') volume_up
             span(:class='{"primary--text": isPlayingTrack(track)}') {{ track.title }}
-          v-list-tile-sub-title(:class='{"primary--text": isPlayingTrack(track)}') {{ track.artist }} • {{ track.album }}
-    v-data-table.px-4.hidden-xs-only(:headers='headers', :items='tracks', :loading='loading', :search='search', no-data-text='Loading playlist...', hide-actions, disable-initial-sort)
+          v-list-item-subtitle(:class='{"primary--text": isPlayingTrack(track)}') {{ track.artist }} • {{ track.album }}
+    v-data-table.px-4.hidden-xs-only(:headers='headers', :items='tracks', :loading='loading', :search='search', no-data-text='Loading playlist...', hide-default-footer, sort-by='trackNumber')
       template(slot='items', slot-scope='props')
         tr(@click='playSong(props.index)')
           td
@@ -84,7 +84,8 @@ export default {
           album: item.track.album.name,
           uri: item.track.uri,
           duration: DateService.formattedDuration(item.track.duration_ms),
-          durationMs: item.track.duration_ms
+          durationMs: item.track.duration_ms,
+          trackNumber: item.track.track_number
         }
       })
       const totalMs = this.tracks.reduce((accumulator, current) => accumulator + Number(current.durationMs), 0)

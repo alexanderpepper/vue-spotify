@@ -8,7 +8,7 @@
           v-flex.text-xs-center(v-show='!showPlayer')
                 .body-2.truncate.compress(v-text='app.playerState.artist')
                 .body-1.truncate.compress(v-text='app.playerState.track')
-          v-btn(icon, small, outline, @click='togglePlay', v-show='!showPlayer')
+          v-btn(icon, small, outlined, @click='togglePlay', v-show='!showPlayer')
             v-icon {{ app.playerState.paused ? 'play_arrow' : 'pause' }}
       v-flex.px-3.hide-overflow-x(sm3, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout
@@ -26,7 +26,7 @@
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 14 : 18', :class='{"primary--text": app.playerState.shuffle}') shuffle
           v-btn.my-0(icon, @click='previousTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_previous
-          v-btn.my-0(icon, outline, @click='togglePlay', :large='$vuetify.breakpoint.xsOnly')
+          v-btn.my-0(icon, outlined, @click='togglePlay', :large='$vuetify.breakpoint.xsOnly')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 26 : 32') {{ app.playerState.paused ? 'play_arrow' : 'pause' }}
           v-btn.my-0(icon, @click='nextTrack')
             v-icon(:size='$vuetify.breakpoint.smAndUp ? 28 : 46', :large='$vuetify.breakpoint.xsOnly') skip_next

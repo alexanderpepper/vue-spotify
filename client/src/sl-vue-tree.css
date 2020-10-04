@@ -15,23 +15,28 @@
   padding-bottom: 4px;
 }
 
-.application.theme--dark .sl-vue-tree-selected > .sl-vue-tree-node-item {
+
+.v-application.theme--dark .sl-vue-tree-node-item {
+  background-color: black;
+}
+
+.v-application.theme--dark .sl-vue-tree-selected .sl-vue-tree-node-item {
   background-color: #1a1a1a;
   color: white;
 }
 
-.application.theme--light .sl-vue-tree-selected > .sl-vue-tree-node-item {
+.v-application.theme--light .sl-vue-tree-selected .sl-vue-tree-node-item {
   background-color: #ededed;
   color: black;
 }
 
-.application.theme--light .sl-vue-tree-node-item:hover,
-.application.theme--light .sl-vue-tree-node-item.sl-vue-tree-cursor-hover {
+.v-application.theme--light .sl-vue-tree-node-item:hover,
+.v-application.theme--light .sl-vue-tree-node-item.sl-vue-tree-cursor-hover {
   color: black;
 }
 
-.application.theme--dark .sl-vue-tree-node-item:hover,
-.application.theme--dark .sl-vue-tree-node-item.sl-vue-tree-cursor-hover {
+.v-application.theme--dark .sl-vue-tree-node-item:hover,
+.v-application.theme--dark .sl-vue-tree-node-item.sl-vue-tree-cursor-hover {
   color: white;
 }
 
@@ -101,7 +106,7 @@
 
 @media screen and (max-width: 600px){
 
-  .application.theme--dark .sl-vue-tree-selected > .sl-vue-tree-node-item {
+  .v-application.theme--dark .sl-vue-tree-selected > .sl-vue-tree-node-item {
     background-color: #262626;
     color: white;
   }

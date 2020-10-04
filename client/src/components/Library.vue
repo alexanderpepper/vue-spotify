@@ -16,12 +16,12 @@
           v-icon.primary--text.ml-1.cursor-pointer(small, @click='shuffleFolder(node)', v-if='!node.isLeaf') shuffle
     v-menu(v-model='menu.show', :position-x='menu.x', :position-y='menu.y', absolute, offset-y)
       v-list.py-0
-        v-list-tile(@click='showCreateDialog', ripple)
-          v-list-tile-title New Folder
-        v-list-tile(v-show='!selectedNode.isLeaf', @click='showRenameDialog', ripple)
-          v-list-tile-title Rename
-        v-list-tile(v-show='!selectedNode.isLeaf', @click='showDeleteDialog', ripple)
-          v-list-tile-title Delete
+        v-list-item(@click='showCreateDialog', ripple)
+          v-list-item-title New Folder
+        v-list-item(v-show='!selectedNode.isLeaf', @click='showRenameDialog', ripple)
+          v-list-item-title Rename
+        v-list-item(v-show='!selectedNode.isLeaf', @click='showDeleteDialog', ripple)
+          v-list-item-title Delete
     v-dialog(v-model='nameDialog.show', persistent, max-width='290')
       v-card
         v-card-title.headline {{ nameDialog.create ? 'Create' : 'Rename' }} Folder

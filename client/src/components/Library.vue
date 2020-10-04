@@ -1,11 +1,9 @@
 <template lang="pug">
   .library(:class='libraryClass')
-    v-layout(align-center)
-      v-flex(xs6)
-        .caption.mt-2.pl-2.ml-1(style='letter-spacing: 2px;') PLAYLISTS
-      v-flex.text-xs-right(xs6)
-        v-btn.primary--text(icon, small, @click='showCreateDialog')
-          v-icon create_new_folder
+    .d-flex
+      .flex-grow-1.align-self-center.caption.mt-2.pl-2.ml-1 PLAYLISTS
+      v-btn.primary--text(icon, small, @click='showCreateDialog')
+        v-icon create_new_folder
     v-layout
       sl-vue-tree(ref='tree', v-model="app.library.children", @nodecontextmenu='showMenu', @nodedblclick='nodeDoubleClicked', @select="rowsSelected", :class='{"grey--text": app.isDarkTheme, "grey--text text--darken-2": !app.isDarkTheme}')
         template(slot="toggle", slot-scope='{ node }')

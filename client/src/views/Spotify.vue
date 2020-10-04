@@ -1,9 +1,9 @@
 <template lang="pug">
-  v-layout.home(fill-height)
-    v-layout(v-if='app.library.children && !app.isLoadingShuffle')
-      v-flex.position-relative(v-if='$vuetify.breakpoint.smAndUp || $route.name === "playlists"' xs12, sm4, md3, lg2)
+  .home.w-100.h-100
+    .d-flex.h-100(v-if='app.library.children && !app.isLoadingShuffle')
+      .h-100.position-relative.left-side(v-if='$vuetify.breakpoint.smAndUp || $route.name === "playlists"')
         library.overflow-scroll(:app='app')
-      v-flex.position-relative(v-if='$vuetify.breakpoint.smAndUp || $route.name === "playlist"', xs12, sm8, md9, lg10)
+      .h-100.position-relative.flex-grow-1(v-if='$vuetify.breakpoint.smAndUp || $route.name === "playlist"')
         router-view.overflow-scroll(:app='app')
     modal-spinner(v-else, :loading-text='app.loadingText')
     play-controls(:app='app')
@@ -27,6 +27,14 @@ export default {
 </script>
 
 <style scoped>
+  .left-side {
+    width: 200px;
+  }
+  @media screen and (max-width: 600px){
+    .left-side {
+      width: 100%;
+    }
+  }
   .position-relative {
     position: relative;
   }

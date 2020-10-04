@@ -15,7 +15,7 @@
           v-btn(icon v-bind='attrs' v-on='on')
             user-photo(size='medium', :app='app')
         v-list.py-0
-          v-layout.px-3.pb-2.hidden-sm-and-up.pt-2(column)
+          .px-3.pb-2.hidden-sm-and-up.pt-2
             .caption Signed in as
             .body-2 {{ userFullName }}
           v-divider.hidden-sm-and-up

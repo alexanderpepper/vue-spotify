@@ -79,3 +79,7 @@ a {
     margin-right: auto !important;
   }
 }
+
+.h-100 {
+  height: 100%;
+}

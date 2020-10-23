@@ -1,5 +1,5 @@
 <template lang="pug">
-  .landing.display-2.text-xs-center.mt-4 LANDING
+  .landing.display-2.text-center.mt-4 LANDING
 </template>
 
 <script>

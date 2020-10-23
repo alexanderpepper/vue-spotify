@@ -3,16 +3,16 @@
     lazy-component(@show='init')
       img(v-if='artworkUrl', :src='artworkUrl')
     img(v-if='!artworkUrl', src='/static/transparent-square.png')
-    .no-image.grey.darken-3.text-xs-center(v-if='!isFolder && !artworkUrl', :style='{width: size, height: size, "line-height": size}')
+    .no-image.grey.darken-3.text-center(v-if='!isFolder && !artworkUrl', :style='{width: size, height: size, "line-height": size}')
       .no-image-icon-container
         v-icon.no-image-icon.grey--text.text--darken-1(size='100') queue_music
-    .no-image.grey.darken-3.text-xs-center(v-if='isFolder', :style='{width: size, height: size, "line-height": size}')
+    .no-image.grey.darken-3.text-center(v-if='isFolder', :style='{width: size, height: size, "line-height": size}')
       .no-image-icon-container
         v-icon.no-image-icon.grey--text.text--darken-1(size='100') folder
 </template>
 
 <script>
-import ImageCacheService from '../services/ImageCacheService'
+// import ImageCacheService from '../services/ImageCacheService'
 export default {
   name: 'playlistArtwork',
   props: {
@@ -44,17 +44,18 @@ export default {
       const key = (this.libraryPlaylist && this.libraryPlaylist.data && this.libraryPlaylist.data.artworkUrl) ||
           (this.spotifyPlaylist && this.spotifyPlaylist.images && this.spotifyPlaylist.images.length && this.spotifyPlaylist.images[0].url)
 
-      if (key) {
-        ImageCacheService.getObjectURL(key).then(objectURL => {
-          if (objectURL) {
-            this.artworkUrl = objectURL
-          } else {
-            this.artworkUrl = key
-          }
-        })
-      } else {
-        this.artworkUrl = false
-      }
+      this.artworkUrl = key
+      // if (key) {
+      //   ImageCacheService.getObjectURL(key).then(objectURL => {
+      //     if (objectURL) {
+      //       this.artworkUrl = objectURL
+      //     } else {
+      //       this.artworkUrl = key
+      //     }
+      //   })
+      // } else {
+      //   this.artworkUrl = false
+      // }
     }
   }
 }

@@ -1,13 +1,13 @@
 <template lang="pug">
   .playlist.pb-6.pa-xs-0
-    v-layout.px-4.pt-6.mb-6(row, wrap, align-center)
-      v-flex.text-xs-center(xs12, sm3)
+    v-row.px-4.pt-6.mb-6(wrap, align-center)
+      v-col.text-center(cols='12', sm='3')
         playlist-artwork.mx-xs-4(:spotify-playlist='playlist', elevation='10', size='100%')
-      v-flex.px-4.px-xs-0.text-sm-left.text-xs-center(xs12, sm9)
+      v-col.px-4.px-xs-0.text-sm-left.text-center(xs12, sm9)
         .caption PLAYLIST
         .display-1.mb-2.bold {{ playlistName }}
         .body-1.grey--text {{ tracks.length }} songs, {{ totalDuration }}
-      v-flex.hidden-xs-only(md3, offset-md9, sm6, offset-sm6, xs12)
+      v-col.hidden-xs-only(md='3', offset-md='9', sm='6', offset-sm='6', xs='12')
         v-text-field.filter-field.pt-0(v-model='search', placeholder='Filter', append-icon='search', hide-details)
     v-list.hidden-sm-and-up.py-0(two-line)
       v-list-item(ripple, v-for='(track, index) in tracks', :key='index', @click='playSong(index)',)
@@ -48,6 +48,7 @@ export default {
       playlist: undefined,
       playlistName: '',
       tracks: [],
+      artworkUrl: '',
       totalDuration: 0,
       loading: true,
       search: '',
@@ -64,17 +65,10 @@ export default {
   created () {
     this.initialize()
   },
-  computed: {
-    artworkUrl () {
-      if (this.playlist && this.playlist.images && this.playlist.images.length) {
-        return this.playlist.images[0].url
-      } else {
-        return ''
-      }
-    }
-  },
   methods: {
     async initialize () {
+      console.log('well ok')
+
       this.playlist = await PlaylistService.getPlaylist(this.id)
       this.tracks = this.playlist.tracks.items.map(item => {
         return {
@@ -93,6 +87,9 @@ export default {
       this.loading = false
       this.playlistName = this.playlist.name
       this.audio = new Audio()
+      if (this.playlist && this.playlist.images && this.playlist.images.length) {
+        this.artworkUrl = this.playlist.images[0].url
+      }
     },
     async playSong (index) {
       PlayerService.play(this.tracks.map(t => t.uri), index)

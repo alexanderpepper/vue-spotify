@@ -1,5 +1,5 @@
 <template functional lang="pug">
-  .user-photo-container.text-xs-center(row, align-center)
+  .user-photo-container.text-center(row, align-center)
     v-icon(v-if='!props.app.user.id || !props.app.user.images.length', size='36') account_circle
     img.user-photo(:src='props.app.user.images[0].url' v-if='props.app.user.id && props.app.user.images.length', :class='[props.size]', v-once)
 </template>

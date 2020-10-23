@@ -1,25 +1,25 @@
 <template lang="pug">
   v-footer.elevation-4.play-controls(:height='$vuetify.breakpoint.smAndUp ? 80 : showPlayer ? 520 : 44', fixed, app)
-    v-layout(align-center, wrap)
-      v-flex.hidden-sm-and-up(xs12)
+    .d-flex.w-100
+      .flex-grow-1.flex-shrink-1.hidden-sm-and-up
         v-layout(align-center)
           v-btn(icon, small, @click='showPlayer = !showPlayer')
             v-icon {{ showPlayer ? 'expand_more' : 'expand_less' }}
-          v-flex.text-xs-center(v-show='!showPlayer')
+          v-flex.text-center(v-show='!showPlayer')
                 .body-2.truncate.compress(v-text='app.playerState.artist')
                 .body-1.truncate.compress(v-text='app.playerState.track')
           v-btn(icon, small, outlined, @click='togglePlay', v-show='!showPlayer')
             v-icon {{ app.playerState.paused ? 'play_arrow' : 'pause' }}
-      v-flex.px-3.hide-overflow-x(sm3, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
+      .px-3.hide-overflow-x(v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout
           .vertical-center-container.mx-xs-auto(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
             .vertical-center.mx-xs-4(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
               .artwork.elevation-5.mx-auto(:class='{"mobile-large": $vuetify.breakpoint.xsOnly, "desktop": $vuetify.breakpoint.smAndUp}')
                 img(:src='app.playerState.images[0].url')
-            .vertical-center.text-xs-center.text-sm-left.pl-4.pa-xs-0.mx-xs-4(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
+            .vertical-center.text-center.text-sm-left.pl-4.pa-xs-0.mx-xs-4(:class='{"d-block": $vuetify.breakpoint.xsOnly}')
               .body-2.truncate.compress(v-text='app.playerState.artist')
               .body-1.truncate.compress(v-text='app.playerState.track')
-      v-flex.text-xs-center(sm6, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
+      .flex-grow-1.flex-shrink-0.text-center(v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout.mx-xs-4(row, align-center)
           v-spacer
           v-btn.my-0(icon, :small='$vuetify.breakpoint.smAndUp', @click='setShuffle')
@@ -37,7 +37,7 @@
           .caption(v-text='app.playerState.elapsed')
           v-slider.pa-0.mx-3(:color='app.isDarkTheme ? "white" : "black"', :thumb-color='app.isDarkTheme ? "white" : "black"', v-model='app.playerState.position', @click='seek')
           .caption(v-text='app.playerState.duration')
-      v-flex.px-3.text-xs-right(sm3, xs12, v-show='$vuetify.breakpoint.smAndUp || showPlayer')
+      .flex-grow-1.flex-shrink-1.px-3.text-xs-right(v-show='$vuetify.breakpoint.smAndUp || showPlayer')
         v-layout(row, align-center)
           v-spacer
           v-menu(v-model='showDevices', top, left, offset-y, fixed)

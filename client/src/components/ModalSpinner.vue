@@ -1,7 +1,6 @@
 <template functional lang="pug">
-  v-layout.modal-spinner(fill-height, align-center)
-    v-flex.text-center
-      // v-progress-circular(:size='200' :width='50', color='primary', indeterminate)
+  .d-flex.fill-height.w-100.text-center
+    .mx-auto.align-self-center
       .headline(v-text='props.loadingText')
 </template>
 

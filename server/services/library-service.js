@@ -20,6 +20,11 @@ module.exports = class LibraryService {
     })
   }
 
+
+  static exportAll ({ user }) {
+    return SpotifyService.getAll(user)
+  }
+
   static save ({user, Library, library}) {
     return new Promise(resolve => {
       if (user.id.toString() === library.userId.toString()) {
@@ -84,7 +89,7 @@ module.exports = class LibraryService {
     return result
   }
 
-  static newLibrary (playlists, user) {
+  static newLibrary (playlists = [], user) {
     return {
       userId: user.id,
       syncAfter: moment().add(syncAfterSeconds, 'seconds').toDate(),

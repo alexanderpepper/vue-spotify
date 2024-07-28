@@ -20,6 +20,8 @@
           v-divider.hidden-sm-and-up
           v-list-tile(@click='toggleTheme', :ripple='true')
             v-list-tile-title Switch Theme
+          v-list-tile(@click='exportAll', :ripple='true')
+            v-list-tile-title Export Spotify Data
           v-divider
           v-list-tile(@click='logout', ripple)
             v-list-tile-title Sign Out
@@ -32,6 +34,7 @@
   import UserPhoto from './components/UserPhoto'
   import PlayerService from './services/PlayerService'
   import AuthorizationService from './services/AuthorizationService'
+  import LibraryService from './services/LibraryService'
 
   export default {
     components: {UserPhoto},
@@ -109,6 +112,10 @@
       toggleTheme () {
         this.isDarkTheme = !this.isDarkTheme
         window.localStorage['dark'] = this.isDarkTheme
+      },
+      async exportAll () {
+        const data = await LibraryService.exportAll()
+        console.log(data)
       },
       logout () {
         this.user = {}

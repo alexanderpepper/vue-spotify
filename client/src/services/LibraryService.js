@@ -9,6 +9,10 @@ class LibraryService extends BaseService {
   static save (library) {
     return this.POST(api.myLibrary, library)
   }
+
+  static exportAll () {
+    return this.GET(api.export)
+  }
 }
 
 export default LibraryService

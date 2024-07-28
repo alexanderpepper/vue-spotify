@@ -35,9 +35,16 @@ module.exports = class SpotifyService {
     log('setAuthorizationCode')
 
     const spotifyApi = new SpotifyWebApi({clientId, clientSecret, redirectUri})
-    const tokenResponse = await spotifyApi.authorizationCodeGrant(code)
-    const token = TokenService.create(tokenResponse.body)
 
+    console.log(redirectUri)
+
+    let tokenResponse
+    try {
+      tokenResponse = await spotifyApi.authorizationCodeGrant(code)
+    } catch (error) {
+      console.log(error)
+    }
+    const token = TokenService.create(tokenResponse.body)
     spotifyApi.setAccessToken(token.accessToken)
     spotifyApi.setRefreshToken(token.refreshToken)
 
@@ -139,12 +146,45 @@ module.exports = class SpotifyService {
   }
 
   static async getPlaylists (user) {
-    log('getPlaylists')
     const spotifyApi = this.getSpotifyApi(user)
     const sampling = await spotifyApi.getUserPlaylists(user.id, {limit: 1}).then(data => data.body)
     const pageCount = Math.ceil(sampling.total / limit)
     const pages = Array.from(Array(pageCount).keys())
     const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
-    return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val))).catch(console.log)
+    return Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val), [])).catch(console.log)
+  }
+
+  static async getAll (user) {
+    log('getAll')
+    const spotifyApi = this.getSpotifyApi(user)
+    const sampling = await spotifyApi.getUserPlaylists(user.id, {limit: 1}).then(data => data.body)
+    const pageCount = Math.ceil(sampling.total / limit)
+    const pages = Array.from(Array(pageCount).keys())
+    const promises = pages.map(p => spotifyApi.getUserPlaylists(user.id, {limit, offset: p * limit}).then(data => data.body.items))
+    const playlists = await Promise.all(promises).then(results => results.reduce((acc, val) => acc.concat(val), [])).catch(console.log)
+
+    const results = []
+    for (const { id, name } of playlists) {
+      const trackSampling = await spotifyApi.getPlaylistTracks(id, {limit: 1}).then(res => res.body)
+      const trackPageCount = Math.ceil(trackSampling.total / limit)
+      const trackPages = Array.from(Array(trackPageCount).keys())
+      const trackPromises = trackPages.map(p => spotifyApi.getPlaylistTracks(id, {limit, offset: p * limit}).then(data => data.body.items))
+      const trackItems = await Promise.all(trackPromises).then(results => results.reduce((acc, val) => acc.concat(val), []))
+
+      if (name === 'Release Radar') {
+        continue;
+      }
+
+      const tracks = trackItems.map(({ track: { name: trackName, artists, album }}) => ({
+        trackName,
+        artist: artists.map(({ name }) => name).join(','),
+        album: album.name
+      }))
+
+      console.log(name, ':', tracks.length, 'tracks')
+      results.push({ name, tracks })
+    }
+
+    return results
   }
 }

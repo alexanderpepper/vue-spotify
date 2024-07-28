@@ -21,4 +21,12 @@ module.exports = (Library) => {
     ],
     http: {path: '/mine', verb: 'post'}
   })
+
+  Library.exportAll = (options) => LibraryService.exportAll({ user: options.user })
+  Library.remoteMethod('exportAll', {
+    ...remoteDefaults.method,
+    accepts: remoteDefaults.options,
+    http: {path: '/export', verb: 'get'}
+  })
+
 }

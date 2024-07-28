@@ -19,5 +19,6 @@ export default {
   setRepeat: `${host}/player/repeat`,
   seek: `${host}/player/seek`,
   library: (id) => `${host}/library/${id || ''}`,
-  myLibrary: `${host}/library/mine`
+  myLibrary: `${host}/library/mine`,
+  export: `${host}/library/export`
 }
